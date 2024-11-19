@@ -5,10 +5,10 @@
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <title>Calendify | Responsive Bootstrap 4 Admin Dashboard Template</title>
-      
+
       <!-- Favicon -->
       <link rel="shortcut icon" href="/assets/images/favicon.ico" />
-      
+
       <link rel="stylesheet" href="/assets/css/backend-plugin.min.css">
       <link rel="stylesheet" href="/assets/css/backend.css?v=1.0.1">
       <link rel="stylesheet" href="/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
@@ -572,7 +572,7 @@
             <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="col-lg-12">
-                    <div class="card card-block card-stretch create-workform">                    
+                    <div class="card card-block card-stretch create-workform">
                         <div class="card-body p-5">
                             <div class="row">
                                 <!-- Title -->
@@ -583,7 +583,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-            
+
                                 <!-- Description -->
                                 <div class="col-lg-12 mb-4">
                                     <label class="title mb-3">Description</label>
@@ -592,7 +592,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-            
+
                                 <!-- Image -->
                                 <div class="col-lg-6 mb-4">
                                     <label class="title">Service Image *</label>
@@ -601,7 +601,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-            
+
                                 <!-- Price -->
                                 <div class="col-lg-6 mb-4">
                                     <label class="title">Price *</label>
@@ -610,7 +610,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-            
+
                                 <!-- Duration -->
                                 <div class="col-lg-6 mb-4">
                                     <label class="title">Duration (Days) *</label>
@@ -619,7 +619,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-            
+
                                 <!-- First Reminder Date/Time -->
                                 <div class="col-lg-6 mb-4">
                                     <label class="title">First Reminder Date/Time</label>
@@ -635,7 +635,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-            
+
                                 <!-- Second Reminder Date/Time -->
                                 <div class="col-lg-6 mb-4">
                                     <label class="title">Second Reminder Date/Time</label>
@@ -651,7 +651,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-            
+
                                 <!-- Follow-up Reminder Date/Time -->
                                 <div class="col-lg-6 mb-4">
                                     <label class="title">Follow-up Reminder Date/Time</label>
@@ -667,19 +667,19 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-            
+
                                 <!-- Submit Button -->
                                 <div class="col-lg-12 mt-4">
                                     <div class="d-flex flex-wrap align-items-center justify-content-center">
                                         <button type="submit" class="btn btn-outline-primary">Create Service</button>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </form>
-            
+
         </div>
     </div>
     </div>
@@ -724,7 +724,7 @@
                             <button type="submit" data-dismiss="modal" class="btn btn-primary mr-4">Cancel</button>
                             <button type="submit" data-dismiss="modal" class="btn btn-outline-primary">Save</button>
                         </div>
-                    </div>  
+                    </div>
                 </div>
             </div>
           </div>
@@ -743,7 +743,7 @@
                     </ul>
                 </div>
                 <div class="col-lg-6 text-right">
-                    Copyright <span id="copyright"> 
+                    Copyright <span id="copyright">
     <script>document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))</script>
     </span> <a href="#">Calendify</a> All Rights Reserved.
                 </div>
@@ -752,11 +752,11 @@
     </footer>
     <!-- Backend Bundle JavaScript -->
     <script src="/assets/js/backend-bundle.min.js"></script>
-    
+
     <!-- Chart Custom JavaScript -->
     <script src="/assets/js/customizer.js"></script>
-    
-    
+
+
     <!-- app JavaScript -->
     <script src="/assets/js/app.js"></script>  </body>
 </html>
