@@ -9,8 +9,8 @@
             </div>
             <div class="col-lg-6 text-right">
                 Copyright <span id="copyright"> 
-    <script>document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))</script>
-    </span> <a href="#">Calendify</a> All Rights Reserved.
+<script>document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))</script>
+</span> <a href="#">Calendify</a> All Rights Reserved.
             </div>
         </div>
     </div>

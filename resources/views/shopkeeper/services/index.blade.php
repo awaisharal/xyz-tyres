@@ -7,10 +7,10 @@
 
   <body class="fixed-top-navbar top-nav  ">
     <!-- loader Start -->
-    <div id="loading">
+    {{-- <div id="loading">
           <div id="loading-center">
           </div>
-    </div>
+    </div> --}}
     <!-- loader END -->
 
     <div class="content-page">
@@ -46,96 +46,59 @@
         </div>
         <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="event-content">
-                    <div id="event1" class="tab-pane fade active show">
-                        <div class="row">
-                            @foreach ($services as $service)
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="card card-block card-stretch card-height">
-                                    <!-- Service Image -->
-                                    <div class="card-body rounded event-detail event-detail-danger">
-                                        <img
-                                            src="{{ asset('storage/' . $service->image) }}"
-                                            alt="{{ $service->title }}"
-                                            class="card-img-top rounded-top"
-                                            style="height: 200px; object-fit: cover;"
-                                        >
-                                        <div class="d-flex flex-column">
-                                            <!-- Title -->
-                                            <h4 class="mb-2">{{ $service->title }}</h4>
-
-                                            <!-- Description -->
-                                            {{-- <p class="card-description mb-3">{{ Str::limit($service->description, 100) }}</p> --}}
-
-                                            <!-- Price -->
-                                            <p class="text-danger font-weight-500 mb-2">
-                                                <i class="las la-tag pr-2"></i>Price: ${{ number_format($service->price, 2) }}
-                                            </p>
-
-                                            <!-- Duration -->
-                                            <p class="text-muted mb-3">
-                                                <i class="las la-clock pr-2"></i>Duration: {{ $service->duration }} days
-                                            </p>
-
-                                            <!-- First Reminder -->
-                                            {{-- @if ($service->first_reminder_datetime || $service->first_reminder_message)
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <span>
-                                                        <i class="las la-bell pr-2"></i>
-                                                        1st Reminder:
-                                                        {{ $service->first_reminder_datetime ? \Carbon\Carbon::parse($service->first_reminder_datetime)->format('d M Y, h:i A') : 'Not Set' }}
-                                                    </span>
-                                                    <span>Message: {{ $service->first_reminder_message ?? 'No Message' }}</span>
-                                                </div>
-                                            @endif --}}
-
-                                            <!-- Second Reminder -->
-                                            {{-- @if ($service->second_reminder_datetime || $service->second_reminder_message)
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <span>
-                                                        <i class="las la-bell pr-2"></i>
-                                                        2nd Reminder:
-                                                        {{ $service->second_reminder_datetime ? \Carbon\Carbon::parse($service->second_reminder_datetime)->format('d M Y, h:i A') : 'Not Set' }}
-                                                    </span>
-                                                    <span>Message: {{ $service->second_reminder_message ?? 'No Message' }}</span>
-                                                </div>
-                                            @endif --}}
-
-                                            <!-- Follow-up Reminder -->
-                                            {{-- @if ($service->followup_reminder_datetime || $service->followup_reminder_message)
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <span>
-                                                        <i class="las la-bell pr-2"></i>
-                                                        Follow-up Reminder:
-                                                        {{ $service->followup_reminder_datetime ? \Carbon\Carbon::parse($service->followup_reminder_datetime)->format('d M Y, h:i A') : 'Not Set' }}
-                                                    </span>
-                                                    <span>Message: {{ $service->followup_reminder_message ?? 'No Message' }}</span>
-                                                </div>
-                                            @endif --}}
-
-                                            <!-- Action Buttons -->
-                                            <div class="d-flex align-items-center pt-3">
-                                                <a href="{{ route('services.edit', $service->id) }}" class="btn btn-primary mr-3 px-xl-3">
-                                                    <i class="ri-pencil-line pr-1"></i>Edit
-                                                </a>
-                                                <form action="{{ route('services.destroy', $service->id) }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger px-xl-3">
-                                                        <i class="ri-delete-bin-6-line pr-1"></i>Delete
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
+            @foreach ($services as $service)
+            <div class="col-lg-4 col-md-6">
+                <div class="card card-block card-stretch card-height">
+                    <div class="card-body rounded event-detail event-detail-primary">
+                        <div class="position-relative">
+                           
+                            <div class="text-center">
+                                <img
+                                    src="{{ $service->image ? asset('storage/' . $service->image) : asset('storage/default-image.jpg') }}"
+                                    alt="{{ $service->title }}"
+                                    class="card-img-top rounded-top"
+                                    style="height: 150px; width: 150px; object-fit: cover; max-width: 100%;"
+                                >
+                            </div>
+            
+                            
+                            <div class="card-header-toolbar mt-1 position-absolute" style="top: 10px; right: 10px;">
+                                <div class="dropdown">
+                                    <span class="dropdown-toggle" id="dropdownMenuButton4" data-toggle="dropdown">
+                                        <i class="ri-more-2-fill"></i>
+                                    </span>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton4">
+                                        <a class="dropdown-item" href="{{ route('services.edit', $service->id) }}">
+                                            <i class="ri-pencil-line mr-3"></i>Edit
+                                        </a>
+                                        <form action="{{ route('services.destroy', $service->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="ri-delete-bin-6-line mr-3"></i>Delete
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                            @endforeach
+                            <div class="mt-3">
+                                <h4 class="mb-2 mr-4">{{ $service->title }}</h4>
+                                <p class="text-muted mb-3">
+                                    {{ $service->description }}
+                                </p>
+                                <p class="text-danger font-weight-500 mb-2">
+                                    <i class="las la-tag pr-2"></i>Price: ${{ number_format($service->price, 2) }}
+                                </p>
+                                <p class="text-muted mb-3">
+                                    <i class="las la-clock pr-2"></i>Duration: {{ $service->duration }} days
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
+             @endforeach
         </div>
     </div>
  </body>
