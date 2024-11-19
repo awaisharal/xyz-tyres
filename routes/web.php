@@ -25,15 +25,15 @@ Route::middleware('auth')->group(function () {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Shopkeeper Signup 
+// Shopkeeper Signup
 Route::get('/signup/shopkeeper', [RegisteredUserController::class, 'createShopkeeper'])->name('shopkeeper.signup');
 Route::post('/signup/shopkeeper', [RegisteredUserController::class, 'storeShopkeeper'])->name('shopkeeper.store');
 Route::middleware(['auth', 'role:shopkeeper'])->group(function () {
-    // Dashboard route 
-     Route::get('/dashboard/shopkeeper', [DashboardController::class, 'shopkeeper'])->name('dashboard.shopkeeper');
+    // Dashboard route
+     Route::get('/dashboard', [DashboardController::class, 'shopkeeper'])->name('dashboard.shopkeeper');
 
     // Service  routes
-    Route::prefix('shopkeeper/services')->name('services.')->group(function () {
+    Route::prefix('/services')->name('services.')->group(function () {
         Route::get('/', [ServiceController::class, 'index'])->name('index'); // List all services
         Route::get('/create', [ServiceController::class, 'create'])->name('create'); // Show create form
         Route::post('/', [ServiceController::class, 'store'])->name('store'); // Store new service
@@ -50,6 +50,6 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 //  Super Admin
 Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.super_admin');
-    
+
 });
 require __DIR__.'/auth.php';
