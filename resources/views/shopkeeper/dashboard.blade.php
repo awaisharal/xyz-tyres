@@ -1,17 +1,18 @@
 @extends('shopkeeper.layouts.app')
 @section('title', 'Dashboard')
 
-
 <!doctype html>
 <html lang="en">
-
-  <body class="fixed-top-navbar top-nav  ">
-    <!-- loader Start -->
-    {{-- <div id="loading">
-          <div id="loading-center">
-          </div>
-    </div> --}}
-    <!-- loader END -->
+  <body class="fixed-top-navbar top-nav">
+    <!-- Loader Start -->
+    <div id="loading" style="position: fixed; width: 100%; height: 100%; background: white; z-index: 9999;">
+        <div id="loading-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <!-- Loader END -->
 
     <div class="content-page">
         <div class="content-top">
@@ -32,20 +33,19 @@
                                 <input type="text" class="text search-input" placeholder="Search...">
                             </form>
                         </div>
-                        {{-- <div class="float-sm-right">
-                            <a href="{{ route('services.create') }}">
-                               <button class="btn btn-primary d-flex justify-content-center text-center position-relative">
-                                Add
-                                <i class="ri-add-line"></i>
-                               </button>
-                            </a>
-                        </div> --}}
                     </div>
                 </div>
             </div>
         </div>
         <div class="container">
-       
+        </div>
     </div>
- </body>
+
+    <!-- Remove loader on page load -->
+    <script>
+        window.addEventListener('load', function () {
+            document.getElementById('loading').style.display = 'none';
+        });
+    </script>
+  </body>
 </html>

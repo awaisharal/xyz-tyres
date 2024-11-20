@@ -18,10 +18,13 @@
       <link rel="stylesheet" href="/assets/vendor/remixicon/fonts/remixicon.css">  </head>
   <body class=" ">
     <!-- loader Start -->
-    <div id="loading">
-          <div id="loading-center">
-          </div>
-    </div>
+    <div id="loading" style="position: fixed; width: 100%; height: 100%; background: white; z-index: 9999;">
+        <div id="loading-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+     </div>
     <!-- loader END -->
     
       <div class="wrapper">
@@ -42,7 +45,8 @@
                                         <div class="floating-input form-group">
                                             <input class="form-control" type="text" name="name" id="name" value="{{ old('name') }}" required />
                                             <label class="form-label" for="name">{{ __('Name') }}</label>
-                                        </div>
+                                         </div>
+                                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
                                     </div>
                         
                                     <!-- Company -->
@@ -50,15 +54,17 @@
                                         <div class="floating-input form-group">
                                             <input class="form-control" type="text" name="company" id="company" value="{{ old('company') }}" required />
                                             <label class="form-label" for="company">{{ __('Company') }}</label>
-                                        </div>
+                                          </div>
+                                        <x-input-error :messages="$errors->get('company')" class="mt-2" />
                                     </div>
                         
                                     <!-- Email -->
                                     <div class="col-lg-12">
                                         <div class="floating-input form-group">
-                                            <input class="form-control" type="email" name="email" id="email" value="{{ old('email') }}" required />
+                                            <input class="form-control" type="text" name="email" id="email" value="{{ old('email') }}" required />
                                             <label class="form-label" for="email">{{ __('Email') }}</label>
-                                        </div>
+                                          </div>
+                                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                     </div>
                         
                                     <!-- Password -->
@@ -66,7 +72,8 @@
                                         <div class="floating-input form-group">
                                             <input class="form-control" type="password" name="password" id="password" required />
                                             <label class="form-label" for="password">{{ __('Password') }}</label>
-                                        </div>
+                                          </div>
+                                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                     </div>
                         
                                     <!-- Confirm Password -->
@@ -74,16 +81,17 @@
                                         <div class="floating-input form-group">
                                             <input class="form-control" type="password" name="password_confirmation" id="password_confirmation" required />
                                             <label class="form-label" for="password_confirmation">{{ __('Confirm Password') }}</label>
-                                        </div>
+                                         </div>
+                                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                     </div>
                         
                                     <!-- Agree to Terms -->
-                                    <div class="col-lg-12">
+                                    {{-- <div class="col-lg-12">
                                         <div class="custom-control custom-checkbox mb-3 text-left">
                                             <input type="checkbox" class="custom-control-input" id="customCheck1" name="terms" required />
                                             <label class="custom-control-label" for="customCheck1">{{ __('I agree with the terms of use') }}</label>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                         
                                 <!-- Submit Button -->
@@ -112,5 +120,11 @@
     
     
     <!-- app JavaScript -->
-    <script src="/assets/js/app.js"></script>  </body>
+    <script src="/assets/js/app.js"></script>
+    <script>
+        window.addEventListener('load', function () {
+            document.getElementById('loading').style.display = 'none';
+        });
+     </script>
+</body>
 </html>

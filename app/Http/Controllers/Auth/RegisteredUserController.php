@@ -60,7 +60,7 @@ public function storeShopkeeper(Request $request)
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'company' => 'required|string|max:255',
+            'company' => ['required|string|max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 

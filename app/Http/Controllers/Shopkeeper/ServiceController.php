@@ -62,16 +62,18 @@ class ServiceController extends Controller
         }
     
         if ($request->hasFile('image')) {
-            $originalImageName = $request->file('image')->getClientOriginalName();
-            $path = $request->file('image')->storeAs('services', $originalImageName);
-            $validatedData['image'] = $path;
+            // Store the image in the 'services' directory
+            $validatedData['image'] = $request->file('image')->storeAs('services', $request->file('image')->getClientOriginalName(), 'public');
         }
+        
         
         $validatedData['user_id'] = auth()->id();
         $service = Service::create($validatedData);
         return redirect()->route('services.index')->with('success', 'Service created successfully.');
     }
-    
+
+
+   
     /**
      * Get the previous reminder's date field for validation.
      *
