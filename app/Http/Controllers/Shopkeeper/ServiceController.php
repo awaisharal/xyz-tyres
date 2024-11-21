@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Shopkeeper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Service;
 
 class ServiceController extends Controller
@@ -11,120 +12,154 @@ class ServiceController extends Controller
     public function index()
     {
         
-        $services = Auth::user()->services; // Assuming the relationship is defined in the User model
+        $services = Auth::user()->services;
         // return response()->json($services);
+        // dd($services);
         return view('shopkeeper.services.index', compact('services'));
     }
-
-    
     public function create()
     {
-        // Return a view for creating a service (if applicable)
+       
         return view('shopkeeper.services.create');
         
     }
-
-
+    
     public function store(Request $request)
     {
-        // Check if the authenticated user is a shopkeeper
-        if (Auth::user()->role !== 'shopkeeper') {
-            return response()->json(['message' => 'Unauthorized. Only shopkeepers can create services.'], 403);
-        }
-    
-        // Validate the request
-        $request->validate([
-           
+        
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'price' => 'required|numeric',
-            'duration' => 'required|integer',
-            'first_reminder_datetime' => 'nullable|date',
-            'first_reminder_message' => 'nullable|string',
-            'second_reminder_datetime' => 'nullable|date',
-            'second_reminder_message' => 'nullable|string',
-            'followup_reminder_datetime' => 'nullable|date',
-            'followup_reminder_message' => 'nullable|string',
+            'description' => 'nullable|string|max:2000|regex:/^(\S+\s*){1,2000}$/', 
+            'price' => 'required|numeric|min:0.01', 
+            'duration' => 'required|integer|min:1',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
-        $imagePath = $request->file('image')->store('services', 'public');
     
         
-        $service = Service::create([
-            'user_id' => auth()->id(), // Get the authenticated user's ID
-            'title' => $request->title,
-            'description' => $request->description,
-            'image' => $imagePath,
-            'price' => $request->price,
-            'duration' => $request->duration,
-            'first_reminder_date' => $request->first_reminder_date,
-            'first_reminder_message' => $request->first_reminder_message,
-            'second_reminder_date' => $request->second_reminder_date,
-            'second_reminder_message' => $request->second_reminder_message,
-            'followup_reminder_date' => $request->followup_reminder_date,
-            'followup_reminder_message' => $request->followup_reminder_message,
-        ]);
+        $reminders = ['first', 'second', 'followup'];
     
+        
+        foreach ($reminders as $reminder) {
+            if ($request->boolean("{$reminder}_reminder_enabled")) {
+                $validatedData["{$reminder}_reminder_enabled"] = true;
+                $request->validate([
+                    "{$reminder}_reminder_date" => [
+                        'required', 
+                        'date', 
+                        ($reminder === 'first') 
+                            ? 'after_or_equal:' . now()->toDateString() 
+                            : "after:{$this->getPreviousReminderDate($reminders, $reminder)}",
+                    ],
+                    "{$reminder}_reminder_message" => 'required|string|max:1000',
+                ]);
+                $validatedData["{$reminder}_reminder_date"] = $request->input("{$reminder}_reminder_date");
+                $validatedData["{$reminder}_reminder_message"] = $request->input("{$reminder}_reminder_message");
+            } else {
+                $validatedData["{$reminder}_reminder_enabled"] = false;
+                $validatedData["{$reminder}_reminder_date"] = null;
+                $validatedData["{$reminder}_reminder_message"] = null;
+            }
+        }
+    
+        if ($request->hasFile('image')) {
+            // Store the image in the 'services' directory
+            $validatedData['image'] = $request->file('image')->storeAs('services', $request->file('image')->getClientOriginalName(), 'public');
+        }
+        
+        
+        $validatedData['user_id'] = auth()->id();
+        $service = Service::create($validatedData);
         return redirect()->route('services.index')->with('success', 'Service created successfully.');
-        // return response()->json(['message' => 'Service created successfully', 'service' => $service], 201);
     }
 
+
    
+    /**
+     * Get the previous reminder's date field for validation.
+     *
+     * @param array $reminders
+     * @param string $currentReminder
+     * @return string|null
+     */
+    private function getPreviousReminderDate(array $reminders, string $currentReminder): ?string
+    {
+        $currentIndex = array_search($currentReminder, $reminders);
+        if ($currentIndex > 0) {
+            $previousReminder = $reminders[$currentIndex - 1];
+            return "{$previousReminder}_reminder_date";
+        }
+        return null;
+    }
+    
     public function edit(Service $service)
     {
         
         return view('shopkeeper.services.edit', compact('service'));
     }
-
+// 'image' => $request->hasFile('image') ? $request->file('image')->store('services', 'public') : $service->image,
     
-    public function update(Request $request, Service $service)
+public function update(Request $request, $id)
 {
-    // Check if the authenticated user is a shopkeeper
-    if (Auth::user()->role !== 'shopkeeper') {
-       
-        return response()->json(['message' => 'Unauthorized. Only shopkeepers can update services.'], 403);
+  
+    $service = Service::findOrFail($id);
+
+ 
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string|max:2000|regex:/^(\S+\s*){1,2000}$/', 
+        'price' => 'required|numeric|min:0.01', 
+        'duration' => 'required|integer|min:1',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+    ]);
+
+    $reminders = ['first', 'second', 'followup'];
+
+    foreach ($reminders as $reminder) {
+        if ($request->boolean("{$reminder}_reminder_enabled")) {
+            $validatedData["{$reminder}_reminder_enabled"] = true;
+            $request->validate([
+                "{$reminder}_reminder_date" => [
+                    'required', 
+                    'date', 
+                    ($reminder === 'first') 
+                        ? 'after_or_equal:' . now()->toDateString() 
+                        : "after:{$this->getPreviousReminderDate($reminders, $reminder)}",
+                ],
+                "{$reminder}_reminder_message" => 'required|string|max:1000',
+            ]);
+            $validatedData["{$reminder}_reminder_date"] = $request->input("{$reminder}_reminder_date");
+            $validatedData["{$reminder}_reminder_message"] = $request->input("{$reminder}_reminder_message");
+        } else {
+            $validatedData["{$reminder}_reminder_enabled"] = false;
+            $validatedData["{$reminder}_reminder_date"] = null;
+            $validatedData["{$reminder}_reminder_message"] = null;
+        }
     }
 
-  
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'image' => 'nullable|string', // Assuming this is a URL or path to the image
-        'price' => 'required|numeric',
-        'duration' => 'required|integer', // Duration in minutes or any unit you prefer
-        'first_reminder_date' => 'nullable|date',
-        'first_reminder_message' => 'nullable|string',
-        'second_reminder_date' => 'nullable|date',
-        'second_reminder_message' => 'nullable|string',
-        'followup_reminder_date' => 'nullable|date',
-        'followup_reminder_message' => 'nullable|string',
-    ]);
-
     
-    $service->update([
-        'title' => $request->title,
-        'description' => $request->description,
-        'image' => $request->hasFile('image') ? $request->file('image')->store('services', 'public') : $service->image,
-        'price' => $request->price,
-        'duration' => $request->duration,
-        'first_reminder_date' => $request->first_reminder_date,
-        'first_reminder_message' => $request->first_reminder_message,
-        'second_reminder_date' => $request->second_reminder_date,
-        'second_reminder_message' => $request->second_reminder_message,
-        'followup_reminder_date' => $request->followup_reminder_date,
-        'followup_reminder_message' => $request->followup_reminder_message,
-    ]);
+    if ($request->hasFile('image')) {
+        
+        if ($service->image) {
+            Storage::disk('public')->delete($service->image);
+        }
+    
+   
+        $validatedData['image'] = $request->file('image')->storeAs('services', $request->file('image')->getClientOriginalName(), 'public');
+    } else {
+       
+        $validatedData['image'] = $service->image;
+    }
+    
+   
+    $service->update($validatedData);
+
+   
     return redirect()->route('services.index')->with('success', 'Service updated successfully.');
-    // return response()->json(['message' => 'Service updated successfully', 'service' => $service], 200);
 }
 
-    
+
     public function destroy(Service $service)
     {
-        
-        if (Auth::user()->role !== 'shopkeeper') {
-            return response()->json(['message' => 'Unauthorized. Only shopkeepers can delete services.'], 403);
-        }
         $service->delete();
         return redirect()->route('services.index')->with('success', 'Service deleted successfully.');
         // return response()->json(['message' => 'Service deleted successfully'], 200);

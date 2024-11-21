@@ -23,30 +23,38 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request)
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required',
+    //     ]);
+
+    //     if (Auth::attempt($request->only('email', 'password'))) {
+    //         $request->session()->regenerate();
+
+    //         // Redirect based on user role
+    //         $user = Auth::user();
+    //         if ($user->role === 'super_admin') {
+    //             return redirect()->route('dashboard.super_admin'); // Adjust this route if necessary
+    //         } elseif ($user->role === 'shopkeeper') {
+    //             return redirect()->route('dashboard.shopkeeper');
+    //         } else {
+    //             return redirect()->route('dashboard.customer');
+    //         }
+    //     }
+
+    //     return back()->withErrors([
+    //         'email' => 'The provided credentials do not match our records.',
+    //     ]);
+    // }
+    public function store(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $request->authenticate();
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            $request->session()->regenerate();
+        $request->session()->regenerate();
 
-            // Redirect based on user role
-            $user = Auth::user();
-            if ($user->role === 'super_admin') {
-                return redirect()->route('dashboard.super_admin'); // Adjust this route if necessary
-            } elseif ($user->role === 'shopkeeper') {
-                return redirect()->route('dashboard.shopkeeper');
-            } else {
-                return redirect()->route('dashboard.customer');
-            }
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**

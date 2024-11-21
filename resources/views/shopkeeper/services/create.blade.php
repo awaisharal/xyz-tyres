@@ -1,762 +1,197 @@
+@extends('shopkeeper.layouts.app')
+@section('title', 'Dashboard')
+
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Calendify | Responsive Bootstrap 4 Admin Dashboard Template</title>
 
-      <!-- Favicon -->
-      <link rel="shortcut icon" href="/assets/images/favicon.ico" />
-
-      <link rel="stylesheet" href="/assets/css/backend-plugin.min.css">
-      <link rel="stylesheet" href="/assets/css/backend.css?v=1.0.1">
-      <link rel="stylesheet" href="/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
-      <link rel="stylesheet" href="/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
-      <link rel="stylesheet" href="/assets/vendor/remixicon/fonts/remixicon.css">  </head>
   <body class="fixed-top-navbar top-nav  ">
     <!-- loader Start -->
-    <div id="loading">
-          <div id="loading-center">
-          </div>
-    </div>
-    <!-- loader END -->
-    <!-- Wrapper Start -->
-    <div class="wrapper">
-      <div class="iq-top-navbar">
-          <div class="container">
-              <div class="iq-navbar-custom">
-                  <div class="d-flex align-items-center justify-content-between">
-                      <div class="iq-navbar-logo d-flex align-items-center justify-content-between">
-                          <i class="ri-menu-line wrapper-menu"></i>
-                          <a href="index.html" class="header-logo">
-                              <img src="/assets/images/logo.png" class="img-fluid rounded-normal light-logo" alt="logo">
-                              <img src="/assets/images/logo-white.png" class="img-fluid rounded-normal darkmode-logo" alt="logo">
-                          </a>
-                      </div>
-                      <div class="iq-menu-horizontal">
-                          <nav class="iq-sidebar-menu">
-                              <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
-                                  <a href="index.html" class="header-logo">
-                                      <img src="/assets/images/logo.png" class="img-fluid rounded-normal" alt="logo">
-                                  </a>
-                                  <div class="iq-menu-bt-sidebar">
-                                      <i class="las la-bars wrapper-menu"></i>
-                                  </div>
-                              </div>
-                              <ul id="iq-sidebar-toggle" class="iq-menu d-flex">
-                                  <li class="">
-                                      <a href="../backend/index.html" class="">
-                                          <span>Dashboard</span>
-                                      </a>
-                                  </li>
-                                  <li class="">
-                                      <a href="../backend/main-my-schedule.html" class="">
-                                          <span>My Schedule</span>
-                                      </a>
-                                  </li>
-                                  <li class="">
-                                      <a href="../backend/main-integration.html" class="">
-                                          <span>Integration</span>
-                                      </a>
-                                  </li>
-                                  <li class="">
-                                      <a href="#pages" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                          <span>Extra Pages</span>
-                                          <i class="ri-arrow-right-s-line iq-arrow-right"></i>
-                                      </a>
-                                      <ul id="pages" class="iq-submenu sub-scrll collapse" data-parent="#iq-sidebar-toggle">
-                                          <li class="">
-                                              <a href="#ui" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                                  <span>UI Elements</span>
-                                                  <i class="ri-arrow-right-s-line iq-arrow-right"></i>
-                                              </a>
-                                              <ul id="ui" class="iq-submenu iq-submenu-data collapse" data-parent="#pages">
-                                                  <li class="">
-                                                      <a href="../backend/ui-avatars.html">
-                                                          <span>Avatars</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-alerts.html">
-                                                          <span>Alerts</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-badges.html">
-                                                          <span>Badges</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-breadcrumb.html">
-                                                          <span>Breadcrumb</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-buttons.html">
-                                                          <span>Buttons</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-buttons-group.html">
-                                                          <span>Buttons Group</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-boxshadow.html">
-                                                          <span>Box Shadow</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-colors.html">
-                                                          <span>Colors</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-cards.html">
-                                                          <span>Cards</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-carousel.html">
-                                                          <span>Carousel</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-grid.html">
-                                                          <span>Grid</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-helper-classes.html">
-                                                          <span>Helper classes</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-images.html">
-                                                          <span>Images</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-list-group.html">
-                                                          <span>list Group</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-media-object.html">
-                                                          <span>Media</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-modal.html">
-                                                          <span>Modal</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-notifications.html">
-                                                          <span>Notifications</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-pagination.html">
-                                                          <span>Pagination</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-popovers.html">
-                                                          <span>Popovers</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-progressbars.html">
-                                                          <span>Progressbars</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-typography.html">
-                                                          <span>Typography</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-tabs.html">
-                                                          <span>Tabs</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-tooltips.html">
-                                                          <span>Tooltips</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/ui-embed-video.html">
-                                                          <span>Video</span>
-                                                      </a>
-                                                  </li>
-                                              </ul>
-                                          </li>
-                                          <li class="">
-                                              <a href="#auth" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                                  <span>Authentication</span>
-                                                  <i class="ri-arrow-right-s-line iq-arrow-right"></i>
-                                              </a>
-                                              <ul id="auth" class="iq-submenu iq-submenu-data collapse" data-parent="#pages">
-                                                  <li class="">
-                                                      <a href="../backend/auth-sign-in.html">
-                                                          <span>Login</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/auth-sign-up.html">
-                                                          <span>Register</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/auth-recoverpw.html">
-                                                          <span>Recover Password</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/auth-confirm-mail.html">
-                                                          <span>Confirm Mail</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/auth-lock-screen.html">
-                                                          <span>Lock Screen</span>
-                                                      </a>
-                                                  </li>
-                                              </ul>
-                                          </li>
-                                          <li class="">
-                                              <a href="#contact" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                                  <span>Contact</span>
-                                                  <i class="ri-arrow-right-s-line iq-arrow-right"></i>
-                                              </a>
-                                              <ul id="contact" class="iq-submenu iq-submenu-data collapse" data-parent="#pages">
-                                                  <li class="">
-                                                      <a href="../backend/contact-list.html">
-                                                          <span>Contact List</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/contact-detail.html">
-                                                          <span>Contact Details</span>
-                                                      </a>
-                                                  </li>
-                                              </ul>
-                                          </li>
-                                          <li class="">
-                                              <a href="#timeline" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                                  <span>Timeline</span>
-                                                  <i class="ri-arrow-right-s-line iq-arrow-right"></i>
-                                              </a>
-                                              <ul id="timeline" class="iq-submenu iq-submenu-data collapse" data-parent="#pages">
-                                                  <li class="">
-                                                      <a href="../backend/timeline.html">
-                                                          <span>Timeline 1</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/timeline-1.html">
-                                                          <span>Timeline 2</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/timeline-2.html">
-                                                          <span>Timeline 3</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/timeline-3.html">
-                                                          <span>Timeline 4</span>
-                                                      </a>
-                                                  </li>
-                                              </ul>
-                                          </li>
-                                          <li class="">
-                                              <a href="#pricing" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                                  <span>Pricing</span>
-                                                  <i class="ri-arrow-right-s-line iq-arrow-right"></i>
-                                              </a>
-                                              <ul id="pricing" class="iq-submenu iq-submenu-data collapse" data-parent="#pages">
-                                                  <li class="">
-                                                      <a href="../backend/pricing.html">
-                                                          <span>Pricing 1</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pricing-1.html">
-                                                          <span>Pricing 2</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pricing-2.html">
-                                                          <span>Pricing 3</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pricing-3.html">
-                                                          <span>Pricing 4</span>
-                                                      </a>
-                                                  </li>
-                                              </ul>
-                                          </li>
-                                          <li class="">
-                                              <a href="#pages-error" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                                  <span>Error</span>
-                                                  <i class="ri-arrow-right-s-line iq-arrow-right"></i>
-                                              </a>
-                                              <ul id="pages-error" class="iq-submenu iq-submenu-data collapse" data-parent="#pages">
-                                                  <li class="">
-                                                      <a href="../backend/pages-error.html">
-                                                          <span>Error 404</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pages-error-500.html">
-                                                          <span>Error 500</span>
-                                                      </a>
-                                                  </li>
-                                              </ul>
-                                          </li>
-                                          <li class="">
-                                              <a href="#others" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                                  <span>Others</span>
-                                                  <i class="ri-arrow-right-s-line iq-arrow-right"></i>
-                                              </a>
-                                              <ul id="others" class="iq-submenu iq-submenu-data collapse" data-parent="#pages">
-                                                  <li class="">
-                                                      <a href="../backend/pages-invoice.html">
-                                                          <span>Invoice</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pages-subscribers.html">
-                                                          <span>Subscribers</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pages-faq.html">
-                                                          <span>Faq</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pages-blank-page.html">
-                                                          <span>Blank Page</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pages-maintenance.html">
-                                                          <span>Maintenance</span>
-                                                      </a>
-                                                  </li>
-                                                  <li class="">
-                                                      <a href="../backend/pages-comingsoon.html">
-                                                          <span>Coming Soon</span>
-                                                      </a>
-                                                  </li>
-                                              </ul>
-                                          </li>
-                                      </ul>
-                                  </li>
-                              </ul>
-                          </nav>
-                      </div>
-                      <nav class="navbar navbar-expand-lg navbar-light p-0">
-                          <div class="change-mode">
-                              <div class="custom-control custom-switch custom-switch-icon custom-control-indivne">
-                                  <div class="custom-switch-inner">
-                                      <p class="mb-0"> </p>
-                                      <input type="checkbox" class="custom-control-input" id="dark-mode" data-active="true">
-                                      <label class="custom-control-label" for="dark-mode" data-mode="toggle">
-                                          <span class="switch-icon-left"><i class="a-left ri-moon-clear-line"></i></span>
-                                          <span class="switch-icon-right"><i class="a-right ri-sun-line"></i></span>
-                                      </label>
-                                  </div>
-                              </div>
-                          </div>
-                          <button class="navbar-toggler" type="button" data-toggle="collapse"
-                              data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                              aria-label="Toggle navigation">
-                              <i class="ri-menu-3-line"></i>
-                          </button>
-                          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                              <ul class="navbar-nav ml-auto navbar-list align-items-center">
-                                  <li class="nav-item nav-icon dropdown ml-3">
-                                      <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton2" data-toggle="dropdown"
-                                          aria-haspopup="true" aria-expanded="false">
-                                          <i class="las la-envelope"></i>
-                                          <span class="badge badge-primary count-mail rounded-circle">2</span>
-                                          <span class="bg-primary"></span>
-                                      </a>
-                                      <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                          <div class="card shadow-none m-0">
-                                              <div class="card-body p-0 ">
-                                                  <div class="cust-title p-3">
-                                                      <h5 class="mb-0">All Messages</h5>
-                                                  </div>
-                                                  <div class="p-2">
-                                                      <a href="#" class="iq-sub-card">
-                                                          <div class="media align-items-center cust-card p-2">
-                                                              <div class="">
-                                                                  <img class="avatar-40 rounded-small" src="/assets/images/user/u-1.jpg" alt="01">
-                                                              </div>
-                                                              <div class="media-body ml-3">
-                                                                  <h6 class="mb-0">Barry Emma Watson</h6>
-                                                                  <small class="mb-0">We Want to see you On..</small>
-                                                              </div>
-                                                          </div>
-                                                      </a>
-                                                      <a href="#" class="iq-sub-card">
-                                                          <div class="media align-items-center cust-card p-2">
-                                                              <div class="">
-                                                                  <img class="avatar-40 rounded-small" src="/assets/images/user/u-2.jpg" alt="02">
-                                                              </div>
-                                                              <div class="media-body ml-3">
-                                                                  <h6 class="mb-0">Lorem Ipsum Watson</h6>
-                                                                  <small class="mb-0">Can we have a Call?</small>
-                                                              </div>
-                                                          </div>
-                                                      </a>
-                                                      <a href="#" class="iq-sub-card">
-                                                          <div class="media align-items-center cust-card p-2">
-                                                              <div class="">
-                                                                  <img class="avatar-40 rounded-small" src="/assets/images/user/u-3.jpg" alt="03">
-                                                              </div>
-                                                              <div class="media-body ml-3">
-                                                                  <h6 class="mb-0">Why do we use it?</h6>
-                                                                  <small class="mb-0">Thank You but now we Don't...</small>
-                                                              </div>
-                                                          </div>
-                                                      </a>
-                                                  </div>
-                                                  <a class="right-ic btn-block position-relative p-3 border-top text-center" href="#" role="button">
-                                                      View All
-                                                  </a>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li class="nav-item nav-icon dropdown">
-                                      <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
-                                          aria-haspopup="true" aria-expanded="false">
-                                          <i class="las la-bell"></i>
-                                          <span class="badge badge-primary count-mail rounded-circle">2</span>
-                                          <span class="bg-primary"></span>
-                                      </a>
-                                      <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                          <div class="card shadow-none m-0">
-                                              <div class="card-body p-0 ">
-                                                  <div class="cust-title p-3">
-                                                      <h5 class="mb-0">Notifications</h5>
-                                                  </div>
-                                                  <div class="p-2">
-                                                      <a href="#" class="iq-sub-card">
-                                                          <div class="media align-items-center cust-card p-2">
-                                                              <div class="">
-                                                                  <img class="avatar-40 rounded-small" src="/assets/images/user/u-1.jpg" alt="01">
-                                                              </div>
-                                                              <div class="media-body ml-3">
-                                                                  <div class="d-flex align-items-center justify-content-between">
-                                                                      <h6 class="mb-0">Anne Effit</h6>
-                                                                      <small class="mb-0">02 Min Ago</small>
-                                                                  </div>
-                                                                  <small class="mb-0">Manager</small>
-                                                              </div>
-                                                          </div>
-                                                      </a>
-                                                      <a href="#" class="iq-sub-card">
-                                                          <div class="media align-items-center cust-card p-2">
-                                                              <div class="">
-                                                                  <img class="avatar-40 rounded-small" src="/assets/images/user/u-2.jpg" alt="02">
-                                                              </div>
-                                                              <div class="media-body ml-3">
-                                                                  <div class="d-flex align-items-center justify-content-between">
-                                                                      <h6 class="mb-0">Eric Shun</h6>
-                                                                      <small class="mb-0">05 Min Ago</small>
-                                                                  </div>
-                                                                  <small class="mb-0">Manager</small>
-                                                              </div>
-                                                          </div>
-                                                      </a>
-                                                      <a href="#" class="iq-sub-card">
-                                                          <div class="media align-items-center cust-card p-2">
-                                                              <div class="">
-                                                                  <img class="avatar-40 rounded-small" src="/assets/images/user/u-3.jpg" alt="03">
-                                                              </div>
-                                                              <div class="media-body ml-3">
-                                                                  <div class="d-flex align-items-center justify-content-between">
-                                                                      <h6 class="mb-0">Ken Tucky</h6>
-                                                                      <small class="mb-0">10 Min Ago</small>
-                                                                  </div>
-                                                                  <small class="mb-0">Employee</small>
-                                                              </div>
-                                                          </div>
-                                                      </a>
-                                                  </div>
-                                                  <a class="right-ic btn-block position-relative p-3 border-top text-center" href="#" role="button">
-                                                      See All Notification
-                                                  </a>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li class="caption-content">
-                                      <a href="#" class="search-toggle dropdown-toggle d-flex align-items-center" id="dropdownMenuButton3" data-toggle="dropdown"
-                                          aria-haspopup="true" aria-expanded="false">
-                                          <img src="/assets/images/user/01.jpg" class="avatar-40 img-fluid rounded" alt="user">
-                                          <div class="caption ml-3">
-                                              <h6 class="mb-0 line-height">Rick O'shea<i class="las la-angle-down ml-3"></i></h6>
-                                          </div>
-                                      </a>
-                                      <div class="iq-sub-dropdown dropdown-menu user-dropdown" aria-labelledby="dropdownMenuButton3">
-                                          <div class="card m-0">
-                                              <div class="card-body p-0">
-                                                  <div class="py-3">
-                                                      <a href="../app/user-profile.html" class="iq-sub-card">
-                                                          <div class="media align-items-center">
-                                                              <i class="ri-user-line mr-3"></i>
-                                                              <h6>Account Settings</h6>
-                                                          </div>
-                                                      </a>
-                                                      <a href="../backend/page-calendar-connections.html" class="iq-sub-card">
-                                                          <div class="media align-items-center">
-                                                              <i class="ri-calendar-line mr-3"></i>
-                                                              <h6>Calender Connections</h6>
-                                                          </div>
-                                                      </a>
-                                                      <a href="../backend/page-users.html" class="iq-sub-card">
-                                                          <div class="media align-items-center">
-                                                              <i class="ri-group-line mr-3"></i>
-                                                              <h6>Users</h6>
-                                                          </div>
-                                                      </a>
-                                                      <a href="../backend/privacy-policy.html" class="iq-sub-card">
-                                                          <div class="media align-items-center">
-                                                              <i class="ri-lock-line mr-3"></i>
-                                                              <h6>Privacy & Security Settings</h6>
-                                                          </div>
-                                                      </a>
-                                                      <a href="#popup1" data-toggle="modal" data-target="#exampleModalCenter" class="iq-sub-card">
-                                                          <div class="media align-items-center">
-                                                              <i class="ri-links-line mr-3"></i>
-                                                              <h6>Share Your Link</h6>
-                                                          </div>
-                                                      </a>
-                                                  </div>
-                                                  <a class="right-ic p-3 border-top btn-block position-relative text-center" href="auth-sign-in.html" role="button">
-                                                       Logout
-                                                  </a>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </li>
-                              </ul>
-                          </div>
-                      </nav>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="content-page">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 mb-4">
-                <div class="py-4 border-bottom">
-                    <div class="float-left"><a href="page-new-event.html" class="badge bg-white back-arrow"><i class="las la-angle-left"></i></a></div>
-                    <div class="form-title text-center">
-                        <h3>Add One-on-One Event Type</h3>
-                    </div>
-                </div>
+    <div id="loading" style="position: fixed; width: 100%; height: 100%; background: white; z-index: 9999;">
+        <div id="loading-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
             </div>
-            <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="col-lg-12">
-                    <div class="card card-block card-stretch create-workform">
-                        <div class="card-body p-5">
-                            <div class="row">
-                                <!-- Title -->
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">Service Title *</label>
-                                    <input type="text" name="title" class="form-control" placeholder="Enter service title..." value="{{ old('title') }}" required>
-                                    @error('title')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
+        </div>
+    </div>
+    <div class="content-page">
+        <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <div class="py-4 border-bottom">
+                            <div class="float-left"><a href="{{ route('services.index') }}" class="badge bg-white back-arrow"><i class="las la-angle-left"></i></a></div>
+                                <div class="form-title text-center">
+                                    <h3>Add Service</h3>
                                 </div>
 
-                                <!-- Description -->
-                                <div class="col-lg-12 mb-4">
-                                    <label class="title mb-3">Description</label>
-                                    <textarea name="description" class="form-control" placeholder="Enter service description..." rows="4" required>{{ old('description') }}</textarea>
-                                    @error('description')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="col-lg-12">
+                                        <div class="card card-block card-stretch create-workform">
+                                            <div class="card-body p-5">
+                                                <div class="row">
+                                                    <!-- Title -->
+                                                    <div class="col-lg-6 mb-4">
+                                                        <label class="title">Service Title</label>
+                                                        <input type="text" name="title" class="form-control" placeholder="Enter service title..." value="{{ old('title') }}" required>
+                                                        @error('title')
+                                                            <div class="text-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                
+                                                    <!-- Description -->
+                                                    <div class="col-lg-12 mb-4">
+                                                        <label class="title mb-3">Description</label>
+                                                        <textarea name="description" class="form-control" placeholder="Enter service description..." rows="4">{{ old('description') }}</textarea>
+                                                        @error('description')
+                                                            <div class="text-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <!-- Price -->
+                                                    <div class="col-lg-6 mb-4">
+                                                        <label class="title">Price</label>
+                                                        <input type="number" name="price" class="form-control" placeholder="Enter service price..." value="{{ old('price') }}" step="0.01" required>
+                                                        @error('price')
+                                                            <div class="text-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                
+                                                    <!-- Duration -->
+                                                    <div class="col-lg-6 mb-4">
+                                                        <label class="title">Duration (Days)</label>
+                                                        <input type="number" name="duration" class="form-control" placeholder="Enter duration..." value="{{ old('duration') }}">
+                                                        @error('duration')
+                                                            <div class="text-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                
+                                                    <!-- Reminder Fields -->
+                                                    <div class="container">
+                                                        <!-- Reminders Row -->
+                                                        <div class="row">
+                                                            @foreach (['first', 'second', 'followup'] as $reminderType)
+                                                                <div class="col-lg-4 mb-4">
+                                                                    <div class="form-check mb-2">
+                                                                        <input type="hidden" name="{{ $reminderType }}_reminder_enabled" value="0">
+                                                                        <input 
+                                                                            type="checkbox" 
+                                                                            class="form-check-input" 
+                                                                            id="{{ $reminderType }}ReminderToggle" 
+                                                                            name="{{ $reminderType }}_reminder_enabled" 
+                                                                            value="1"
+                                                                            onclick="toggleReminder('{{ $reminderType }}')"
+                                                                        >
+                                                                        <label class="form-check-label" for="{{ $reminderType }}ReminderToggle">
+                                                                            {{ ucfirst($reminderType) }} Reminder
+                                                                        </label>
+                                                                    </div>
+                                                                    <div id="{{ $reminderType }}ReminderFields" style="display: none;">
+                                                                        <label class="title">{{ ucfirst($reminderType) }} Reminder Date/Time</label>
+                                                                        <input 
+                                                                            type="datetime-local" 
+                                                                            id="{{ $reminderType }}ReminderDate" 
+                                                                            name="{{ $reminderType }}_reminder_date" 
+                                                                            class="form-control mb-3"
+                                                                        >
+                                                                        @error($reminderType . '_reminder_date')
+                                                                            <div class="text-danger">{{ $message }}</div>
+                                                                        @enderror
+                                                        
+                                                                        <label class="title">{{ ucfirst($reminderType) }} Reminder Message</label>
+                                                                        <textarea 
+                                                                            name="{{ $reminderType }}_reminder_message" 
+                                                                            class="form-control" 
+                                                                            rows="3"
+                                                                        >{{ old($reminderType . '_reminder_message') }}</textarea>
+                                                                        @error($reminderType . '_reminder_message')
+                                                                            <div class="text-danger">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                        <!-- File Upload Row -->
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <label class="title">Service Image</label>
+                                                                <div class="item-wrapper one">
+                                                                    <div class="item">
+                                                                        <form data-validation="true" action="#" method="post" enctype="multipart/form-data">
+                                                                            <div class="item-inner">
+                                                                                <div class="item-content">
+                                                                                    <div class="image-upload text-center position-relative" style="width: 100%; height: 300px; border: 1px dashed #ddd; border-radius: 5px; margin-bottom: 20px; background: #f8f8f9; color: #666; overflow: hidden;">
+                                                                                        <label for="file_upload" style="cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative;">
+                                                                                            <img src="" alt="" class="uploaded-image d-none" style="max-height: 400px; border-radius: 5px; width: auto; margin-bottom: 20px;">
+                                                                                            <div>
+                                                                                                <i class="fa fa-cloud-upload" style="font-size: 6em; color: #ccc;"></i>
+                                                                                                <h5><b>Choose Your Image to Upload</b></h5>
+                                                                                                <h6 class="mt-3">Or Drop Your Image Here</h6>
+                                                                                            </div>
+                                                                                            <input type="file" name="image" id="file_upload" class="position-absolute w-100 h-100" style="opacity: 0; cursor: pointer;">
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                        @error('image') 
+                                                                        <div class="text-danger">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    <div class="col-lg-12 mt-4">
+                                                        <div class="d-flex flex-wrap align-items-center justify-content-center">
+                                                            <button type="submit" class="btn btn-outline-primary">Create Service</button>
+                                                        </div>
+                                                    </div>
 
-                                <!-- Image -->
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">Service Image *</label>
-                                    <input type="file" name="image" class="form-control" required>
-                                    @error('image')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Price -->
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">Price *</label>
-                                    <input type="number" name="price" class="form-control" placeholder="Enter service price..." value="{{ old('price') }}" required>
-                                    @error('price')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Duration -->
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">Duration (Days) *</label>
-                                    <input type="number" name="duration" class="form-control" placeholder="Enter duration..." value="{{ old('duration') }}" required>
-                                    @error('duration')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- First Reminder Date/Time -->
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">First Reminder Date/Time</label>
-                                    <input type="datetime-local" name="first_reminder_datetime" class="form-control" value="{{ old('first_reminder_datetime') }}">
-                                    @error('first_reminder_datetime')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">First Reminder Message</label>
-                                    <textarea name="first_reminder_message" class="form-control" rows="3">{{ old('first_reminder_message') }}</textarea>
-                                    @error('first_reminder_message')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Second Reminder Date/Time -->
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">Second Reminder Date/Time</label>
-                                    <input type="datetime-local" name="second_reminder_datetime" class="form-control" value="{{ old('second_reminder_datetime') }}">
-                                    @error('second_reminder_datetime')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">Second Reminder Message</label>
-                                    <textarea name="second_reminder_message" class="form-control" rows="3">{{ old('second_reminder_message') }}</textarea>
-                                    @error('second_reminder_message')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Follow-up Reminder Date/Time -->
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">Follow-up Reminder Date/Time</label>
-                                    <input type="datetime-local" name="followup_reminder_datetime" class="form-control" value ="{{ old('followup_reminder_datetime') }}">
-                                    @error('followup_reminder_datetime')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <label class="title">Follow-up Reminder Message</label>
-                                    <textarea name="followup_reminder_message" class="form-control" rows="3">{{ old('followup_reminder_message') }}</textarea>
-                                    @error('followup_reminder_message')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Submit Button -->
-                                <div class="col-lg-12 mt-4">
-                                    <div class="d-flex flex-wrap align-items-center justify-content-center">
-                                        <button type="submit" class="btn btn-outline-primary">Create Service</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
-
-        </div>
-    </div>
-    </div>
-    </div>
-    <!-- Modal -->
-    {{-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="popup text-left" id="popup">
-                <h4 class="mb-3">Add Action</h4>
-                <div class="content create-workform">
-                    <div class="form-group">
-                      <h6 class="form-label mb-3">Copy Your Link</h6>
-                      <div class="input-group">
-                        <input type="text" class="form-control" readonly value="calendly.com/rickoshea1234">
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="basic-addon2"><i class="las la-link"></i></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <h6 class="form-label mb-3">Email Your Link</h6>
-                      <div class="input-group">
-                        <input type="text" class="form-control" readonly value="calendly.com/rickoshea1234">
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="basic-addon3"><i class="las la-envelope"></i></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <h6 class="form-label mb-3">Add to Your Website</h6>
-                      <div class="input-group">
-                        <input type="text" class="form-control" readonly value="calendly.com/rickoshea1234">
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="basic-addon4"><i class="las la-code"></i></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-12 mt-3">
-                        <div class="d-flex flex-wrap align-items-ceter justify-content-center">
-                            <button type="submit" data-dismiss="modal" class="btn btn-primary mr-4">Cancel</button>
-                            <button type="submit" data-dismiss="modal" class="btn btn-outline-primary">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> --}}
-
-    <!-- Wrapper End-->
-    <footer class="iq-footer">
-        <div class="container-fluid container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <ul class="list-inline mb-0">
-                        <li class="list-inline-item"><a href="../backend/privacy-policy.html">Privacy Policy</a></li>
-                        <li class="list-inline-item"><a href="../backend/terms-of-service.html">Terms of Use</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-6 text-right">
-                    Copyright <span id="copyright">
-    <script>document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))</script>
-    </span> <a href="#">Calendify</a> All Rights Reserved.
-                </div>
             </div>
         </div>
-    </footer>
-    <!-- Backend Bundle JavaScript -->
-    <script src="/assets/js/backend-bundle.min.js"></script>
 
-    <!-- Chart Custom JavaScript -->
-    <script src="/assets/js/customizer.js"></script>
+        {{--scripts--}}
+    <script>
+        function toggleReminder(type){
+        const fields = document.getElementById(type + 'ReminderFields');
+        fields.style.display = fields.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function setCurrentDateTime() {
+            const now = new Date();
+            const formattedDateTime = now.toISOString().slice(0, 16); 
+            ['first', 'second', 'followup'].forEach(reminderType => {
+                const dateInput = document.getElementById(`${reminderType}ReminderDate`);
+                if (dateInput) {
+                    dateInput.value = formattedDateTime;
+                }
+            });
+        }
+    
+        
+        function toggleReminder(reminderType) {
+            const fields = document.getElementById(`${reminderType}ReminderFields`);
+            if (fields.style.display === "none") {
+                fields.style.display = "block";
+            } else {
+                fields.style.display = "none";
+            }
+        }
+        window.onload = setCurrentDateTime;
+        window.addEventListener('load', function () {
+            document.getElementById('loading').style.display = 'none';
+        });
+    </script>
 
-
-    <!-- app JavaScript -->
-    <script src="/assets/js/app.js"></script>  </body>
-</html>
+   
+    
