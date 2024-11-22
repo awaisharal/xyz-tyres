@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Shopkeeper\ServiceController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -20,8 +21,7 @@ Route::get('/aboutme', function () {
 })->middleware(['auth', 'verified'])->name('aboutme');
 
 
-//profile
-
+//Admin Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -35,10 +35,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::put('/service/{service}', [ServiceController::class, 'update'])->name('services.update'); 
     Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy'); 
+});
 
-
-
-
+// Customer Routes
+Route::group(['prefix' => 'customer','as' => 'customer.'], function () {
+    Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/register', [CustomerController::class, 'register_view'])->name('register.view');
+    Route::post('/register', [CustomerController::class, 'register'])->name('register');
+    Route::get('/login', [CustomerController::class, 'login_view'])->name('login.view');
+    Route::post('/login', [CustomerController::class, 'login'])->name('login');
+    Route::post('/logout', [CustomerController::class, 'logout'])->name('logout');
 });
 
 

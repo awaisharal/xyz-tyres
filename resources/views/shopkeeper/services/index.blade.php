@@ -57,7 +57,7 @@
                            
                             <div class="text-center">
                                 <img
-                                    src="{{ $service->image ? asset('storage/' . $service->image) : asset('storage/default-image.jpg') }}"
+                                    src="{{ $service->image ? asset('assets/uploads/services/' . $service->image) : asset('assets/uploads/services/default-image.jpg') }}" alt="Service Image"
                                     alt="{{ $service->title }}"
                                     class="card-img-top rounded-top"
                                     style="height: 150px; width: 150px; object-fit: cover; max-width: 100%;"
@@ -85,12 +85,12 @@
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <h4 class="mb-2 mr-4">{{ $service->title }}</h4>
+                                <h4 class="mb-2 mr-4 text-capitalize">{{ $service->title }}</h4>
                                 <p class="text-muted mb-3">
                                     {{ $service->description }}
                                 </p>
                                 <p class="text-danger font-weight-500 mb-2">
-                                    <i class="las la-tag pr-2"></i>Price: ${{ number_format($service->price, 2) }}
+                                    <i class="las la-tag pr-2"></i>Price: &dollar;{{ number_format($service->price, 2) }}
                                 </p>
                                 <p class="text-muted mb-3">
                                     <i class="las la-clock pr-2"></i>Duration: {{ $service->duration }} days

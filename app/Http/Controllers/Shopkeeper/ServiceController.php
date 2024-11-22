@@ -39,7 +39,7 @@ class ServiceController extends Controller
         $reminders = ['first', 'second', 'followup'];
     
         
-        foreach ($reminders as $reminder) {
+        foreach ($reminders as $reminder) {                                                                                                                                                                                                                                                 
             if ($request->boolean("{$reminder}_reminder_enabled")) {
                 $validatedData["{$reminder}_reminder_enabled"] = true;
                 $request->validate([
@@ -60,13 +60,17 @@ class ServiceController extends Controller
                 $validatedData["{$reminder}_reminder_message"] = null;
             }
         }
-    
+
         if ($request->hasFile('image')) {
-            // Store the image in the 'services' directory
-            $validatedData['image'] = $request->file('image')->storeAs('services', $request->file('image')->getClientOriginalName(), 'public');
+            $file = $request->file('image');
+            $filename = time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
+    
+            $destinationPath = public_path('assets/uploads/services/');
+            $file->move($destinationPath, $filename);
+
+            $validatedData['image'] = $filename;
         }
-        
-        
+    
         $validatedData['user_id'] = auth()->id();
         $service = Service::create($validatedData);
         return redirect()->route('services.index')->with('success', 'Service created successfully.');
@@ -135,24 +139,23 @@ public function update(Request $request, $id)
             $validatedData["{$reminder}_reminder_message"] = null;
         }
     }
-
     
     if ($request->hasFile('image')) {
-        
+        $uploadPath = 'assets/uploads/services/';
+        $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+        $request->file('image')->move(public_path($uploadPath), $filename);
+    
         if ($service->image) {
-            Storage::disk('public')->delete($service->image);
+            $oldFilePath = public_path($uploadPath . $service->image);
+            if (file_exists($oldFilePath)) {
+                unlink($oldFilePath); 
+            }
         }
     
-   
-        $validatedData['image'] = $request->file('image')->storeAs('services', $request->file('image')->getClientOriginalName(), 'public');
-    } else {
-       
-        $validatedData['image'] = $service->image;
+        $validatedData['image'] = $filename;
     }
-    
    
     $service->update($validatedData);
-
    
     return redirect()->route('services.index')->with('success', 'Service updated successfully.');
 }
@@ -162,6 +165,5 @@ public function update(Request $request, $id)
     {
         $service->delete();
         return redirect()->route('services.index')->with('success', 'Service deleted successfully.');
-        // return response()->json(['message' => 'Service deleted successfully'], 200);
     }
 }
