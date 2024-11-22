@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Customer;
+use App\Models\Service;
 
 class CustomerController extends Controller
 {
@@ -59,6 +60,16 @@ class CustomerController extends Controller
     }
 
     public function dashboard(){
-        return view('customer.dashboard');
+        $customer = Auth::guard('customer')->user();
+        $services = Service::with('user')->get();
+
+        return view('customer.dashboard', compact('customer'));
+    }
+    public function showServices(){
+        $customer = Auth::guard('customer')->user();
+        $services = Service::with('user')->get();
+       
+        return view('customer.services', compact('customer', 'services'));
     }
 }
+

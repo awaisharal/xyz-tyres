@@ -45,6 +45,11 @@ Route::group(['prefix' => 'customer','as' => 'customer.'], function () {
     Route::get('/login', [CustomerController::class, 'login_view'])->name('login.view');
     Route::post('/login', [CustomerController::class, 'login'])->name('login');
     Route::post('/logout', [CustomerController::class, 'logout'])->name('logout');
+
+    //services
+    Route::get('/services', [CustomerController::class, 'showServices'])->name('services');
+
+
 });
 
 
