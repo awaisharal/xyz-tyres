@@ -19,14 +19,17 @@ return new class extends Migration
         $table->string('image')->nullable(); // Assuming you will store the image path
         $table->decimal('price', 8, 2);
         $table->integer('duration')->nullable();
-        $table->boolean('first_reminder_enabled')->default(false);  
-        $table->dateTime('first_reminder_date')->nullable();
+        $table->boolean('first_reminder_enabled')->default(false);
+        $table->string('first_reminder_days')->nullable();
+        $table->string('first_reminder_time')->nullable();
         $table->text('first_reminder_message')->nullable();
-        $table->boolean('second_reminder_enabled')->default(false); 
-        $table->dateTime('second_reminder_date')->nullable();
+        $table->boolean('second_reminder_enabled')->default(false);
+        $table->string('second_reminder_days')->nullable();
+        $table->string('second_reminder_time')->nullable();
         $table->text('second_reminder_message')->nullable();
         $table->boolean('followup_reminder_enabled')->default(false);
-        $table->dateTime('followup_reminder_date')->nullable();
+        $table->string('followup_reminder_days')->nullable();
+        $table->string('followup_reminder_time')->nullable();
         $table->text('followup_reminder_message')->nullable();
         $table->timestamps();
     });
