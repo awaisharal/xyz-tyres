@@ -66,9 +66,11 @@
                                         <p class="text-primary mb-3">
                                             <i class="las la-user pr-2"></i>Provided by: {{ $service->user->name ?? 'Unknown' }}
                                         </p>
-                                        <a href="#" class="btn btn-primary">
+                                        
+                                        <a href="{{ route('customer.appointment.create', $service->id) }}" class="btn btn-primary rounded-pill mt-2">
                                             Get Service
                                         </a>
+                                        
                                     </div>
                                 </div>
                             </div>

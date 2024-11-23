@@ -4,6 +4,9 @@
 use App\Http\Controllers\Shopkeeper\ServiceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\customer\CustomerController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\Shopkeeper\ShopkeeperController;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,6 +22,10 @@ Route::get('/', function () {
 Route::get('/aboutme', function () {
     return view('shopkeeper.aboutme');
 })->middleware(['auth', 'verified'])->name('aboutme');
+
+//appointments
+Route::get('/appointments', [ShopkeeperController::class, 'showAppointments'])->name('appointments');
+
 
 
 //Admin Routes
@@ -48,6 +55,14 @@ Route::group(['prefix' => 'customer','as' => 'customer.'], function () {
 
     //services
     Route::get('/services', [CustomerController::class, 'showServices'])->name('services');
+
+
+    //appointments
+    Route::get('/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
+    Route::post('/service/{service}/book', [AppointmentController::class, 'store'])->name('appointment.store');
+    Route::get('/appointments', [CustomerController::class, 'showAppointments'])->name('appointments.index');
+
+
 
 
 });

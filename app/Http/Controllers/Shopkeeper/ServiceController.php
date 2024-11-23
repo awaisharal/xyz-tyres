@@ -12,11 +12,12 @@ class ServiceController extends Controller
     public function index()
     {
         
-        $services = Auth::user()->services;
-        // return response()->json($services);
-        // dd($services);
+        $services = Auth::user()->services()->withCount('appointments')->get();
+       
         return view('shopkeeper.services.index', compact('services'));
     }
+
+    
     public function create()
     {
        
@@ -100,8 +101,7 @@ class ServiceController extends Controller
         
         return view('shopkeeper.services.edit', compact('service'));
     }
-// 'image' => $request->hasFile('image') ? $request->file('image')->store('services', 'public') : $service->image,
-    
+  
 public function update(Request $request, $id)
 {
   

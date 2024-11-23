@@ -48,61 +48,78 @@
             </div>
         </div>
         <div class="container">
-        <div class="row">
-            @foreach ($services as $service)
-            <div class="col-lg-4 col-md-6">
-                <div class="card card-block card-stretch card-height">
-                    <div class="card-body rounded event-detail event-detail-primary">
-                        <div class="position-relative">
-                           
-                            <div class="text-center">
-                                <img
-                                    src="{{ $service->image ? asset('assets/uploads/services/' . $service->image) : asset('assets/uploads/services/default-image.jpg') }}" alt="Service Image"
-                                    alt="{{ $service->title }}"
-                                    class="card-img-top rounded-top"
-                                    style="height: 150px; width: 150px; object-fit: cover; max-width: 100%;"
-                                >
-                            </div>
+            <div class="row">
+                @foreach ($services as $service)
+                <div class="col-lg-4 col-md-6">
+                    <div class="card card-block card-stretch card-height">
+                        <div class="card-body rounded event-detail event-detail-primary">
+                            <div class="position-relative">
             
-                            
-                            <div class="card-header-toolbar mt-1 position-absolute" style="top: 10px; right: 10px;">
-                                <div class="dropdown">
-                                    <span class="dropdown-toggle" id="dropdownMenuButton4" data-toggle="dropdown">
-                                        <i class="ri-more-2-fill"></i>
-                                    </span>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton4">
-                                        <a class="dropdown-item" href="{{ route('services.edit', $service->id) }}">
-                                            <i class="ri-pencil-line mr-3"></i>Edit
-                                        </a>
-                                        <form action="{{ route('services.destroy', $service->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="dropdown-item">
-                                                <i class="ri-delete-bin-6-line mr-3"></i>Delete
-                                            </button>
-                                        </form>
+                                <!-- Service Image -->
+                                <div class="text-center">
+                                    <img
+                                        src="{{ $service->image ? asset('assets/uploads/services/' . $service->image) : asset('assets/uploads/services/default-image.jpg') }}" 
+                                        alt="{{ $service->title }}"
+                                        class="card-img-top rounded-top"
+                                        style="height: 150px; width: 150px; object-fit: cover; max-width: 100%;"
+                                    >
+                                </div>
+            
+                                <!-- Dropdown Menu -->
+                                <div class="card-header-toolbar mt-1 position-absolute" style="top: 10px; right: 10px;">
+                                    <div class="dropdown">
+                                        <span class="dropdown-toggle" id="dropdownMenuButton4" data-toggle="dropdown">
+                                            <i class="ri-more-2-fill"></i>
+                                        </span>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton4">
+                                            <a class="dropdown-item" href="{{ route('services.edit', $service->id) }}">
+                                                <i class="ri-pencil-line mr-3"></i>Edit
+                                            </a>
+                                            <form action="{{ route('services.destroy', $service->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="ri-delete-bin-6-line mr-3"></i>Delete
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="mt-3">
-                                <h4 class="mb-2 mr-4 text-capitalize">{{ $service->title }}</h4>
-                                <p class="text-muted mb-3">
-                                    {{ $service->description }}
-                                </p>
-                                <p class="text-danger font-weight-500 mb-2">
-                                    <i class="las la-tag pr-2"></i>Price: &dollar;{{ number_format($service->price, 2) }}
-                                </p>
-                                <p class="text-muted mb-3">
-                                    <i class="las la-clock pr-2"></i>Duration: {{ $service->duration }} days
-                                </p>
+            
+                                <!-- Service Details -->
+                                <div class="mt-3">
+                                    <h4 class="mb-2 mr-4 text-capitalize">{{ $service->title }}</h4>
+                                    <p class="text-muted mb-3">
+                                        {{ $service->description }}
+                                    </p>
+                                    <p class="text-danger font-weight-500 mb-2">
+                                        <i class="las la-tag pr-2"></i>Price: &dollar;{{ number_format($service->price, 2) }}
+                                    </p>
+                                    <p class="text-muted mb-3">
+                                        <i class="las la-clock pr-2"></i>Duration: {{ $service->duration }} days
+                                    </p>
+            
+                                    <!-- Appointment Count -->
+                                    
+                                    <p class="mb-2">
+                                        <a href="{{ route('appointments') }}" class="btn mb-1 bg-primary-light">
+                                            Appointments <span class="badge badge-primary ml-2">{{ $service->appointments_count }}</span>
+                                        </a>
+                                    </p>
+                                    
+                                    
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                @endforeach
             </div>
             
-             @endforeach
-        </div>
+
+
+
     </div>
     <script>
         window.addEventListener('load', function () {

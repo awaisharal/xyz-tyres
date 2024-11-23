@@ -31,9 +31,9 @@
                                         <span>Services</span>
                                     </a>
                                 </li>
-                                <li class="{{ request()->routeIs('about.me') ? 'active' : '' }}">
-                                    <a href="{{ route('aboutme') }}">
-                                        <span>About me</span>
+                                <li class="{{ request()->routeIs('appointments') ? 'active' : '' }}">
+                                    <a href="{{ route('appointments') }}">
+                                        <span>Appointments</span>
                                     </a>
                                 </li>
                             </ul>
@@ -49,7 +49,7 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ml-auto navbar-list align-items-center">
                               
-                                <li class="nav-item nav-icon dropdown">
+                                {{-- <li class="nav-item nav-icon dropdown">
                                     <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                         <i class="las la-bell"></i>
@@ -84,7 +84,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                </li>
+                                </li> --}}
+
+                                {{---------------------------------------notifications---------------------------------------------}}
+
+                                {{------------------------------account setting and logout-----------------------------------------}}
                                 <li class="caption-content">
                                     <a href="#" class="search-toggle dropdown-toggle d-flex align-items-center" id="dropdownMenuButton3" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">

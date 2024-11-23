@@ -12,4 +12,9 @@ class Customer extends Authenticatable
     // use HasFactory;
     use Notifiable;
     protected $guarded = [];
+    public function appointments()
+{
+    return $this->hasMany(Appointment::class, 'customer_id');
+}
+
 }
