@@ -1,19 +1,7 @@
 @extends('shopkeeper.layouts.app')
 @section('title', 'Dashboard')
+@section('content')
 
-
-<!doctype html>
-<html lang="en">
-
-  <body class="fixed-top-navbar top-nav  ">
-    <!-- loader Start -->
-    <div id="loading" style="position: fixed; width: 100%; height: 100%; background: white; z-index: 9999;">
-        <div id="loading-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-    </div>
     <div class="content-page">
         <div class="container">
                 <div class="row">
@@ -38,7 +26,7 @@
                                                             <div class="text-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
-                                
+
                                                     <!-- Description -->
                                                     <div class="col-lg-12 mb-4">
                                                         <label class="title mb-3">Description</label>
@@ -47,7 +35,7 @@
                                                             <div class="text-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
-                                
+
                                                     <!-- Price -->
                                                     <div class="col-lg-6 mb-4">
                                                         <label class="title">Price</label>
@@ -56,7 +44,7 @@
                                                             <div class="text-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
-                                
+
                                                     <!-- Duration -->
                                                     <div class="col-lg-6 mb-4">
                                                         <label class="title">Duration (Days)</label>
@@ -65,7 +53,7 @@
                                                             <div class="text-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
-                                
+
                                                     <!-- Reminder Fields -->
                                                     <div class="container">
                                                         <!-- Reminders Row -->
@@ -74,11 +62,11 @@
                                                                 <div class="col-lg-4 mb-4">
                                                                     <div class="form-check mb-2">
                                                                         <input type="hidden" name="{{ $reminderType }}_reminder_enabled" value="0">
-                                                                        <input 
-                                                                            type="checkbox" 
-                                                                            class="form-check-input" 
-                                                                            id="{{ $reminderType }}ReminderToggle" 
-                                                                            name="{{ $reminderType }}_reminder_enabled" 
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            class="form-check-input"
+                                                                            id="{{ $reminderType }}ReminderToggle"
+                                                                            name="{{ $reminderType }}_reminder_enabled"
                                                                             value="1"
                                                                             {{ old($reminderType . '_reminder_enabled', $service->{$reminderType . '_reminder_enabled'}) ? 'checked' : '' }}
                                                                             onclick="toggleReminder('{{ $reminderType }}')"
@@ -89,21 +77,21 @@
                                                                     </div>
                                                                     <div id="{{ $reminderType }}ReminderFields" style="{{ old($reminderType . '_reminder_enabled', $service->{$reminderType . '_reminder_enabled'}) ? '' : 'display: none;' }}">
                                                                         <label class="title">{{ ucfirst($reminderType) }} Reminder Date/Time</label>
-                                                                        <input 
-                                                                            type="datetime-local" 
-                                                                            id="{{ $reminderType }}ReminderDate" 
-                                                                            name="{{ $reminderType }}_reminder_date" 
+                                                                        <input
+                                                                            type="datetime-local"
+                                                                            id="{{ $reminderType }}ReminderDate"
+                                                                            name="{{ $reminderType }}_reminder_date"
                                                                             class="form-control mb-3"
                                                                             value="{{ old($reminderType . '_reminder_date', $service->{$reminderType . '_reminder_date'}) }}"
                                                                         >
                                                                         @error($reminderType . '_reminder_date')
                                                                             <div class="text-danger">{{ $message }}</div>
                                                                         @enderror
-                                
+
                                                                         <label class="title">{{ ucfirst($reminderType) }} Reminder Message</label>
-                                                                        <textarea 
-                                                                            name="{{ $reminderType }}_reminder_message" 
-                                                                            class="form-control" 
+                                                                        <textarea
+                                                                            name="{{ $reminderType }}_reminder_message"
+                                                                            class="form-control"
                                                                             rows="3"
                                                                         >{{ old($reminderType . '_reminder_message', $service->{$reminderType . '_reminder_message'}) }}</textarea>
                                                                         @error($reminderType . '_reminder_message')
@@ -113,7 +101,7 @@
                                                                 </div>
                                                             @endforeach
                                                         </div>
-                                
+
                                                         <!-- File Upload Row -->
                                                         <div class="row">
                                                             <div class="col-12">
@@ -141,48 +129,46 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                @error('image') 
+                                                                @error('image')
                                                                     <div class="text-danger">{{ $message }}</div>
                                                                 @enderror
                                                             </div>
                                                         </div>
                                                     </div>
-                                
+
                                                     <div class="col-lg-12 mt-4">
                                                         <div class="d-flex flex-wrap align-items-center justify-content-center">
                                                             <button type="submit" class="btn btn-outline-primary">Update Service</button>
                                                         </div>
                                                     </div>
-                                
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </form>
-                                
-                                <script>
-                                   
-                                
-                                    
-                                    function toggleReminder(reminderType) {
-                                        const fields = document.getElementById(`${reminderType}ReminderFields`);
-                                        if (fields.style.display === "none") {
-                                            fields.style.display = "block";
-                                        } else {
-                                            fields.style.display = "none";
-                                        }
-                                    }
-                                    window.onload = setCurrentDateTime;
 
-                                    window.addEventListener('load', function () {
-                                        document.getElementById('loading').style.display = 'none';
-                                    });
-                                </script>
+
                         </div>
                     </div>
                 </div>
          </div>
     </div>
+@endsection
+@section('scripts')
+<script>
+    function toggleReminder(reminderType) {
+        const fields = document.getElementById(`${reminderType}ReminderFields`);
+        if (fields.style.display === "none") {
+            fields.style.display = "block";
+        } else {
+            fields.style.display = "none";
+        }
+    }
+    window.onload = setCurrentDateTime;
 
-   
-    
+    window.addEventListener('load', function () {
+        document.getElementById('loading').style.display = 'none';
+    });
+</script>
+@endsection
