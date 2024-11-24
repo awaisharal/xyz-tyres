@@ -66,7 +66,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                </li>
+                                </li> --}}
+
+                                {{---------------------------------------notifications---------------------------------------------}}
+
+                                {{------------------------------account setting and logout-----------------------------------------}}
                                 <li class="caption-content">
                                     <a href="#" class="search-toggle dropdown-toggle d-flex align-items-center" id="dropdownMenuButton3" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">

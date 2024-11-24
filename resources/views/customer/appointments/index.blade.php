@@ -1,0 +1,57 @@
+@extends('customer.layouts.app')
+@section('title', 'Dashboard')
+
+
+<!doctype html>
+<html lang="en">
+
+  <body class="fixed-top-navbar top-nav  ">
+    <!-- loader Start -->
+    <div id="loading" style="position: fixed; width: 100%; height: 100%; background: white; z-index: 9999;">
+        <div id="loading-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <!-- loader END -->
+
+    <div class="content-page">
+        
+        <div class="container">
+            <br>
+
+            <h1>My Appointments</h1>
+            <br>
+
+            @if($appointments->isNotEmpty())
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Service Provider</th>
+                        <th>Company</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($appointments as $appointment)
+                        <tr>
+                            <td>{{ $appointment->service->title }}</td>
+                            <td>{{ $appointment->service->user->name }}</td>
+                            <td>{{ $appointment->service->user->company }}</td>
+                            <td>{{ $appointment->date }}</td>
+                            <td>{{ $appointment->time }}</td>
+                            <td>Pending</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <p class="text-center">No appointments found.</p>
+        @endif
+        
+</div>
+

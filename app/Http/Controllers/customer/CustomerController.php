@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Customer;
 use App\Models\Service;
+use App\Models\Appointment;
 
 class CustomerController extends Controller
 {
@@ -71,5 +72,21 @@ class CustomerController extends Controller
        
         return view('customer.services', compact('customer', 'services'));
     }
+    public function showAppointments()
+{
+    $customer = Auth::guard('customer')->user();
+
+    if (!$customer) {   
+        return redirect()->route('customer.login')->with('error', 'You must be logged in to view your appointments.');
+    }
+
+    $appointments = Appointment::where('customer_id', $customer->id)
+        ->with('service.user') 
+        ->get();
+
+    return view('customer.appointments.index', compact('customer', 'appointments'));
+}
+
+    
 }
 

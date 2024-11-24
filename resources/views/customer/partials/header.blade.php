@@ -31,9 +31,9 @@
                                         <span>Services</span>
                                     </a>
                                 </li>
-                                <li class="{{ request()->routeIs('') ? 'active' : '' }}">
-                                    <a href="#">
-                                        <span>About me</span>
+                                <li class="{{ request()->routeIs('customer.appointments.index') ? 'active' : '' }}">
+                                    <a href="{{route('customer.appointments.index')}}">
+                                        <span>Appointments</span>
                                     </a>
                                 </li>
                             </ul>
