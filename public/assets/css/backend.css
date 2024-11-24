@@ -291,7 +291,60 @@ legend {
   line-height: inherit;
   color: inherit;
   white-space: normal; }
-  @media (max-width: 1200px) {
+.reminder_message{
+    border: 1px solid #c9c9c9!important;
+    border-radius: 4px!important;
+    height: 180px!important;
+    width: 100%;
+}
+.reminder_input{
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    height: 30px;
+    width: 50px;
+    text-align: center;
+}
+input.reminder_input::-webkit-outer-spin-button,
+input.reminder_input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input.reminder_input[type=number] {
+  -moz-appearance: textfield;
+}
+.reminder_input.time{
+    width: 140px
+}
+ul li.axn a{
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
+}
+ul li.axn a:hover,
+ul li.axn a:focus{
+    color: #465af7;
+}
+
+ul li.axn.active a{
+    color: #465af7;
+}
+.fw600{
+    font-weight: 600;
+}
+.fw500{
+    font-weight: 500;
+}
+.btn-lighter{
+    background: #fff!important;
+    color: #000!important;
+    border: 1px solid #efefef!important;
+}
+.form-group label{
+    font-weight: 500;
+}
+@media (max-width: 1200px) {
     legend {
       font-size: calc(1.275rem + 0.3vw) ; } }
 
@@ -11093,7 +11146,7 @@ body.tab-horizontal .iq-footer {
     border-left: none; } }
 
 /*
- * Background color 
+ * Background color
  */
 .bg-blue {
   color: #fff !important;
@@ -21240,7 +21293,7 @@ a.cancel-btn {
   top: 15px; }
 
 .create-workform .title {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500; }
 
 .create-workform .dropdown-toggle.disabled {

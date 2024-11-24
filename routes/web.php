@@ -35,13 +35,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    
+
     Route::get('/service', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/service/create', [ServiceController::class, 'create'])->name('services.create');
     Route::post('/service', [ServiceController::class, 'store'])->name('services.store');
     Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
-    Route::put('/service/{service}', [ServiceController::class, 'update'])->name('services.update'); 
-    Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy'); 
+    Route::put('/service/{service}', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 });
 
 // Customer Routes
