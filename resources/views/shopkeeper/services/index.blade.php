@@ -70,7 +70,7 @@
                         </ul>
                     </div>
                 </div>
-                @endforeach
+                {{-- @endforeach --}}
             </div>
         </div>
         @endforeach

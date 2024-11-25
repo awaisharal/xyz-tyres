@@ -95,63 +95,66 @@ class ServiceController extends Controller
         return view('shopkeeper.services.edit', compact('service'));
     }
 
-public function update(Request $request, $id)
-{
-
-    $service = Service::findOrFail($id);
-
-
-    $validatedData = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string|max:2000|regex:/^(\S+\s*){1,2000}$/',
-        'price' => 'required|numeric|min:0.01',
-        'duration' => 'required|integer|min:1',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    $reminders = ['first', 'second', 'followup'];
-
-    foreach ($reminders as $reminder) {
-        if ($request->boolean("{$reminder}_reminder_enabled")) {
-            $validatedData["{$reminder}_reminder_enabled"] = true;
-            $request->validate([
-                "{$reminder}_reminder_date" => [
-                    'required',
-                    'date',
-                    ($reminder === 'first')
-                        ? 'after_or_equal:' . now()->toDateString()
-                        : "after:{$this->getPreviousReminderDate($reminders, $reminder)}",
-                ],
-                "{$reminder}_reminder_message" => 'required|string|max:1000',
-            ]);
-            $validatedData["{$reminder}_reminder_date"] = $request->input("{$reminder}_reminder_date");
-            $validatedData["{$reminder}_reminder_message"] = $request->input("{$reminder}_reminder_message");
-        } else {
-            $validatedData["{$reminder}_reminder_enabled"] = false;
-            $validatedData["{$reminder}_reminder_date"] = null;
-            $validatedData["{$reminder}_reminder_message"] = null;
-        }
-    }
-
-    if ($request->hasFile('image')) {
-        $uploadPath = 'assets/uploads/services/';
-        $filename = time() . '_' . $request->file('image')->getClientOriginalName();
-        $request->file('image')->move(public_path($uploadPath), $filename);
-
-        if ($service->image) {
-            $oldFilePath = public_path($uploadPath . $service->image);
-            if (file_exists($oldFilePath)) {
-                unlink($oldFilePath);
+    public function update(Request $request, $id)
+    {
+        // Find the service by ID
+        $service = Service::findOrFail($id);
+    
+        // Validate incoming data
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000|regex:/^(\S+\s*){1,2000}$/',
+            'price' => 'required|numeric|min:0.01',
+            'duration' => 'required|integer|min:1',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        $reminders = ['first', 'second', 'followup'];
+    
+        foreach ($reminders as $reminder) {
+            if ($request->boolean("{$reminder}_reminder_enabled")) {
+                $validatedData["{$reminder}_reminder_enabled"] = true;
+                $request->validate([
+                    "{$reminder}_reminder_days" => 'required',
+                    "{$reminder}_reminder_message" => 'required|string|max:1000',
+                ]);
+                $validatedData["{$reminder}_reminder_days"] = $request->input("{$reminder}_reminder_days");
+                $validatedData["{$reminder}_reminder_time"] = $request->input("{$reminder}_reminder_date");
+                $validatedData["{$reminder}_reminder_message"] = $request->input("{$reminder}_reminder_message");
+            } else {
+                $validatedData["{$reminder}_reminder_enabled"] = false;
+                $validatedData["{$reminder}_reminder_days"] = null;
+                $validatedData["{$reminder}_reminder_time"] = null;
+                $validatedData["{$reminder}_reminder_message"] = null;
             }
         }
-
-        $validatedData['image'] = $filename;
+    
+        
+        if ($request->hasFile('image')) {
+           
+            if ($service->image) {
+                $oldImagePath = public_path('assets/uploads/services/' . $service->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+    
+            
+            $file = $request->file('image');
+            $filename = time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
+    
+            $destinationPath = public_path('assets/uploads/services/');
+            $file->move($destinationPath, $filename);
+    
+            $validatedData['image'] = $filename;
+        }
+    
+        
+        $service->update($validatedData);
+    
+        return redirect()->route('services.index')->with('success', 'Service updated successfully.');
     }
-
-    $service->update($validatedData);
-
-    return redirect()->route('services.index')->with('success', 'Service updated successfully.');
-}
+    
 
 
     public function destroy(Service $service)

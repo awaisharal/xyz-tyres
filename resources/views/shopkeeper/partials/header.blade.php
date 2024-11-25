@@ -30,6 +30,11 @@
                                         <span>Services</span>
                                     </a>
                                 </li>
+                                <li class="{{ request()->routeIs('appointments') ? 'active' : '' }} axn">
+                                    <a href="{{ route('appointments') }}">
+                                        <span>Appointments</span>
+                                    </a>
+                                </li>
 
                                 <li class="nav-item nav-icon dropdown">
                                     <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
@@ -66,7 +71,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </li> --}}
+                                </li> 
 
                                 {{---------------------------------------notifications---------------------------------------------}}
 
@@ -83,7 +88,7 @@
                                         <div class="card m-0">
                                             <div class="card-body p-0">
                                                 <div class="py-3">
-                                                    <a href="../app/user-profile.html" class="iq-sub-card">
+                                                    <a href="{{route('profile.edit')}}" class="iq-sub-card">
                                                         <div class="media align-items-center">
                                                             <i class="ri-user-line mr-3"></i>
                                                             <h6>Account Settings</h6>

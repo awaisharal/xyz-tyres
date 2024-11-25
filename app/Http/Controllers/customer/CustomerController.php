@@ -87,6 +87,99 @@ class CustomerController extends Controller
     return view('customer.appointments.index', compact('customer', 'appointments'));
 }
 
-    
-}
 
+//////////////////////profile section /////////////////////
+
+public function index()
+    {
+        $customer = Auth::guard('customer')->user(); // Using the 'customer' guard
+        return view('customer.profile.edit', compact('customer'));
+    }
+
+    
+    public function edit()
+    {
+        $customer = Auth::guard('customer')->user(); // Using the 'customer' guard
+        return view('customer.profile.edit', compact('customer'));
+    }
+
+    
+    public function update(Request $request)
+    {
+        $customer = Auth::guard('customer')->user(); // Using the 'customer' guard
+
+        
+        if (!($customer instanceof Customer)) {
+            return redirect()->route('customer.profile.index')->with('error', 'Customer not found.');
+        }
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:customers,email,' . $customer->id,
+        ]);
+        $customer->name = $request->input('name');
+        $customer->email = $request->input('email');
+
+        if ($request->has('password') && $request->input('password')) {
+            $customer->password = Hash::make($request->input('password'));
+        }
+
+         $customer->save();
+
+        return redirect()->route('customer.profile.index')->with('success', 'Profile updated successfully.');
+    }
+
+    
+    public function editPassword()
+    {
+        return view('customer.profile.password');
+    }
+
+   
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $customer = Auth::guard('customer')->user(); 
+
+        
+        if (!($customer instanceof Customer)) {
+            return redirect()->route('customer.profile.index')->with('error', 'Customer not found.');
+        }
+
+        
+        if (!Hash::check($request->input('current_password'), $customer->password)) {
+            return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+
+        
+        $customer->password = Hash::make($request->input('password'));
+
+        
+        $customer->save();
+
+        return redirect()->route('customer.profile.index')->with('success', 'Password updated successfully.');
+    }
+    public function destroy(Request $request)
+    {
+        
+        if (!$request->has('confirm_delete')) {
+            return redirect()->back()->withErrors(['confirm_delete' => 'You must confirm the deletion of your account.']);
+        }
+
+        // Get the logged-in customer
+        $customer = Auth::customer();
+
+        
+        $customer->delete();
+
+       
+        Auth::logout();
+
+        
+        return redirect()->route('customer/register')->with('status', 'Your account has been deleted.');
+    }
+}
