@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\customer\CustomerController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Shopkeeper\ShopkeeperController;
+use App\Http\Controllers\Shopkeeper\ServiceProviderController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -27,6 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    //schedule
+    Route::get('/profile/schedule', [ProfileController::class, 'editSchedule'])->name('profile.schedule.edit'); // Edit Schedule
+    Route::patch('/profile/schedule', [ProfileController::class, 'updateSchedule'])->name('profile.schedule.update');
+
         //services
     Route::get('/service', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/service/create', [ServiceController::class, 'create'])->name('services.create');
@@ -34,6 +39,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::put('/service/{service}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+    //service provider
+    // Service Providers
+    Route::get('/service-providers', [ServiceProviderController::class, 'index'])->name('service-providers.index');
+    Route::get('/service-providers/create', [ServiceProviderController::class, 'create'])->name('service-providers.create');
+    Route::post('/service-providers', [ServiceProviderController::class, 'store'])->name('service-providers.store');
+    Route::get('/service-providers/{serviceProvider}/edit', [ServiceProviderController::class, 'edit'])->name('service-providers.edit');
+    Route::put('/service-providers/{serviceProvider}', [ServiceProviderController::class, 'update'])->name('service-providers.update');
+    Route::delete('/service-providers/{serviceProvider}', [ServiceProviderController::class, 'destroy'])->name('service-providers.destroy');
 });
 
 

@@ -18,24 +18,47 @@
                 <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data" class="mt-4">
                     @csrf
                     <div class="row">
+                        <!-- Service Provider -->
                         <div class="col-md-12 mb-2">
                             <div class="form-group">
-                                <label for="" class="">Service Title</label>
+                                <label for="service_provider_id">Service Provider</label>
+                                <select name="service_provider_id" class="form-control" required>
+                                    <option value="">Select Service Provider</option>
+                                    @foreach ($serviceProviders as $provider)
+                                        <option value="{{ $provider->id }}" {{ old('service_provider_id') == $provider->id ? 'selected' : '' }}>
+                                            {{ $provider->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('service_provider_id')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Service Title -->
+                        <div class="col-md-12 mb-2">
+                            <div class="form-group">
+                                <label for="title">Service Title</label>
                                 <input type="text" name="title" class="form-control" placeholder="Enter service title..." value="{{ old('title') }}" required>
                                 @error('title')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
+
+                        <!-- Description -->
                         <div class="col-md-12 mb-2">
                             <div class="form-group">
-                                <label for="" class="">Description</label>
+                                <label for="description">Description</label>
                                 <textarea name="description" class="form-control" placeholder="Enter service description..." rows="4">{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
+
+                        <!-- Price -->
                         <div class="col-md-6 mb-2">
                             <div class="form-group">
                                 <label for="price">Price</label>
@@ -45,67 +68,69 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <!-- Duration (Time) -->
                         <div class="col-md-6 mb-2">
                             <div class="form-group">
-                                <label for="duration">Duration</label>
-                                <input type="number" name="duration" class="form-control" placeholder="Enter duration in days..." value="{{ old('duration') }}" id="duration">
+                                <label for="duration">Duration (Time)</label>
+                                <input type="time" name="duration" class="form-control" value="{{ old('duration') }}" id="duration">
                                 @error('duration')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
+
+                        <!-- Reminder Fields (First, Second, Followup) -->
                         @foreach (['first', 'second', 'followup'] as $reminderType)
-                        <div class="col-md-12 mb-2">
-                            <div class="custom-control custom-checkbox">
-                                <input type="hidden" name="{{ $reminderType }}_reminder_enabled" value="0">
-                                <input
-                                    type="checkbox"
-                                    class="custom-control-input"
-                                    id="{{ $reminderType }}ReminderToggle"
-                                    name="{{ $reminderType }}_reminder_enabled"
-                                    value="1"
-                                    onclick="toggleReminder('{{ $reminderType }}')"
-                                >
-                                <label class="custom-control-label" for="{{ $reminderType }}ReminderToggle">
-                                    {{ ucfirst($reminderType) }} Reminder
-                                </label>
-                                <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="display: none;margin-left: -23px">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div>
-                                            Send {{$reminderType}} reminder after
+                            <div class="col-md-12 mb-2">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="{{ $reminderType }}_reminder_enabled" value="0">
+                                    <input
+                                        type="checkbox"
+                                        class="custom-control-input"
+                                        id="{{ $reminderType }}ReminderToggle"
+                                        name="{{ $reminderType }}_reminder_enabled"
+                                        value="1"
+                                        onclick="toggleReminder('{{ $reminderType }}')"
+                                    >
+                                    <label class="custom-control-label" for="{{ $reminderType }}ReminderToggle">
+                                        {{ ucfirst($reminderType) }} Reminder
+                                    </label>
+                                    <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="display: none; margin-left: -23px">
+                                        <div class="d-flex align-items-center mb-3">
+                                            @if ($reminderType == 'followup')
+                                                <!-- For Follow-up reminder, show 'after' -->
+                                                <div>
+                                                    Send follow-up reminder after
+                                                </div>
+                                            @else
+                                                <!-- For first and second reminder, show 'before' -->
+                                                <div>
+                                                    Send {{ $reminderType }} reminder before
+                                                </div>
+                                            @endif
+                                            <div class="mx-1">
+                                                <input type="number" class="reminder_input" name="{{ $reminderType }}_reminder_hours" id="{{ $reminderType }}ReminderHours" />
+                                            </div>
+                                            <div>hour(s)</div>
                                         </div>
-                                        <div class="mx-1">
-                                            <input type="number" class="reminder_input" value="2" name="{{ $reminderType }}_reminder_days"
-                                            id="{{ $reminderType }}ReminderDays" />
-                                        </div>
-                                        <div>day(s) at</div>
-                                        <div class="mx-1">
-                                            <input type="time"
-                                                class="reminder_input time"
-                                                value="08:00"
-                                                name="{{ $reminderType }}_reminder_date"
-                                                id="{{ $reminderType }}ReminderDate" />
-                                        </div>
+                                        @error($reminderType . '_reminder_hours')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+
+                                        <label class="title">{{ ucfirst($reminderType) }} reminder message</label>
+                                        <textarea name="{{ $reminderType }}_reminder_message" class="form-control" rows="3">{{ old($reminderType . '_reminder_message') }}</textarea>
+                                        @error($reminderType . '_reminder_message')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    @error($reminderType . '_reminder_date')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-
-                                    <label class="title">{{ ucfirst($reminderType) }} reminder message</label>
-                                    <textarea
-                                        name="{{ $reminderType }}_reminder_message"
-                                        class="form-control"
-                                        rows="3"
-                                    >{{ old($reminderType . '_reminder_message') }}</textarea>
-                                    @error($reminderType . '_reminder_message')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-
                                 </div>
-
                             </div>
-                        </div>
                         @endforeach
+
+
+
+                        <!-- Service Image -->
                         <div class="col-md-12 mb-2 mt-2">
                             <div class="form-group">
                                 <label class="title">Service Image</label>
@@ -134,6 +159,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Submit Button -->
                         <div class="col-md-12 mb-2">
                             <button class="btn btn-dark w-100 py-2 d-flex align-items-center justify-content-center">
                                 Add Service &nbsp;
@@ -148,47 +175,25 @@
 </main>
 
 @endsection
+
 @section('scripts')
 <script>
+    // Toggle visibility of reminder fields
     function toggleReminder(type){
         const fields = document.getElementById(type + 'ReminderFields');
         fields.style.display = fields.style.display === 'none' ? 'block' : 'none';
     }
 
-    function setCurrentDateTime() {
-        const now = new Date();
-        const formattedDateTime = now.toISOString().slice(0, 16);
-        ['first', 'second', 'followup'].forEach(reminderType => {
-            const dateInput = document.getElementById(`${reminderType}ReminderDate`);
-            if (dateInput) {
-                dateInput.value = formattedDateTime;
-            }
-        });
-    }
-
-
-    function toggleReminder(reminderType) {
-        const fields = document.getElementById(`${reminderType}ReminderFields`);
-        if (fields.style.display === "none") {
-            fields.style.display = "block";
-        } else {
-            fields.style.display = "none";
-        }
-    }
-    window.onload = setCurrentDateTime;
-    window.addEventListener('load', function () {
-        document.getElementById('loading').style.display = 'none';
-    });
-
+    // Update the file name when a file is selected
     function uploaded(tmp_path)
     {
         const fileInput = document.getElementById('file_upload');
         const file = fileInput.files[0];
         if (file) {
-            $("#filename").html(file.name)
+            document.getElementById("filename").innerText = file.name;
         }
         else{
-            $("#filename").html('')
+            document.getElementById("filename").innerText = '';
         }
     }
 </script>

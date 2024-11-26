@@ -8,22 +8,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\ShopSchedule;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
     public function edit(Request $request): View
     {
+        // Fetch the existing shop schedule, or create a new instance if none exists
+        $shopSchedule = ShopSchedule::where('user_id', auth()->user()->id)->first() ?? new ShopSchedule();
+        
         return view('shopkeeper.profile.edit', [
             'user' => $request->user(),
+            'shopSchedule' => $shopSchedule
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
+
+    
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -37,9 +38,7 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    /**
-     * Delete the user's account.
-     */
+    
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
@@ -57,4 +56,58 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+
+ 
+    public function updateSchedule(Request $request)
+{
+    $request->validate([
+        'monday_enabled' => 'nullable|boolean',
+        'monday_start_time' => 'nullable|required_if:monday_enabled,true|date_format:H:i',
+        'monday_end_time' => 'nullable|required_if:monday_enabled,true|date_format:H:i|after:monday_start_time',
+
+        'tuesday_enabled' => 'nullable|boolean',
+        'tuesday_start_time' => 'nullable|required_if:tuesday_enabled,true|date_format:H:i',
+        'tuesday_end_time' => 'nullable|required_if:tuesday_enabled,true|date_format:H:i|after:tuesday_start_time',
+
+        'wednesday_enabled' => 'nullable|boolean',
+        'wednesday_start_time' => 'nullable|required_if:wednesday_enabled,true|date_format:H:i',
+        'wednesday_end_time' => 'nullable|required_if:wednesday_enabled,true|date_format:H:i|after:wednesday_start_time',
+
+        'thursday_enabled' => 'nullable|boolean',
+        'thursday_start_time' => 'nullable|required_if:thursday_enabled,true|date_format:H:i',
+        'thursday_end_time' => 'nullable|required_if:thursday_enabled,true|date_format:H:i|after:thursday_start_time',
+
+        'friday_enabled' => 'nullable|boolean',
+        'friday_start_time' => 'nullable|required_if:friday_enabled,true|date_format:H:i',
+        'friday_end_time' => 'nullable|required_if:friday_enabled,true|date_format:H:i|after:friday_start_time',
+
+        'saturday_enabled' => 'nullable|boolean',
+        'saturday_start_time' => 'nullable|required_if:saturday_enabled,true|date_format:H:i',
+        'saturday_end_time' => 'nullable|required_if:saturday_enabled,true|date_format:H:i|after:saturday_start_time',
+
+        'sunday_enabled' => 'nullable|boolean',
+        'sunday_start_time' => 'nullable|required_if:sunday_enabled,true|date_format:H:i',
+        'sunday_end_time' => 'nullable|required_if:sunday_enabled,true|date_format:H:i|after:sunday_start_time',
+    ]);
+
+    $user = Auth::user();
+
+    // Fetch or create the schedule for the logged-in user
+    $schedule = ShopSchedule::firstOrNew(['user_id' => $user->id]);
+
+    // Update schedule data for each day
+    foreach (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day) {
+        $schedule->{$day.'_enabled'} = $request->has($day.'_enabled');
+        $schedule->{$day.'_start_time'} = $request->input($day.'_start_time', null);
+        $schedule->{$day.'_end_time'} = $request->input($day.'_end_time', null);
+    }
+
+    // Save the schedule
+    $schedule->save();
+
+    return back()->with('status', 'schedule-updated');
+}
+
+
 }
