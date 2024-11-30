@@ -16,6 +16,9 @@
             <h4 class="mb-4">Update Profile Information</h4>
             @include('shopkeeper.profile.partials.update-profile-information-form')
 
+            <h4 class="mb-4">Update Shop Schedule</h4>
+            @include('shopkeeper.profile.partials.shop-schedule')
+
             <!-- Password Update Section -->
             <h4 class="mb-4 mt-5">Change Password</h4>
             @include('shopkeeper.profile.partials.update-password-form')

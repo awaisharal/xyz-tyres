@@ -45,7 +45,7 @@
                         <div class="mb-0 fw600">${{number_format($obj->price, 2)}}</div>
                         <div class="mx-2"> - </div>
                         <div class="text-muted d-flex align-items-center fw500">
-                            <i class="la la-clock me-1"></i> {{$obj->duration}} days
+                            <i class="la la-clock me-1"></i> {{$obj->duration}} 
                         </div>
                     </div>
                     <div class="dropdown" style="float: right;">

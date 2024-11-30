@@ -13,9 +13,14 @@ class Service extends Model
         return $this->belongsTo(User::class, 'user_id');
     }  
     public function appointments()
-{
-    return $this->hasMany(Appointment::class);
-}
+    {
+        return $this->hasMany(Appointment::class);
+    }
+    public function serviceProvider()
+    {
+        return $this->belongsTo(ServiceProvider::class,'service_provider_id');
+    }
+
 
     use HasFactory;
 }
