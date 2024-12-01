@@ -12,8 +12,9 @@ use App\Models\ShopSchedule;
 
 class ProfileController extends Controller
 {
-    public function edit(Request $request): View
+    public function edit(Request $request)
     {
+        // return $request->user();
         // Fetch the existing shop schedule, or create a new instance if none exists
         $shopSchedule = ShopSchedule::where('user_id', auth()->user()->id)->first() ?? new ShopSchedule();
 
@@ -107,6 +108,12 @@ class ProfileController extends Controller
         $schedule->save();
 
         return back()->with('status', 'schedule-updated');
+    }
+
+    public function getSchedule($userId)
+    {
+        $schedule = ShopSchedule::where('user_id', $userId)->first();
+        return response()->json($schedule);
     }
 
 

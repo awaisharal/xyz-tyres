@@ -75,14 +75,12 @@
                         <div class="col-md-6 mb-2">
                             <div class="form-group">
                                 <label for="duration">Duration (Time)</label>
-                                <!-- Make sure to set a default value if the service has a duration set -->
                                 <input type="time" name="duration" class="form-control" value="{{ old('duration', $service->duration ?? '00:00') }}" id="duration">
                                 @error('duration')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        
 
                         <!-- Reminder Fields (First, Second, Followup) -->
                         @foreach (['first', 'second', 'followup'] as $reminderType)
@@ -104,15 +102,9 @@
                                     <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="display: {{ $service->{$reminderType . '_reminder_enabled'} ? 'block' : 'none' }}; margin-left: -23px">
                                         <div class="d-flex align-items-center mb-3">
                                             @if ($reminderType == 'followup')
-                                                <!-- For Follow-up reminder, show 'after' -->
-                                                <div>
-                                                    Send follow-up reminder after
-                                                </div>
+                                                <div>Send follow-up reminder after</div>
                                             @else
-                                                <!-- For first and second reminder, show 'before' -->
-                                                <div>
-                                                    Send {{ $reminderType }} reminder before
-                                                </div>
+                                                <div>Send {{ $reminderType }} reminder before</div>
                                             @endif
                                             <div class="mx-1">
                                                 <input type="number" class="reminder_input" name="{{ $reminderType }}_reminder_hours" id="{{ $reminderType }}ReminderHours" value="{{ old($reminderType . '_reminder_hours', $service->{$reminderType . '_reminder_hours'}) }}" />
@@ -140,23 +132,21 @@
                                 <div class="item-wrapper one">
                                     <div class="item">
                                         <div class="item-inner">
-                                            <div class="item-content">
-                                                <div class="image-upload text-center position-relative" style="width: 100%; height: 300px; border: 1px dashed #ddd; border-radius: 5px; margin-bottom: 20px; background: #f8f8f9; color: #666; overflow: hidden;">
-                                                    <label for="file_upload" style="cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative;">
-                                                        @if ($service->image)
-                                                            <img src="{{ asset('storage/' . $service->image) }}" alt="Uploaded Image" class="uploaded-image" style="max-height: 400px; border-radius: 5px; width: auto; margin-bottom: 20px;">
-                                                        @else
-                                                            <img src="" alt="" class="uploaded-image d-none" style="max-height: 400px; border-radius: 5px; width: auto; margin-bottom: 20px;">
-                                                        @endif
-                                                        <div>
-                                                            <i class="fa fa-cloud-upload" style="font-size: 6em; color: #ccc;"></i>
-                                                            <h5><b>Choose Your Image to Upload</b></h5>
-                                                            <h6 class="mt-3">Or Drop Your Image Here</h6>
-                                                            <p class="mt-2" id="filename">{{ $service->image ? basename($service->image) : '' }}</p>
-                                                        </div>
-                                                        <input type="file" name="image" id="file_upload" class="position-absolute w-100 h-100" style="opacity: 0; cursor: pointer;" onchange="uploaded(this.value)">
-                                                    </label>
-                                                </div>
+                                            <div class="image-upload text-center position-relative" style="width: 100%; height: 300px; border: 1px dashed #ddd; border-radius: 5px; margin-bottom: 20px; background: #f8f8f9; color: #666; overflow: hidden;">
+                                                <label for="file_upload" style="cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative;">
+                                                    @if ($service->image)
+                                                        <img src="{{ asset('storage/' . $service->image) }}" alt="Uploaded Image" class="uploaded-image" style="max-height: 400px; border-radius: 5px; width: auto; margin-bottom: 20px;">
+                                                    @else
+                                                        <img src="" alt="" class="uploaded-image d-none" style="max-height: 400px; border-radius: 5px; width: auto; margin-bottom: 20px;">
+                                                    @endif
+                                                    <div>
+                                                        <i class="fa fa-cloud-upload" style="font-size: 6em; color: #ccc;"></i>
+                                                        <h5><b>Choose Your Image to Upload</b></h5>
+                                                        <h6 class="mt-3">Or Drop Your Image Here</h6>
+                                                        <p class="mt-2" id="filename">{{ $service->image ? basename($service->image) : '' }}</p>
+                                                    </div>
+                                                    <input type="file" name="image" id="file_upload" class="position-absolute w-100 h-100" style="opacity: 0; cursor: pointer;" onchange="uploaded(this.value)">
+                                                </label>
                                             </div>
                                         </div>
                                         @error('image')
@@ -185,13 +175,11 @@
 
 @section('scripts')
 <script>
-    // Toggle visibility of reminder fields
     function toggleReminder(type){
         const fields = document.getElementById(type + 'ReminderFields');
         fields.style.display = fields.style.display === 'none' ? 'block' : 'none';
     }
 
-    // Update the file name when a file is selected
     function uploaded(filename){
         document.getElementById('filename').textContent = filename.split('\\').pop();
     }

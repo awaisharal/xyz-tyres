@@ -31,7 +31,7 @@ class CustomerController extends Controller
             'password' => Hash::make($request->password),
         ]);
     
-        Auth::guard('customer')->login($customer);
+        Auth::guard('customers')->login($customer);
     
         return redirect()->route('customer.dashboard');
     }
@@ -48,7 +48,7 @@ class CustomerController extends Controller
             'password' => 'required|string',
         ]);
     
-        if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::guard('customers')->attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect()->route('customer.dashboard');
         }
     
@@ -57,24 +57,28 @@ class CustomerController extends Controller
 
     public function logout(Request $request)
     {
-        
+        if (Auth::guard('customers')->check()) {
+            Auth::guard('customers')->logout(); // Log out the customer
+        }
+
+        return redirect ('customer/login')->withErrors('success', 'logged out successfully.');
     }
 
     public function dashboard(){
-        $customer = Auth::guard('customer')->user();
+        $customer = Auth::guard('customers')->user();
         $services = Service::with('user')->get();
 
         return view('customer.dashboard', compact('customer'));
     }
     public function showServices(){
-        $customer = Auth::guard('customer')->user();
+        $customer = Auth::guard('customers')->user();
         $services = Service::with('user')->get();
        
         return view('customer.services', compact('customer', 'services'));
     }
     public function showAppointments()
 {
-    $customer = Auth::guard('customer')->user();
+    $customer = Auth::guard('customers')->user();
 
     if (!$customer) {   
         return redirect()->route('customer.login')->with('error', 'You must be logged in to view your appointments.');
@@ -90,27 +94,20 @@ class CustomerController extends Controller
 
 //////////////////////profile section /////////////////////
 
-public function index()
-    {
-        $customer = Auth::guard('customer')->user(); // Using the 'customer' guard
-        return view('customer.profile.edit', compact('customer'));
-    }
 
     
-    public function edit()
+    public function edit(Request $request)
     {
-        $customer = Auth::guard('customer')->user(); // Using the 'customer' guard
+        $customer = Auth::guard('customers')->user();
         return view('customer.profile.edit', compact('customer'));
     }
 
     
     public function update(Request $request)
     {
-        $customer = Auth::guard('customer')->user(); // Using the 'customer' guard
-
-        
+        $customer = Auth::guard('customers')->user(); 
         if (!($customer instanceof Customer)) {
-            return redirect()->route('customer.profile.index')->with('error', 'Customer not found.');
+            return redirect()->route('customer.profile.edit')->with('error', 'Customer not found.');
         }
         
         $request->validate([
@@ -126,7 +123,7 @@ public function index()
 
          $customer->save();
 
-        return redirect()->route('customer.profile.index')->with('success', 'Profile updated successfully.');
+        return redirect()->route('customer.profile.edit')->with('success', 'Profile updated successfully.');
     }
 
     
@@ -143,11 +140,11 @@ public function index()
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $customer = Auth::guard('customer')->user(); 
+        $customer = Auth::guard('customers')->user(); 
 
         
         if (!($customer instanceof Customer)) {
-            return redirect()->route('customer.profile.index')->with('error', 'Customer not found.');
+            return redirect()->route('customer.profile.edit')->with('error', 'Customer not found.');
         }
 
         
@@ -161,7 +158,7 @@ public function index()
         
         $customer->save();
 
-        return redirect()->route('customer.profile.index')->with('success', 'Password updated successfully.');
+        return redirect()->route('customer.profile.edit')->with('success', 'Password updated successfully.');
     }
     public function destroy(Request $request)
     {
