@@ -7,6 +7,7 @@ use App\Http\Controllers\customer\CustomerController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Shopkeeper\ShopkeeperController;
 use App\Http\Controllers\Shopkeeper\ServiceProviderController;
+use App\Http\Controllers\BookingsController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -64,7 +65,7 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
     Route::middleware(['auth:customer'])->group(function () {
         // Dashboard
         Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('dashboard');
-        
+
         // Appointments
         Route::get('/appointments', [CustomerController::class, 'showAppointments'])->name('appointments.index');
 
@@ -98,7 +99,9 @@ Route::middleware(['auth:customer'])->prefix('customer/profile')->name('customer
     Route::delete('/delete', [CustomerController::class, 'destroy'])->name('profile.delete');
 });
 
-
+// Bookings
+Route::get('/book/{username}', [BookingsController::class, 'booking_page'])->name('booking.view');
+Route::get('/book/{username}/{date}', [BookingsController::class, 'booking_confirmation_page'])->name('booking.confirmation.view');
 
 
 
