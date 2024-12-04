@@ -51,7 +51,7 @@ class CustomerController extends Controller
         if (Auth::guard('customers')->attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect()->route('customer.dashboard');
         }
-    
+        
         return back()->withErrors(['email' => 'Invalid credentials.']);
     }
 
