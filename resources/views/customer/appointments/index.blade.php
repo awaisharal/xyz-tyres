@@ -30,8 +30,14 @@
                         <td>{{ $appointment->service->user->company }}</td>
                         <td>{{ $appointment->date }}</td>
                         <td>{{ $appointment->time }}</td>
+                        <td>
+                            @if($appointment->payment_status == 1)
+                                <span class="text-success">Paid</span>
+                            @else
+                                <span class="text-danger">Unpaid</span>
+                            @endif
+                        </td>
                         
-                        <td>Pending</td>
                         
                     </tr>
                 @endforeach

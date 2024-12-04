@@ -8,6 +8,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Shopkeeper\ShopkeeperController;
 use App\Http\Controllers\Shopkeeper\ServiceProviderController;
 use App\Http\Controllers\BookingsController;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +78,10 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
     // web.php (routes)
     Route::get('/shop/schedule/{userId}', [ProfileController::class, 'getSchedule'])->name('shop.schedule');
 
-
+    // Services 
+    Route::GET('/appointment/{service}/book', [AppointmentController::class, 'store'])->name('appointment.store');
+    Route::get('/appointment/confirmation', [AppointmentController::class, 'confirmAppointment'])->name('confirm.appointment');
+    Route::post('/appointments/store', [AppointmentController::class, 'store_appointment'])->name('store.appointment');
 
     // Protected Routes (Only accessible to logged-in customers)
     Route::middleware(['customers'])->group(function () {
@@ -86,9 +90,6 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
 
         // Appointments
         Route::get('/appointments', [CustomerController::class, 'showAppointments'])->name('appointments.index');
-
-        // Services
-        Route::post('/service/{service}/book', [AppointmentController::class, 'store'])->name('appointment.store');
 
         // Logout
         Route::post('/logout', [CustomerController::class, 'logout'])->name('logout');
@@ -100,12 +101,14 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
         Route::get('/password', [CustomerController::class, 'editPassword'])->name('profile.password.edit');
         Route::patch('/password/update', [CustomerController::class, 'updatePassword'])->name('profile.password.update');
         Route::delete('/delete', [CustomerController::class, 'destroy'])->name('profile.delete');
- });
+    });
 
 });
     Route::get('/services', [CustomerController::class, 'showServices'])->name('customer.services');
+    Route::post('/check/user-email', [AppointmentController::class, 'check_userEmail'])->name('customer.checkEmail');
+    Route::post('/login/validate', [AppointmentController::class, 'login_ValidateUser'])->name('customer.loginValidate');
+    Route::post('/register/validate', [AppointmentController::class, 'register_ValidateUser'])->name('customer.registerValidate');
 
-
-
+    Route::get('/payment/success', [AppointmentController::class, 'confirm_payment'])->name('payment.verify');
 
 require __DIR__.'/auth.php';

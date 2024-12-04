@@ -13,6 +13,9 @@ class CreateAppointmentsTable extends Migration
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->date('date');
             $table->time('time');
+            $table->string('phone', 15)->nullable();
+            $table->tinyInteger('payment_status')->default(0);
+
             $table->timestamps();
         });
     }

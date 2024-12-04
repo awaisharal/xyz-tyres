@@ -126,18 +126,12 @@
 </head>
 <body >
     <div class="booking-container">
-        <form id="appointmentForm" action="{{ route('customer.appointment.store', ['service' => $service->id]) }}" method="POST">
+        <form id="appointmentForm" action="{{ route('customer.appointment.store', ['service' => $service->id]) }}" method="GET">
             @csrf
             <input type="hidden" name="date" id="selectedDateInput">
             <input type="hidden" name="time" id="selectedTimeInput">
+            <input type="hidden" name="service" value="{{ $service->id }}">
         
-            {{-- <div id="calendarGrid"></div>
-            <div id="timeSlotContainer"></div>
-        
-            <!-- Show selected date -->
-            <div id="timebox" class="d-none">
-                <p id="selectedDate"></p>
-            </div> --}}
        
         <div class="row g-0">
             <!-- Left Sidebar -->
@@ -177,40 +171,7 @@
                 @endauth
 
 
-                {{-- <div class="col-md-12 mb-2">
-                    <div class="form-group">
-                        <label for="customer_name">Customer Name</label>
-                        <input 
-                            type="hidden" 
-                            name="customer_name" 
-                            id="customer_name" 
-                            class="form-control" 
-                            value="{{ old('customer_name', $customer->name) }}" 
-                            readonly 
-                            required>
-                        @error('customer_name')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Customer Email -->
-                <div class="col-md-12 mb-2">
-                    <div class="form-group">
-                        <label for="customer_email">Customer Email</label>
-                        <input 
-                            type="hidden" 
-                            name="customer_email" 
-                            id="customer_email" 
-                            class="form-control" 
-                            value="{{ old('customer_email', $customer->email) }}" 
-                            readonly 
-                            required>
-                        @error('customer_email')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div> --}}
+                
             </div>
 
             <!-- Main Calendar Area -->
@@ -266,14 +227,41 @@
 
     <script>
         $(document).ready(function() {
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-            const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            const monthNames = ["January", "February", "March", "April", "May", "June", 
+                "July", "August", "September", "October", "November", "December"];
+            const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+            const dayAbbreviations = {
+            sunday: "Sun",
+            monday: "Mon",
+            tuesday: "Tue",
+            wednesday: "Wed",
+            thursday: "Thu",
+            friday: "Fri",
+            saturday: "Sat",
+        };
+                        
             let currentDate = new Date();
             let selectedDate = null;
             let selectedTime = null;
+            let scheduleData = {}; // Store the fetched schedule data
     
+            // Get schedule data via AJAX
+            function fetchSchedule(userId) {
+                return $.ajax({
+                    url: `/customer/shop/schedule/${userId}`,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log("Schedule data fetched:", data); // Log the schedule data
+                        scheduleData = data;  // Store the schedule data globally
+                    },
+                    error: function(error) {
+                        console.error("Error fetching schedule:", error);
+                    }
+                });
+            }
+    
+            // Generate the calendar
             function generateCalendar(year, month) {
                 const firstDay = new Date(year, month, 1);
                 const lastDay = new Date(year, month + 1, 0);
@@ -281,7 +269,7 @@
     
                 // Add day names
                 dayNames.forEach(day => {
-                    html += `<div class="text-center text-muted">${day}</div>`;
+                    html += `<div class="text-center text-muted">${dayAbbreviations[day]}</div>`;
                 });
     
                 // Add empty cells for days before the first day of the month
@@ -289,11 +277,12 @@
                     html += '<div></div>';
                 }
     
-                // Add calendar days
+                // Add calendar days (now all days are enabled for selection)
                 for (let day = 1; day <= lastDay.getDate(); day++) {
                     const date = new Date(year, month, day);
                     const isDisabled = date < new Date().setHours(0, 0, 0, 0);
                     const isActive = selectedDate && date.toDateString() === selectedDate.toDateString();
+    
                     html += `<div class="calendar-day${isDisabled ? ' disabled' : ''}${isActive ? ' active' : ''}" data-date="${date.toISOString()}">${day}</div>`;
                 }
     
@@ -301,54 +290,97 @@
                 $('#currentMonth').text(`${monthNames[month]} ${year}`);
             }
     
+            // Generate time slots dynamically based on schedule
             function generateTimeSlots(date) {
-                const timeSlots = ['7:30pm', '8:00pm', '8:30pm', '9:00pm', '9:30pm', '10:00pm', '10:30pm', '11:00pm'];
+                const dayOfWeek = date.getDay(); 
+                const dayName = dayNames[dayOfWeek].toLowerCase(); 
+                const isDayEnabled = scheduleData[`${dayName}_enabled`]; 
+                console.log(`Day of week: ${dayOfWeek}, Day Name: ${dayName}, Enabled: ${isDayEnabled}`); // Log this value
+    
                 let html = '';
-                timeSlots.forEach(time => {
-                    html += `
-                        <button type="button" class="time-slot" data-time="${time}">
-                            ${time}
-                        </button>`;
-                });
+                if (isDayEnabled) {
+                    const startTime = scheduleData[`${dayName}_start_time`];
+                    const endTime = scheduleData[`${dayName}_end_time`];
+    
+                    // Log the start and end times
+                    console.log(`Start Time: ${startTime}, End Time: ${endTime}`);
+    
+                    // Generate all time slots between start_time and end_time dynamically (1-hour gap)
+                    const timeSlots = getTimeSlotsBetween(startTime, endTime);
+                    console.log("Generated time slots:", timeSlots); // Log generated time slots
+    
+                    timeSlots.forEach(time => {
+                        html += `
+                            <button type="button" class="time-slot" data-time="${time}">
+                                ${time}
+                            </button>`;
+                    });
+                } else {
+                    html = '<div class="text-center text-muted">Closed</div>';
+                }
+    
                 $('#timeSlotContainer').html(html);
                 $('#selectedDate').text(date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
                 $("#timebox").removeClass('d-none');
-    
-                // Reset selected time
-                selectedTime = null;
             }
     
-            // Generate the initial calendar
-            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+            // Helper function to generate time slots between start_time and end_time with 1-hour gap
+            function getTimeSlotsBetween(startTime, endTime) {
+                const timeSlots = [];
+                let start = parseTime(startTime);
+                const end = parseTime(endTime);
     
-            // Handle previous month navigation
-            $('#prevMonth').click(function() {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
-            });
+                while (start.hours < end.hours || (start.hours === end.hours && start.minutes < end.minutes)) {
+                    timeSlots.push(formatTime(start));
+                    start = incrementTime(start);
+                }
     
-            // Handle next month navigation
-            $('#nextMonth').click(function() {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
-            });
+                console.log("Generated time slots:", timeSlots); 
+                return timeSlots;
+            }
+    
+            // Helper function to parse time in 'HH:mm' format
+            function parseTime(time) {
+                const [hours, minutes] = time.split(':').map(num => parseInt(num));
+                return { hours, minutes };
+            }
+    
+            // Helper function to format time as 'HH:mm'
+            function formatTime(time) {
+                return `${padTime(time.hours)}:${padTime(time.minutes)}`;
+            }
+    
+            // Helper function to pad single-digit numbers
+            function padTime(num) {
+                return num < 10 ? `0${num}` : `${num}`;
+            }
+    
+            // Helper function to increment time by 1 hour
+            function incrementTime(time) {
+                let { hours, minutes } = time;
+                hours += 1;  // Increment by 1 hour
+                return { hours, minutes };
+            }
     
             // Handle day click event
             $(document).on('click', '.calendar-day:not(.disabled)', function() {
                 $('.calendar-day').removeClass('active');
                 $(this).addClass('active');
                 selectedDate = new Date($(this).data('date'));
-                generateTimeSlots(selectedDate);
+                console.log("Current Selected Date:", selectedDate); 
+    
+                // Fetch schedule for the logged-in shopkeeper (replace `userId` with the actual user ID)
+                const userId = @json($userID); 
+                fetchSchedule(userId).then(() => {
+                    generateTimeSlots(selectedDate); 
+                });
             });
     
             // Handle time slot click event
             $(document).on('click', '.time-slot', function() {
                 $('.time-slot').removeClass('selected');
-    
-                // Add 'selected' class to the clicked button
                 $(this).addClass('selected');
-    
-                selectedTime = $(this).data('time'); // Set selected time
+                selectedTime = $(this).data('time');
             });
     
             // Handle form submission on "Book Now"
@@ -359,16 +391,24 @@
                     alert('Please select a date and time slot before booking!');
                     return;
                 }
+                console.log(selectedDate)
+                console.log(selectedTime)
     
-                // Set hidden inputs with selected date and time
-                $('#selectedDateInput').val(selectedDate.toISOString().split('T')[0]);
+                $('#selectedDateInput').val(selectedDate);
                 $('#selectedTimeInput').val(selectedTime);
-    
-                // Submit the form
                 $('#appointmentForm').submit();
             });
+    
+            // Generate the initial calendar and fetch the schedule
+            const userId = @json($userID); // Correctly pass userId (shopkeeper)
+            fetchSchedule(userId).then(() => {
+                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+            });
+            console.log(userId);
+    
         });
     </script>
+    
     
     
     
