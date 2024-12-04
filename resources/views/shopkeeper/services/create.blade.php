@@ -18,24 +18,6 @@
                 <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data" class="mt-4">
                     @csrf
                     <div class="row">
-                        <!-- Service Provider -->
-                        <div class="col-md-12 mb-2">
-                            <div class="form-group">
-                                <label for="service_provider_id">Service Provider</label>
-                                <select name="service_provider_id" class="form-control" required>
-                                    <option value="">Select Service Provider</option>
-                                    @foreach ($serviceProviders as $provider)
-                                        <option value="{{ $provider->id }}" {{ old('service_provider_id') == $provider->id ? 'selected' : '' }}>
-                                            {{ $provider->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('service_provider_id')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
                         <!-- Service Title -->
                         <div class="col-md-12 mb-2">
                             <div class="form-group">
@@ -58,25 +40,48 @@
                             </div>
                         </div>
 
-                        <!-- Price -->
-                        <div class="col-md-6 mb-2">
-                            <div class="form-group">
-                                <label for="price">Price</label>
-                                <input type="number" name="price" class="form-control" placeholder="Enter service price..." value="{{ old('price') }}" step="0.01" id="price" required>
-                                @error('price')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+                        <!-- Service Provider, Price, and Duration in One Row -->
+                        <div class="col-md-12 mb-2">
+                            <div class="row">
+                                <!-- Service Provider -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="service_provider_id">Service Provider</label>
+                                        <select name="service_provider_id" class="form-control" required>
+                                            <option value="">Select Service Provider</option>
+                                            @foreach ($serviceProviders as $provider)
+                                                <option value="{{ $provider->id }}" {{ old('service_provider_id') == $provider->id ? 'selected' : '' }}>
+                                                    {{ $provider->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('service_provider_id')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
 
-                        <!-- Duration (Time) -->
-                        <div class="col-md-6 mb-2">
-                            <div class="form-group">
-                                <label for="duration">Duration (Time)</label>
-                                <input type="time" name="duration" class="form-control" value="{{ old('duration') }}" id="duration">
-                                @error('duration')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
+                                <!-- Price -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="price">Price</label>
+                                        <input type="number" name="price" class="form-control" placeholder="Enter service price..." value="{{ old('price') }}" step="0.01" id="price" required>
+                                        @error('price')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Duration (Time) -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="duration">Duration (Time)</label>
+                                        <input type="time" name="duration" class="form-control" value="{{ old('duration') }}" id="duration">
+                                        @error('duration')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -127,8 +132,6 @@
                                 </div>
                             </div>
                         @endforeach
-
-
 
                         <!-- Service Image -->
                         <div class="col-md-12 mb-2 mt-2">

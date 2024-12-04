@@ -5,6 +5,15 @@
 <main class="container py-5">
     <div class="mb-4">
         <h1 class="display-5 fw-bold">Appointments</h1>
+        @if(Session::has('error'))
+            <div class="alert alert-danger">
+                {{ Session::get('error') }}
+            </div>
+        @elseif(Session::has('success'))
+            <div class="alert alert-success">
+                {{ Session::get('success') }}
+            </div>
+        @endif
         
         
         @if($appointments->isEmpty())
@@ -25,14 +34,18 @@
             <tbody>
                 @foreach ($appointments as $appointment)
                     <tr>
-                        <td>{{ $appointment->customer_name }}</td>
-                        <td>{{ $appointment->customer_email }}</td>
+                        <td>{{ $appointment->customer->name }}</td>
+                        <td>{{ $appointment->customer->email }}</td>
                         <td>{{ $appointment->service->title }}</td>
                         <td>{{ $appointment->date }}</td>
                         <td>{{ $appointment->time }}</td>
-                        
-                        <td>Pending</td>
-                        
+                        <td>
+                            @if($appointment->payment_status == 1)
+                                <span class="text-success">Paid</span>
+                            @else
+                                <span class="text-danger">Unpaid</span>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

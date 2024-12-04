@@ -53,19 +53,26 @@ class ServiceController extends Controller
 
         // Handle file upload if present
         $imagePath = null;
-        // if ($request->hasFile('image')) {
-        //     $imagePath = $request->file('image')->store('service_images', 'public');
-        // }
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
+if ($request->hasFile('image')) {
+    $file = $request->file('image');
+    
+    // Use the original file name
+    $originalName = $file->getClientOriginalName();
+    
+    // Optionally prepend a unique timestamp to avoid name collisions
+    $filename =  $originalName;
 
-            $destinationPath = public_path('assets/uploads/services/');
-            $file->move($destinationPath, $filename);
+    // Define the destination path
+    $destinationPath = public_path('assets/uploads/services/');
+    
+    // Move the file to the destination path
+    $file->move($destinationPath, $filename);
 
-            $imagePath = $filename;
-        }
+    // Store the original or modified name in the database
+    $imagePath = $filename;
+}
+
 
         // Create the service
         Service::create([

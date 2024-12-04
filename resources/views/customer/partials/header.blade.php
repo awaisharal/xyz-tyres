@@ -88,7 +88,7 @@
                                         <div class="card m-0">
                                             <div class="card-body p-0">
                                                 <div class="py-3">
-                                                    <a href="{{route('customer.profile.index')}}" class="iq-sub-card">
+                                                    <a href="{{route('customer.profile.edit')}}" class="iq-sub-card">
                                                         <div class="media align-items-center">
                                                             <i class="ri-user-line mr-3"></i>
                                                             <h6>Account Settings</h6>
@@ -96,14 +96,16 @@
                                                     </a>
                                                 </div>
 
-                                                <a class="right-ic p-3 border-top btn-block position-relative text-center" href="javascript:void(0);" role="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                  Logout
-                                              </a>
+                                               <form action="{{route('customer.logout')}}" method="post">
+                                                @csrf
+                                                    @if(Auth::guard('customers')->check())
+                                                        <a class="right-ic p-3 border-top btn-block position-relative text-center" href="javascript:void(0);">
+                                                            <input type="hidden" name="id" id="id" value="{{$customer->id ?? ''}}">
+                                                            <button type="submit" class="btn btn-primary">Logout</button>
+                                                        </a>
+                                                    @endif
+                                               </form>
 
-                                              <!-- Logout Form -->
-                                              <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                                                  @csrf
-                                              </form>
 
                                             </div>
                                         </div>
