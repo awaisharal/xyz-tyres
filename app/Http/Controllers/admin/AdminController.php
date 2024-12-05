@@ -54,6 +54,26 @@ class AdminController extends Controller
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
         }
-        return redirect('admin/login')->withErrors('success', 'logged out successfully.');
+        return redirect('admin/login')->with('success', 'logged out successfully.');
+    }
+    public function CustomerDestroy(Request $request, $id)
+    {
+        $customer = Customer::findOrFail($id);
+        $customer->delete();
+        return redirect()->route('admin.customer.list')->with('success','Deleted Successfully');
+        
+        
+    }
+    public function ShopkeeperDestroy($id)
+    {
+        $shopkeepers = User::findorFail($id);
+        $shopkeepers->delete();
+        return redirect()->route('admin.shopkeeper.list')->with('success','Deleted Successfully');
+    }
+    public function AppointmentDestroy($id)
+    {
+        $appointments = Appointment::findorFail($id);
+        $appointments->delete();
+        return redirect()->route('admin.appointment.list')->with('success','Deleted Successfully');
     }
 }

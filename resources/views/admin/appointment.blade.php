@@ -86,18 +86,22 @@
                                         {{-- <td>{{ $appointment->name }}</td>
                                         <td>{{ $appointment->email }}</td> --}}
 
-                                        <td>
+                                        <td class="d-flex jusitfy-content-center">
                                             {{-- <a class="btn btn-white mr-1" href=""><span
                                                         class="tio-visible"></span></a> --}}
                                             <a class="btn btn-white mr-1" href=""><span class="tio-edit"></span></a>
-                                            <a class="btn btn-white mr-1 form-alert" href="javascript:" data-id=""
+                                            {{-- <a class="btn btn-white mr-1 form-alert" href="javascript:" data-id=""
                                                 data-message="
-                                                {{-- {{ \App\CPU\translate('Do you want to delete this Booking') }}? --}}
+                                                {{ \App\CPU\translate('Do you want to delete this Booking') }}?
                                                  ">
                                                 <span class="tio-delete"></span>
-                                            </a>
-                                            <form action="" method="post" id="">
+                                            </a> --}}
+                                            <form action="{{ route('admin.appointment.destroy',$appointment->id) }}" method="post" >
                                                 @csrf @method('delete')
+                                                <button type="submit" class="btn btn-white mr-1">
+                                                    <span class="tio-delete"></span>
+                                                </button>
+
                                             </form>
                                         </td>
                                     </tr>

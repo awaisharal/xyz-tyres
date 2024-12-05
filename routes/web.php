@@ -121,10 +121,16 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
         //dashboard routes
         Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
         //customer listing
-        Route::get('/customer/list',[AdminController::class,'CustomerList'])->name('customer');
+        Route::get('/customer/list',[AdminController::class,'CustomerList'])->name('customer.list');
+        Route::delete('/customer/delete/{id}',[AdminController::class,'CustomerDestroy'])->name('customer.destroy');
         //shop listing
-        Route::get('/shopkeeper/list',[AdminController::class,'ShopList'])->name('shopkeeper');
+        Route::get('/shopkeeper/list',[AdminController::class,'ShopList'])->name('shopkeeper.list');
+        Route::delete('/shopkeeper/delete/{id}',[AdminController::class,'ShopkeeperDestroy'])->name('shopkeeper.destroy');
+
         //Appointment listing
-        Route::get('/appointment/list',[AdminController::class,'AppointmentList'])->name('appointment');
+        Route::get('/appointment/list',[AdminController::class,'AppointmentList'])->name('appointment.list');
+        Route::delete('/appointment/delete/{id}',[AdminController::class,'AppointmentDestroy'])->name('appointment.destroy');
+
+        //deleting the record.
     });
 require __DIR__.'/auth.php';

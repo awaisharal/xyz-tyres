@@ -45,7 +45,7 @@
                         </li>
                         <li class="nav-item {{ Request::is('admin/customer/list') ? 'active' : '' }}">
                             <a class="nav-link " href="
-                            {{ route('admin.customer') }}
+                            {{ route('admin.customer.list') }}
                              "
                                 title="
                                 list_of_customers
@@ -56,9 +56,9 @@
                                     class="text-truncate">Customers</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ Request::is('admin/booking/list') ? 'active' : '' }}">
+                        <li class="nav-item {{ Request::is('admin/shopkeeper/list') ? 'active' : '' }}">
                             <a class="nav-link" href="
-                            {{ route('admin.shopkeeper') }}
+                            {{ route('admin.shopkeeper.list') }}
                              "
                                 title="List bookings">
                                 {{-- <span class="tio-add-event nav-icon"></span> --}}
@@ -66,9 +66,9 @@
                                 <span class="text-truncate">Shop Keepers </span>
                             </a>
                         </li>
-                        <li class="nav-item {{ Request::is('admin/booking/list') ? 'active' : '' }}">
+                        <li class="nav-item {{ Request::is('admin/appointment/list') ? 'active' : '' }}">
                             <a class="nav-link" href="
-                            {{ route('admin.appointment') }}
+                            {{ route('admin.appointment.list') }}
                              "
                                 title="List Appointments">
                                 {{-- <span class="tio-add-event nav-icon"></span> --}}
