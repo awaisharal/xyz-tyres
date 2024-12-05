@@ -234,7 +234,7 @@
             sunday: "Sun",
             monday: "Mon",
             tuesday: "Tue",
-            wednesday: "Wed",
+            wednesday: "Wed", 
             thursday: "Thu",
             friday: "Fri",
             saturday: "Sat",

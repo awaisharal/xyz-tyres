@@ -19,7 +19,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable(); // Assuming you will store the image path
             $table->decimal('price', 8, 2);
-            $table->time('duration')->nullable(); // Updated to store duration in HH:MM format
+            // $table->time('duration')->nullable();
+            $table->integer('duration')->nullable(); // Add new integer duration
+            $table->string('duration_type', 20)->nullable(); // Updated to store duration in HH:MM format
             $table->boolean('first_reminder_enabled')->default(false);
             $table->integer('first_reminder_hours')->nullable(); // Hours before appointment for first reminder
             $table->text('first_reminder_message')->nullable();
