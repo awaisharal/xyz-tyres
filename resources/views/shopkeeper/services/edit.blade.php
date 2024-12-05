@@ -1,5 +1,5 @@
 @extends('shopkeeper.layouts.app')
-@section('title', 'Edit Service')
+@section('title', 'Dashboard')
 @section('content')
 
 <main class="d-flex justify-content-center">
@@ -8,7 +8,7 @@
             <div class="card-body">
                 <div>
                     <h4>
-                        <a href="{{ route('services.index') }}">
+                        <a href="{{route('services.index')}}">
                             <i class="la la-arrow-left"></i>
                         </a>
                         &nbsp;
@@ -17,27 +17,8 @@
                 </div>
                 <form action="{{ route('services.update', $service->id) }}" method="POST" enctype="multipart/form-data" class="mt-4">
                     @csrf
-                    @method('PUT') <!-- HTTP method spoofing for PUT request -->
-                    
+                    @method('PUT')
                     <div class="row">
-                        <!-- Service Provider -->
-                        <div class="col-md-12 mb-2">
-                            <div class="form-group">
-                                <label for="service_provider_id">Service Provider</label>
-                                <select name="service_provider_id" class="form-control" required>
-                                    <option value="">Select Service Provider</option>
-                                    @foreach ($serviceProviders as $provider)
-                                        <option value="{{ $provider->id }}" {{ $service->service_provider_id == $provider->id ? 'selected' : '' }}>
-                                            {{ $provider->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('service_provider_id')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
                         <!-- Service Title -->
                         <div class="col-md-12 mb-2">
                             <div class="form-group">
@@ -59,28 +40,66 @@
                                 @enderror
                             </div>
                         </div>
+                        
+                        <div class="col-md-12 mb-3">
+                            <div class="row align-items-end">
+                                <!-- Service Provider -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="service_provider_id">Service Provider</label>
+                                        <select name="service_provider_id" class="form-control" required>
+                                            <option value="">Select Service Provider</option>
+                                            @foreach ($serviceProviders as $provider)
+                                                <option value="{{ $provider->id }}" {{ old('service_provider_id', $service->service_provider_id) == $provider->id ? 'selected' : '' }}>
+                                                    {{ $provider->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('service_provider_id')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
 
-                        <!-- Price -->
-                        <div class="col-md-6 mb-2">
-                            <div class="form-group">
-                                <label for="price">Price</label>
-                                <input type="number" name="price" class="form-control" placeholder="Enter service price..." value="{{ old('price', $service->price) }}" step="0.01" id="price" required>
-                                @error('price')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
+                                <!-- Price -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="price">Price</label>
+                                        <input type="number" name="price" class="form-control" placeholder="Enter price..." value="{{ old('price', $service->price) }}" step="0.01" required>
+                                        @error('price')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Duration -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="duration">Duration</label>
+                                        <input type="number" name="duration" class="form-control" placeholder="Enter duration..." value="{{ old('duration', $service->duration) }}">
+                                        @error('duration')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Duration Type -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="duration_type">Duration Type</label>
+                                        <select name="duration_type" class="form-control">
+                                            <option value="hours" {{ old('duration_type', $service->duration_type) == 'hours' ? 'selected' : '' }}>Hours</option>
+                                            <option value="days" {{ old('duration_type', $service->duration_type) == 'days' ? 'selected' : '' }}>Days</option>
+                                            <option value="months" {{ old('duration_type', $service->duration_type) == 'months' ? 'selected' : '' }}>Months</option>
+                                        </select>
+                                        @error('duration_type')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Duration (Time) -->
-                        <div class="col-md-6 mb-2">
-                            <div class="form-group">
-                                <label for="duration">Duration (Time)</label>
-                                <input type="time" name="duration" class="form-control" value="{{ old('duration', $service->duration ?? '00:00') }}" id="duration">
-                                @error('duration')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
 
                         <!-- Reminder Fields (First, Second, Followup) -->
                         @foreach (['first', 'second', 'followup'] as $reminderType)
@@ -93,21 +112,19 @@
                                         id="{{ $reminderType }}ReminderToggle"
                                         name="{{ $reminderType }}_reminder_enabled"
                                         value="1"
-                                        {{ $service->{$reminderType . '_reminder_enabled'} ? 'checked' : '' }}
                                         onclick="toggleReminder('{{ $reminderType }}')"
+                                        {{ old($reminderType . '_reminder_enabled', $service[$reminderType . '_reminder_enabled']) ? 'checked' : '' }}
                                     >
                                     <label class="custom-control-label" for="{{ $reminderType }}ReminderToggle">
                                         {{ ucfirst($reminderType) }} Reminder
                                     </label>
-                                    <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="display: {{ $service->{$reminderType . '_reminder_enabled'} ? 'block' : 'none' }}; margin-left: -23px">
+                                    <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="display: {{ old($reminderType . '_reminder_enabled', $service[$reminderType . '_reminder_enabled']) ? 'block' : 'none' }}; margin-left: -23px">
                                         <div class="d-flex align-items-center mb-3">
-                                            @if ($reminderType == 'followup')
-                                                <div>Send follow-up reminder after</div>
-                                            @else
-                                                <div>Send {{ $reminderType }} reminder before</div>
-                                            @endif
+                                            <div>
+                                                Send {{ $reminderType }} reminder {{ $reminderType == 'followup' ? 'after' : 'before' }}
+                                            </div>
                                             <div class="mx-1">
-                                                <input type="number" class="reminder_input" name="{{ $reminderType }}_reminder_hours" id="{{ $reminderType }}ReminderHours" value="{{ old($reminderType . '_reminder_hours', $service->{$reminderType . '_reminder_hours'}) }}" />
+                                                <input type="number" class="reminder_input" name="{{ $reminderType }}_reminder_hours" id="{{ $reminderType }}ReminderHours" value="{{ old($reminderType . '_reminder_hours', $service[$reminderType . '_reminder_hours']) }}">
                                             </div>
                                             <div>hour(s)</div>
                                         </div>
@@ -116,7 +133,7 @@
                                         @enderror
 
                                         <label class="title">{{ ucfirst($reminderType) }} reminder message</label>
-                                        <textarea name="{{ $reminderType }}_reminder_message" class="form-control" rows="3">{{ old($reminderType . '_reminder_message', $service->{$reminderType . '_reminder_message'}) }}</textarea>
+                                        <textarea name="{{ $reminderType }}_reminder_message" class="form-control" rows="3">{{ old($reminderType . '_reminder_message', $service[$reminderType . '_reminder_message']) }}</textarea>
                                         @error($reminderType . '_reminder_message')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -132,21 +149,15 @@
                                 <div class="item-wrapper one">
                                     <div class="item">
                                         <div class="item-inner">
-                                            <div class="image-upload text-center position-relative" style="width: 100%; height: 300px; border: 1px dashed #ddd; border-radius: 5px; margin-bottom: 20px; background: #f8f8f9; color: #666; overflow: hidden;">
-                                                <label for="file_upload" style="cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative;">
-                                                    @if ($service->image)
-                                                        <img src="{{ asset('storage/' . $service->image) }}" alt="Uploaded Image" class="uploaded-image" style="max-height: 400px; border-radius: 5px; width: auto; margin-bottom: 20px;">
-                                                    @else
-                                                        <img src="" alt="" class="uploaded-image d-none" style="max-height: 400px; border-radius: 5px; width: auto; margin-bottom: 20px;">
-                                                    @endif
-                                                    <div>
-                                                        <i class="fa fa-cloud-upload" style="font-size: 6em; color: #ccc;"></i>
-                                                        <h5><b>Choose Your Image to Upload</b></h5>
-                                                        <h6 class="mt-3">Or Drop Your Image Here</h6>
-                                                        <p class="mt-2" id="filename">{{ $service->image ? basename($service->image) : '' }}</p>
-                                                    </div>
-                                                    <input type="file" name="image" id="file_upload" class="position-absolute w-100 h-100" style="opacity: 0; cursor: pointer;" onchange="uploaded(this.value)">
-                                                </label>
+                                            <div class="item-content">
+                                                <div class="image-upload text-center position-relative" style="width: 100%; height: 300px; border: 1px dashed #ddd; border-radius: 5px; margin-bottom: 20px; background: #f8f8f9; color: #666; overflow: hidden;">
+                                                    <label for="file_upload" style="cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative;">
+                                                        @if ($service->image)
+                                                            <img src="{{ asset('storage/' . $service->image) }}" alt="" class="uploaded-image" style="max-height: 400px; border-radius: 5px; width: auto; margin-bottom: 20px;">
+                                                        @endif
+                                                        <input type="file" name="image" id="file_upload" class="position-absolute w-100 h-100" style="opacity: 0; cursor: pointer;">
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                         @error('image')
@@ -161,7 +172,7 @@
                         <div class="col-md-12 mb-2">
                             <button class="btn btn-dark w-100 py-2 d-flex align-items-center justify-content-center">
                                 Update Service &nbsp;
-                                <i class="la la-arrow-right"></i>
+                                <i class="la la-save"></i>
                             </button>
                         </div>
                     </div>

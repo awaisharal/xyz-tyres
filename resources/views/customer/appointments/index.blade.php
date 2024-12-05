@@ -31,10 +31,10 @@
                         <td>{{ $appointment->date }}</td>
                         <td>{{ $appointment->time }}</td>
                         <td>
-                            @if($appointment->payment_status == 1)
-                                <span class="text-success">Paid</span>
+                            @if($appointment->payment_status ==='PAID')
+                                <span class="text-success">{{$appointment->payment_status}}</span>
                             @else
-                                <span class="text-danger">Unpaid</span>
+                                <span class="text-danger">{{$appointment->payment_status}}</span>
                             @endif
                         </td>
                         

@@ -8,11 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Service;
+use App\Models\Payment;
 use App\Models\Customer;
 use App\Models\Appointment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class AppointmentController extends Controller
 {
@@ -125,11 +126,6 @@ class AppointmentController extends Controller
             'phone' => 'required|string|min:10|max:15|regex:/^[0-9]+$/',
         ]);
 
-       
-        $cloverApiToken = env('CLOVER_API_TOKEN');
-        $baseUrl = env('CLOVER_BASE_URL');
-        $merchantId = env('MERCHANT_ID');
-
 
         try {
             
@@ -204,7 +200,6 @@ class AppointmentController extends Controller
         // if (!$checkout_id) {
         //     throw new \Exception('Checkout ID not found.');
         // }
-
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => env('CLOVER_BASE_URL') . "/invoicingcheckoutservice/v1/checkouts/{$checkout_id}",
@@ -219,37 +214,64 @@ class AppointmentController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
 
-        $paymentDetails = json_decode($response, true);
-
-        if (!isset($paymentDetails['status']) || $paymentDetails['status'] !== 'PAID') {
-            throw new \Exception('Payment not successful.');
-        }
-
+        $paymentRes = json_decode($response);
+        // return $paymentRes->id;
+        $transactionId=$paymentRes->id;
+        $status = $paymentRes->paymentDetails[0]->status;
+        $amount = $paymentRes->paymentDetails[0]->amount;
+        $amount=$amount/100;
+        // return $amount;
+        
         $validated = Session::get('appointment_data');
-
-        if (!$validated) {
-            throw new \Exception('Appointment data not found.');
-        }
-
         $customer = Auth::guard('customers')->user();
+        // return $paymentStatus;
+        
 
-        Appointment::create([
+        $appointment =Appointment::create([
             'service_id' => $validated['service'],
             'customer_id' => $customer->id,
             'date' => $validated['date'],
             'time' => $validated['time'],
             'phone' => $validated['phone'],
-            'payment_status' => 1
+            'payment_status' =>$status
+        ]);
+       
+
+        $payment=Payment::create([
+            'appointment_id' => $appointment->id,
+            'customer_id' => $customer->id,
+            'amount' => $amount,
+            'payment_status' => $status,
+            'transaction_id' => $transactionId, 
         ]);
 
-        // Clear session data
         Session::forget(['session_id', 'appointment_data']);
+        // $session = Session::put('payresponse', $paymentRes);
+        
+        Session::put('transactionID', $transactionId);
+        Session::put('amountPaid', $amount);
+        Session::put('appointmentData', $appointment);
+        Session::put('paymentData', $payment);
 
-        return redirect()->route('customer.appointments.index')->with('success', 'Appointment successfully created!');
-    } catch (\Throwable $th) {
-        return redirect()->route('customer.services')->with('error', $th->getMessage());
-    }
+
+
+        return redirect()->route('payment.thankyou')->with('success', 'Appointment successfully created!');
+        } catch (\Throwable $th) {
+            return redirect()->route('customer.services')->with('error', $th->getMessage());
+        }
+
+        
+
     }   
+    public function showThankyou(){
+        $transactionId=Session::get('transactionID');
+        $amountPaid=Session::get('amountPaid');
+        $appointmentData=Session::get('appointmentdata');
+        $paymentData=Session::get('paymentData');
+        $paymentDate = Carbon::parse($paymentData->created_at)->format('d-m-Y');
+        $appointmentDate = Carbon::parse($appointmentData->date)->format('d-m-Y');
+        return view('customer.appointments.success_appointment',compact('transactionId', 'appointmentData', 'paymentData', 'paymentDate','amountPaid','appointmentDate'));
+    }
 
 
 }

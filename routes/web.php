@@ -111,6 +111,9 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
     Route::post('/register/validate', [AppointmentController::class, 'register_ValidateUser'])->name('customer.registerValidate');
 
     Route::get('/payment/success', [AppointmentController::class, 'confirm_payment'])->name('payment.verify');
+    Route::get('/payment/success/thankyou', [AppointmentController::class, 'showThankyou'])->name('payment.thankyou');
+
+
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function ()
     {

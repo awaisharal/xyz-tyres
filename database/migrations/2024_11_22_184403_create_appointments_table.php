@@ -14,7 +14,7 @@ class CreateAppointmentsTable extends Migration
             $table->date('date');
             $table->time('time');
             $table->string('phone', 15)->nullable();
-            $table->tinyInteger('payment_status')->default(0);
+            $table->string('payment_status');
 
             $table->timestamps();
         });
