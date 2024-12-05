@@ -176,9 +176,10 @@ class AppointmentController extends Controller
             curl_close($curl);
             $response = json_decode($response);
             $session_id = $response->checkoutSessionId;
-            if (!isset($response->checkoutSessionId)) {
-                throw new \Exception('Failed to create checkout session.');
-            }
+            // return $session_id;
+            // if (!isset($response->checkoutSessionId)) {
+            //     throw new \Exception('Failed to create checkout session.');
+            // }
             Session::put('session_id', $response->checkoutSessionId);
             Session::put('appointment_data', $validated);
     
@@ -194,8 +195,11 @@ class AppointmentController extends Controller
     public function confirm_payment(Request $request)
     {
     try {
-        $checkout_id=Session::get('session_id');
-    
+        $checkout_id = Session::get('session_id');
+
+        // if (!$checkout_id) {
+        //     throw new \Exception('Checkout ID not found.');
+        // }
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => env('CLOVER_BASE_URL') . "/invoicingcheckoutservice/v1/checkouts/{$checkout_id}",

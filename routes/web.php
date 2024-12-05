@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\Shopkeeper\ServiceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\customer\CustomerController;
@@ -114,4 +115,25 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
 
 
 
+    Route::group(['prefix' => 'admin', 'as' => 'admin.'], function ()
+    {
+        Route::get('/login',[AdminController::class,'login_view'])->name('view');
+        //logout
+        Route::get('/logout',[AdminController::class,'logout'])->name('logout');
+        Route::post('/login',[AdminController::class,'login'])->name('login');
+        //dashboard routes
+        Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
+        //customer listing
+        Route::get('/customer/list',[AdminController::class,'CustomerList'])->name('customer.list');
+        Route::delete('/customer/delete/{id}',[AdminController::class,'CustomerDestroy'])->name('customer.destroy');
+        //shop listing
+        Route::get('/shopkeeper/list',[AdminController::class,'ShopList'])->name('shopkeeper.list');
+        Route::delete('/shopkeeper/delete/{id}',[AdminController::class,'ShopkeeperDestroy'])->name('shopkeeper.destroy');
+
+        //Appointment listing
+        Route::get('/appointment/list',[AdminController::class,'AppointmentList'])->name('appointment.list');
+        Route::delete('/appointment/delete/{id}',[AdminController::class,'AppointmentDestroy'])->name('appointment.destroy');
+
+        //deleting the record.
+    });
 require __DIR__.'/auth.php';
