@@ -125,15 +125,18 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
         Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
         //customer listing
         Route::get('/customer/list',[AdminController::class,'CustomerList'])->name('customer.list');
+        Route::post('/customer/update',[AdminController::class,'CustomerUpdate'])->name('customer.update');
         Route::delete('/customer/delete/{id}',[AdminController::class,'CustomerDestroy'])->name('customer.destroy');
         //shop listing
         Route::get('/shopkeeper/list',[AdminController::class,'ShopList'])->name('shopkeeper.list');
+        Route::post('shopkeeper/update',[AdminController::class,'ShopkeeperUpdate'])->name('shopkeeper.update');
         Route::delete('/shopkeeper/delete/{id}',[AdminController::class,'ShopkeeperDestroy'])->name('shopkeeper.destroy');
-
+        Route::get('/shopkeeper/service/provider',[AdminController::class,'ServiceProvider'])->name('shopkeeper.service.provider');
+        Route::get('/shopkeeper/service',[AdminController::class,'Service'])->name('shopkeeper.service');
         //Appointment listing
         Route::get('/appointment/list',[AdminController::class,'AppointmentList'])->name('appointment.list');
         Route::delete('/appointment/delete/{id}',[AdminController::class,'AppointmentDestroy'])->name('appointment.destroy');
-
-        //deleting the record.
+        //Payment
+        Route::get('/payment/list',[AdminController::class,'PaymentList'])->name('payment.list');
     });
 require __DIR__.'/auth.php';

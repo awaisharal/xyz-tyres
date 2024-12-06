@@ -11,11 +11,8 @@
                         aria-label="
                         {{-- {{ \App\CPU\translate('Front') }} --}}
                          ">
-                        <img class="navbar-brand-logo"
-                            src="{{ asset('assets/admin/img/logo.png') }}"
-                            {{-- // onErrorImage($shop_logo, asset('storage/app/public/shop') . '/' . $shop_logo, --}}
-                             {{-- asset('assets/admin/img/logo.png')" --}}
-                            alt="logo" style="width: 250px">
+                        <img class="navbar-brand-logo" src="{{ asset('assets/admin/img/logo.png') }}"
+                            {{-- // onErrorImage($shop_logo, asset('storage/app/public/shop') . '/' . $shop_logo, --}} {{-- asset('assets/admin/img/logo.png')" --}} alt="logo" style="width: 250px">
                     </a>
                     <button type="button"
                         class="js-navbar-vertical-aside-toggle-invoker navbar-vertical-aside-toggle btn btn-icon btn-xs btn-ghost-dark">
@@ -30,9 +27,9 @@
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin') ? 'show' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="
-                            {{ route('admin.dashboard') }}"
-                                title="dashboards">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="
+                            {{ route('admin.dashboard') }}" title="dashboards">
                                 <i class="tio-home-vs-1-outlined nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                     dashboard
@@ -44,7 +41,8 @@
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                         <li class="nav-item {{ Request::is('admin/customer/list') ? 'active' : '' }}">
-                            <a class="nav-link " href="
+                            <a class="nav-link "
+                                href="
                             {{ route('admin.customer.list') }}
                              "
                                 title="
@@ -52,32 +50,81 @@
                                 {{-- {{ \App\CPU\translate('list_of_customers') }} --}}
                                  ">
                                 <span class="tio-user-outlined nav-icon"></span>
-                                <span
-                                    class="text-truncate">Customers</span>
+                                <span class="text-truncate">Customers</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ Request::is('admin/shopkeeper/list') ? 'active' : '' }}">
-                            <a class="nav-link" href="
-                            {{ route('admin.shopkeeper.list') }}
-                             "
-                                title="List bookings">
-                                {{-- <span class="tio-add-event nav-icon"></span> --}}
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/shpkeeper*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
+                                href="javascript:void(0)
+                                {{-- {{ route('admin.shopkeeper.list') }} --}}
+                                 ">
                                 <span class="tio-shop nav-icon"></span>
-                                <span class="text-truncate">Shop Keepers </span>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    Shop Keepers
+                                    {{-- {{ \App\CPU\translate('Bookings') }} --}}
+                                </span>
                             </a>
+                            <ul
+                                class="js-navbar-vertical-aside-submenu nav nav-sub {{ Request::is('admin/booking/*') ? 'd-block' : '' }}">
+                                <li class="nav-item {{ Request::is('admin/shopkeeper/list') ? 'active' : '' }}">
+                                    <a class="nav-link"
+                                        href="
+                                        {{ route('admin.shopkeeper.list') }}
+                                         "
+                                        title="List Shopkeeper">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Shop</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/shopkeeper/service/provider') ? 'active' : '' }}">
+                                    <a class="nav-link "
+                                        href="
+                                        {{ route('admin.shopkeeper.service.provider') }}
+                                         "
+                                        title="Create Booking">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Service Provider</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/shopkeeper/service') ? 'active' : '' }}">
+                                    <a class="nav-link "
+                                        href="
+                                        {{ route('admin.shopkeeper.service') }}
+                                         "
+                                        title="Create Booking">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Services</span>
+                                    </a>
+                                </li>
+
+                            </ul>
                         </li>
+
                         <li class="nav-item {{ Request::is('admin/appointment/list') ? 'active' : '' }}">
-                            <a class="nav-link" href="
+                            <a class="nav-link"
+                                href="
                             {{ route('admin.appointment.list') }}
                              "
                                 title="List Appointments">
                                 {{-- <span class="tio-add-event nav-icon"></span> --}}
-                                <span class="tio-shop nav-icon"></span>
+                                <i class="fas fa-calendar-alt nav-icon"></i>
                                 <span class="text-truncate">Appointments</span>
                             </a>
                         </li>
-                        {{-- @if (\App\CPU\Helpers::module_permission_check('customer_section'))
-                            <li class="nav-item">
+                        <li class="nav-item {{ Request::is('admin/payment/list') ? 'active' : '' }}">
+                            <a class="nav-link"
+                                href="
+                            {{ route('admin.payment.list') }}
+                             "
+                                title="List Payments">
+                                {{-- <span class="tio-add-event nav-icon"></span> --}}
+                                <i class="tio-paypal nav-icon"></i>
+                                <span class="text-truncate">Payments</span>
+                            </a>
+                        </li>
+                        {{-- @if (\App\CPU\Helpers::module_permission_check('customer_section')) --}}
+                        {{-- <li class="nav-item">
                                 <small class="nav-subtitle">Customers & Bookings</small>
                                 <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                             </li>
@@ -87,58 +134,45 @@
                                     href="javascript:">
                                     <i class="tio-poi-user nav-icon"></i>
                                     <span
-                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('customer') }}</span>
-                                </a>
-                                <ul
+                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                        {{ \App\CPU\translate('customer') }}
+                                    </span>
+                                </a> --}}
+                        {{-- <ul
                                     class="js-navbar-vertical-aside-submenu nav nav-sub {{ Request::is('admin/customer*') ? 'd-block' : '' }}">
                                     <li class="nav-item {{ Request::is('admin/customer/add') ? 'active' : '' }}">
-                                        <a class="nav-link " href="{{ route('admin.customer.add') }}"
-                                            title="{{ \App\CPU\translate('add_new_customer') }}">
+                                        <a class="nav-link " href="
+                                        {{ route('admin.customer.add') }}
+                                         "
+                                            title="
+                                            {{ \App\CPU\translate('add_new_customer') }}
+                                             ">
                                             <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">{{ \App\CPU\translate('add_customer') }}</span>
+                                            <span class="text-truncate">
+                                                {{ \App\CPU\translate('add_customer') }}
+                                            </span>
                                         </a>
                                     </li>
 
                                     <li class="nav-item {{ Request::is('admin/customer/list') ? 'active' : '' }}">
-                                        <a class="nav-link " href="{{ route('admin.customer.list') }}"
-                                            title="{{ \App\CPU\translate('list_of_customers') }}">
+                                        <a class="nav-link " href="
+                                        {{ route('admin.customer.list') }}
+                                         "
+                                            title="
+                                            {{ \App\CPU\translate('list_of_customers') }}
+                                             ">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span
-                                                class="text-truncate">{{ \App\CPU\translate('customer_list') }}</span>
+                                                class="text-truncate">
+                                                {{ \App\CPU\translate('customer_list') }}
+                                            </span>
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> --}}
 
-                            <li
-                                class="navbar-vertical-aside-has-menu {{ Request::is('admin/booking*') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
-                                    href="javascript:">
-                                    <i class="tio-premium-outlined nav-icon"></i>
-                                    <span
-                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('Bookings') }}</span>
-                                </a>
-                                <ul
-                                    class="js-navbar-vertical-aside-submenu nav nav-sub {{ Request::is('admin/booking/*') ? 'd-block' : '' }}">
-                                    <li class="nav-item {{ Request::is('admin/booking/list') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('admin.booking.list') }}"
-                                            title="List bookings">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">List</span>
-                                        </a>
-                                    </li>
 
-                                    <li class="nav-item {{ Request::is('admin/booking/create') ? 'active' : '' }}">
-                                        <a class="nav-link " href="{{ route('admin.booking.create') }}"
-                                            title="Create Booking">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">Create</span>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                        @endif --}}
+                        {{-- @endif  --}}
 
                         {{-- <li class="nav-item">
                             <small class="nav-subtitle">Event Logistics</small>
@@ -180,7 +214,7 @@
                             </a>
                         </li> --}}
 
-                        
+
 
                         {{-- @if (\App\CPU\Helpers::module_permission_check('pos_section'))
                         <li class="nav-item">
@@ -304,7 +338,7 @@
                         </li>
                         @endif --}}
                         {{-- @if (account_section) --}}
-                            {{-- <li
+                        {{-- <li
                                 class="navbar-vertical-aside-has-menu {{ Request::is('admin/account*') ? 'active' : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                     href="javascript:">
@@ -331,7 +365,7 @@
                                         </a>
                                     </li> --}}
 
-                                    {{-- <li class="nav-item {{ Request::is('admin/account/list') ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ Request::is('admin/account/list') ? 'active' : '' }}">
                                         <a class="nav-link " href="
                                         {{ route('admin.account.list') }}
                                          "
@@ -344,7 +378,7 @@
                                             </span>
                                         </a>
                                     </li> --}}
-                                    {{-- <li
+                        {{-- <li
                                         class="nav-item {{ Request::is('admin/account/add-expense') ? 'active' : '' }}">
                                         <a class="nav-link " href="
                                         {{ route('admin.account.add-expense') }}
@@ -358,7 +392,7 @@
                                             </span>
                                         </a>
                                     </li> --}}
-                                    {{-- <li
+                        {{-- <li
                                         class="nav-item {{ Request::is('admin/account/add-income') ? 'active' : '' }}">
                                         <a class="nav-link " href="
                                         {{ route('admin.account.add-income') }}
@@ -372,7 +406,7 @@
                                             </span>
                                         </a>
                                     </li> --}}
-                                    {{-- <li
+                        {{-- <li
                                         class="nav-item {{ Request::is('admin/account/add-transfer') ? 'active' : '' }}">
                                         <a class="nav-link " href="
                                         {{ route('admin.account.add-transfer') }}
@@ -387,7 +421,7 @@
                                             </span>
                                         </a>
                                     </li> --}}
-                                    {{-- <li
+                        {{-- <li
                                         class="nav-item {{ Request::is('admin/account/list-transection') ? 'active' : '' }}">
                                         <a class="nav-link " href="
                                         {{ route('admin.account.list-transection') }}
@@ -403,11 +437,11 @@
                                         </a>
                                     </li> --}}
 
-                                {{-- </ul>
+                        {{-- </ul>
                             </li> --}}
                         {{-- @endif --}}
                         {{-- @if (\App\CPU\Helpers::module_permission_check('payment_section')) --}}
-                            {{-- <li class="nav-item {{ Request::is('admin/payment/list') ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ Request::is('admin/payment/list') ? 'active' : '' }}">
                                 <a class="nav-link " href="
                                 {{ route('admin.payment.list') }}
                                  "
@@ -423,7 +457,7 @@
                         {{-- @endif --}}
 
                         {{-- @if (\App\CPU\Helpers::module_permission_check('invoice_section')) --}}
-                            {{-- <li class="nav-item {{ Request::is('admin/invoice/list') ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ Request::is('admin/invoice/list') ? 'active' : '' }}">
                                 <a class="nav-link " href="
                                 {{ route('admin.invoice.list') }}
                                  "
@@ -438,13 +472,13 @@
                             </li> --}}
                         {{-- @endif --}}
                         {{-- @if (\App\CPU\Helpers::module_permission_check('reports_section')) --}}
-                            {{-- <li class="nav-item">
+                        {{-- <li class="nav-item">
                                 <small class="nav-subtitle">
                                     {{ \App\CPU\translate('reports_section') }}
                                 </small>
                                 <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                             </li> --}}
-                            {{-- <li
+                        {{-- <li
                                 class="navbar-vertical-aside-has-menu {{ Request::is('admin/reports*') ? 'active' : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                     href="javascript:">
@@ -572,14 +606,14 @@
                         @endif --}}
 
                         {{-- @if (\App\CPU\Helpers::module_permission_check('supplier_section')) --}}
-                            {{-- <li class="nav-item">
+                        {{-- <li class="nav-item">
                                 <small class="nav-subtitle">
                                     {{ \App\CPU\translate('supplier_section') }}
                                     supplier
                                 </small>
                                 <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                             </li> --}}
-                            {{-- <li class="nav-item {{ Request::is('admin/supplier/list') ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ Request::is('admin/supplier/list') ? 'active' : '' }}">
                                 <a class="nav-link " href="
                                 {{ route('admin.supplier.list') }}
                                  "
@@ -594,7 +628,7 @@
                                     </span>
                                 </a>
                             </li> --}}
-                            {{-- <li class="nav-item {{ Request::is('admin/purchase/list') ? 'active' : '' }}">
+                        {{-- <li class="nav-item {{ Request::is('admin/purchase/list') ? 'active' : '' }}">
                                 <a class="nav-link " href="
                                 {{ route('admin.purchase.list') }}
                                 "
@@ -609,7 +643,7 @@
                                         </span>
                                 </a>
                             </li> --}}
-                            {{-- <li
+                        {{-- <li
                                 class="navbar-vertical-aside-has-menu {{ Request::is('admin/supplier*') ? 'active' : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                     href="javascript:">
@@ -631,18 +665,18 @@
                                     
                                 </ul>
                             </li> --}}
-                            <!--Reports -->
+                        <!--Reports -->
                         {{-- @endif --}}
 
                         {{-- @if (\App\CPU\Helpers::module_permission_check('setting_section')) --}}
-                            {{-- <li class="nav-item">
+                        {{-- <li class="nav-item">
                                 <small class="nav-subtitle">
                                     Shop_section
                                     {{ \App\CPU\translate('shop_setting_section') }}
                                 </small>
                                 <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                             </li> --}}
-                            {{-- <li
+                        {{-- <li
                                 class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings*') ? 'active' : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                     href="javascript:">

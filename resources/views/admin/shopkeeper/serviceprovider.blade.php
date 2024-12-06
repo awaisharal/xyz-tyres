@@ -6,8 +6,7 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}" />
 
     <style>
-        .th,
-        tr {
+        .th, tr {
             text-align: center;
         }
     </style>
@@ -19,7 +18,7 @@
             <div class="col-sm mb-2 mb-sm-0">
                 <h1 class="page-header-title d-flex align-items-center g-2px text-capitalize">
                     <i class="tio-filter-list"></i>
-                    Appointments List
+                    Shopkeepers List
                     {{-- {{ \App\CPU\translate('Payment_list') }} --}}
                     <span class="badge badge-soft-dark ml-2"></span>
                 </h1>
@@ -32,7 +31,7 @@
                     <div class="card-header">
                         <div class="row justify-content-end align-items-center flex-grow-1">
                             <div class="col-md-4 mb-3 mb-sm-0">
-                                <form action="{{ url()->current() }}" method="GET">
+                                <form action="{{url()->current()}}" method="GET">
                                     <div class="input-group input-group-merge input-group-flush">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
@@ -40,73 +39,59 @@
                                             </div>
                                         </div>
                                         <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                            placeholder="Search by Name, Cnic, Phone" aria-label="Search"
-                                            value="{{ request('search') }}" required>
+                                               placeholder="Search by Name, Cnic, Phone" aria-label="Search" value="{{ request('search') }}" required>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
-
                     <div class="table-responsive datatable-custom">
-                        <table
-                            class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                            <thead class="thead-light">
+                        <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                            <thead class="thead-light ">
                                 <tr>
                                     <th>
                                         #</th>
-                                    <th>Title</th>
+                                    <th>Shop Name</th>
                                     <th>Name</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Payment Status</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @if (count($payments) > 0) --}}
-                                @foreach ($appointments as $appointment)
+                            @if (count($serviceProviders) > 0)
+                                @foreach ($serviceProviders as $serviceProvider)
                                     <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
-                                        <td>{{ $appointment->service->title }}</td>
-                                        <td>{{ $appointment->customer->name }}</td>
-                                        <td>{{ $appointment->date }}</td>
-                                        <td>{{ $appointment->time }}</td>
-                                        <td>
-                                            @if ($appointment->payment_status == 0)
-                                                <span class="badge bg-danger text-white px-2 py-1">Unpaid</span>
-                                            @elseif ($appointment->payment_status == 1)
-                                                <span class="badge bg-success text-white px-2 py-1">Paid</span>
-                                            @endif
-                                        </td>
-
-                                        {{-- <td>{{ $appointment->name }}</td>
-                                        <td>{{ $appointment->email }}</td> --}}
-
-                                        <td class="d-flex jusitfy-content-center">
-                                            {{-- <a class="btn btn-white mr-1" href=""><span
-                                                        class="tio-visible"></span></a> --}}
-                                            <a class="btn btn-white mr-1" href=""><span class="tio-edit"></span></a>
+                                        <td>{{ $serviceProvider->id }}</td>
+                                        <td>{{ $serviceProvider->user->name }}</td>
+                                        <td>{{ $serviceProvider->name }}</td>
+                                        <td>{{ $serviceProvider->email }}</td>
+                                        <td>{{ $serviceProvider->phone }}</td>
+                                        <td>{{ $serviceProvider->address }}</td>
+                                        
+                                        <td class="d-flex jsutify-content-center">
+                                            {{-- <a class="btn btn-white mr-1" href=""><span class="tio-visible"></span></a> --}}
+                                            {{-- <a class="btn btn-white mr-1" href=""><span class="tio-edit"></span></a> --}}
                                             {{-- <a class="btn btn-white mr-1 form-alert" href="javascript:" data-id=""
                                                 data-message="
                                                 {{ \App\CPU\translate('Do you want to delete this Booking') }}?
                                                  ">
                                                 <span class="tio-delete"></span>
                                             </a> --}}
-                                            <form action="{{ route('admin.appointment.destroy',$appointment->id) }}" method="post" >
+                                            <form action="" method="post" id="">
                                                 @csrf @method('delete')
                                                 <button type="submit" class="btn btn-white mr-1">
                                                     <span class="tio-delete"></span>
                                                 </button>
-
                                             </form>
                                         </td>
                                     </tr>
                                 @endforeach
-                                {{-- @endif --}}
+                            @endif
                             </tbody>
                             <tfoot>
-                                <tr>
+                                <tr >
                                     <td colspan="5">
                                         <div class="pagination-wrapper">
                                             {{-- {!! $payments->links() !!} --}}
@@ -133,17 +118,17 @@
 @push('script_2')
     <script src="{{ asset('assets/admin/js/global.js') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var searchInput = document.getElementById('datatableSearch_');
             var searchForm = document.getElementById('searchForm');
             var isSearching = {{ request('search') ? 'true' : 'false' }};
-
-            searchInput.addEventListener('input', function() {
+    
+            searchInput.addEventListener('input', function () {
                 if (searchInput.value === '' && isSearching) {
-                    window.location.href = "{{ url()->current() }}";
+                    window.location.href = "{{ url()->current() }}"; 
                 }
             });
-            searchForm.addEventListener('submit', function() {
+            searchForm.addEventListener('submit', function () {
                 searchInput.value = searchInput.value.replace(/-/g, '');
                 isSearching = true;
             });
