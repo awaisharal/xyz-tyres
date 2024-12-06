@@ -3,7 +3,7 @@
 @section('title','dashboard')
 
 @section('content')
-<h1>hello Dashboard</h1>
+<h1 class="mt-5 text-center">Dashboard !!</h1>
 {{-- <div class="content container-fluid">
 
     <div class="card mb-3 bg-white">
@@ -361,7 +361,6 @@
         </div>
     {{-- @endif --}}
 {{-- </div> ---}}
-<h1>hello</h1>
 
 @endsection
 

@@ -45,27 +45,34 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="table-responsive datatable-custom">
                         <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                            <thead class="thead-light">
+                            <thead class="thead-light ">
                                 <tr>
                                     <th>
                                         #</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Company</th>
+                                    <th>Image</th>
+                                    <th>Shop Name</th>
+                                    <th>SP  Name</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                    <th>Duration</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            {{-- @if (count($payments) > 0) --}}
-                                @foreach ($shopkeepers as $shopkeeper)
+                            @if (count($services) > 0)
+                                @foreach ($services as $service)
                                     <tr>
-                                        <td>{{ $shopkeeper->id }}</td>
-                                        <td>{{ $shopkeeper->name }}</td>
-                                        <td>{{ $shopkeeper->email }}</td>
-                                        <td>{{ $shopkeeper->company }}</td>
+                                        <td>{{ $service->id }}</td>
+                                        <td><img src="{{ asset('assets/uploads/services/'. $service->image ) }}" style="width: 50px"  alt=""></td>
+                                        <td>{{ $service->user->name }}</td>
+                                        <td>{{ $service->serviceProvider->name }}</td>
+                                        <td>{{ $service->title }}</td>
+                                        <td>{{ $service->description }}</td>
+                                        <td>{{ $service->price }}</td>
+                                        <td>{{ $service->duration }}</td>
                                         
                                         <td class="d-flex jsutify-content-center">
                                             {{-- <a class="btn btn-white mr-1" href=""><span class="tio-visible"></span></a> --}}
@@ -76,7 +83,7 @@
                                                  ">
                                                 <span class="tio-delete"></span>
                                             </a> --}}
-                                            <form action="{{ route('admin.shopkeeper.destroy', $shopkeeper->id ) }}" method="post" id="">
+                                            <form action="" method="post" id="">
                                                 @csrf @method('delete')
                                                 <button type="submit" class="btn btn-white mr-1">
                                                     <span class="tio-delete"></span>
@@ -85,7 +92,7 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                            {{-- @endif --}}
+                            @endif
                             </tbody>
                             <tfoot>
                                 <tr >

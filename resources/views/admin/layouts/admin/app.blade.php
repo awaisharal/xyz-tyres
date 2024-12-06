@@ -77,6 +77,8 @@
     <script src="{{ asset('assets/admin') }}/js/toastr.js"></script>
     <script src="{{ asset('assets/admin') }}/js/bootstrap-select.min.js"></script>
     <script src="{{ asset('assets/admin') }}/js/ck-editor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @yield('extra_js')
     {{-- {!! Toastr::message() !!} --}}
 

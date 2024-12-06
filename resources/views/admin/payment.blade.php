@@ -19,7 +19,7 @@
             <div class="col-sm mb-2 mb-sm-0">
                 <h1 class="page-header-title d-flex align-items-center g-2px text-capitalize">
                     <i class="tio-filter-list"></i>
-                    Appointments List
+                    Payments List
                     {{-- {{ \App\CPU\translate('Payment_list') }} --}}
                     <span class="badge badge-soft-dark ml-2"></span>
                 </h1>
@@ -55,51 +55,51 @@
                                 <tr>
                                     <th>
                                         #</th>
-                                    <th>Title</th>
-                                    <th>Name</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
+                                    <th>Customer Name</th>
+                                    <th>Amount</th>
                                     <th>Payment Status</th>
+                                    <th>Transaction ID</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {{-- @if (count($payments) > 0) --}}
-                                @foreach ($appointments as $appointment)
+                                @foreach ($payments as $payment)
                                     <tr>
                                         <td>{{ $loop->index + 1 }}</td>
-                                        <td>{{ $appointment->service->title }}</td>
-                                        <td>{{ $appointment->customer->name }}</td>
-                                        <td>{{ $appointment->date }}</td>
-                                        <td>{{ $appointment->time }}</td>
+                                        <td>{{ $payment->customer->name }}</td>
+                                        <td>{{ $payment->amount }}</td>
                                         <td>
-                                            @if ($appointment->payment_status == 0)
+                                            @if ($payment->payment_status == 0)
                                                 <span class="badge bg-danger text-white px-2 py-1">Unpaid</span>
-                                            @elseif ($appointment->payment_status == 1)
+                                            @elseif($payment->payment_status == 1)
                                                 <span class="badge bg-success text-white px-2 py-1">Paid</span>
                                             @endif
                                         </td>
-
-                                        {{-- <td>{{ $appointment->name }}</td>
-                                        <td>{{ $appointment->email }}</td> --}}
-
-                                        <td class="d-flex jusitfy-content-center">
-                                            {{-- <a class="btn btn-white mr-1" href=""><span
-                                                        class="tio-visible"></span></a> --}}
-                                            <a class="btn btn-white mr-1" href=""><span class="tio-edit"></span></a>
+                                        <td>
+                                            <span onclick="copyToClipboard('{{ $payment->transaction_id }}')"
+                                                title="Click to copy"
+                                                style="cursor: pointer;  text-decoration: underline;">
+                                                {{ substr($payment->transaction_id, 0, 5) . '***' . substr($payment->transaction_id, -5) }}
+                                            </span>
+                                        </td>
+                                        <td class="">
+                                            <a class="btn btn-white mr-1" href=""><span
+                                                    class="tio-visible"></span></a>
+                                            {{-- <a class="btn btn-white mr-1" href=""><span class="tio-edit"></span></a> --}}
                                             {{-- <a class="btn btn-white mr-1 form-alert" href="javascript:" data-id=""
                                                 data-message="
                                                 {{ \App\CPU\translate('Do you want to delete this Booking') }}?
                                                  ">
                                                 <span class="tio-delete"></span>
                                             </a> --}}
-                                            <form action="{{ route('admin.appointment.destroy',$appointment->id) }}" method="post" >
+                                            {{-- <form action="{{ route('admin.appointment.destroy',$appointment->id) }}" method="post" >
                                                 @csrf @method('delete')
                                                 <button type="submit" class="btn btn-white mr-1">
                                                     <span class="tio-delete"></span>
                                                 </button>
 
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -149,4 +149,14 @@
             });
         });
     </script>
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Transaction ID copied: ' + text);
+            }).catch(err => {
+                alert('Failed to copy text: ' + err);
+            });
+        }
+    </script>
+    
 @endpush

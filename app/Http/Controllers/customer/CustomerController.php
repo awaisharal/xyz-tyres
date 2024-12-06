@@ -57,7 +57,7 @@ class CustomerController extends Controller
 
     public function logout(Request $request)
     {
-        if (Auth::guard('customers')->check()) {
+        if (Auth::guard('customers')->check()) {    
             Auth::guard('customers')->logout(); // Log out the customer
         }
 
