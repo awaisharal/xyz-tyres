@@ -80,9 +80,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @yield('extra_js')
-    {{-- {!! Toastr::message() !!} --}}
+    {!! Toastr::message() !!}
 
-    {{-- @if ($errors->any())
+    @if ($errors->any())
         <script>
             @foreach ($errors->all() as $error)
                 toastr.error('{{ $error }}', Error, {
@@ -91,7 +91,7 @@
                 });
             @endforeach
         </script>
-    @endif --}}
+    @endif
     <!-- Toggle Direction Init -->
     {{-- <script>
         "use strict";

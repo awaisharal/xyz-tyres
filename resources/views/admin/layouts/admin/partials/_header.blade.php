@@ -61,21 +61,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="
-                                {{-- {{route('admin.settings')}} --}}
-                                ">
-                                    <span class="text-truncate pr-2"
-                                          title="settings
-                                          {{-- {{\App\CPU\translate('settings')}} --}}
-                                          ">
-                                          {{-- {{\App\CPU\translate('settings')}} --}}
-                                        </span>
-                                </a>
+                                
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('admin.logout') }}" id="logoutLink">
                                     <span class="text-truncate pr-2" title="Sign out">
-                                        sign_out
+                                        Sign Out
                                     </span>
                                 </a>
                             </div>

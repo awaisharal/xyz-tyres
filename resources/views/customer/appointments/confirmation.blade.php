@@ -175,7 +175,7 @@
                     </div>
                     <div class="d-flex align-items-center mb-3">
                         <i class="far fa-clock me-2"></i>
-                        <span>{{$service->duration}}</span>
+                        <span>{{$service->duration}} {{$service->duration_type}}</span>
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
@@ -190,7 +190,7 @@
 
             <!-- Main Calendar Area -->
             <div class="col-md-6 position-relative p-5">
-                <h5>Enter Details*</h5>
+                <h5>Enter Details</h5>
                 <form action="{{route('customer.store.appointment')}}" method="POST" class="bookingForm">
                     @csrf
                     <div>
@@ -207,14 +207,14 @@
                     @endphp
 
                     <div class="form-group">
-                        <label for="name">Name*</label>
-                        <input type="text" name="name" id="name" class="form-control" 
+                        <label for="name">Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="eg. Name" 
                             value="{{ $customer->name ?? '' }}" 
                             {{ $isLoggedIn ? 'readonly' : 'required' }} />
                     </div>
                     <div class="form-group">
-                        <label for="email">Email*</label>
-                        <input type="email" name="email" id="email" class="form-control" 
+                        <label for="email">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="eg. example@example.com" 
                             value="{{ $customer->email ?? '' }}" 
                             {{ $isLoggedIn ? 'readonly' : 'required' }} />
                     </div>
@@ -222,9 +222,9 @@
 
                     @if (!$isLoggedIn)
                     <div class="form-group d-none" id="passwordGroup">
-                        <label for="password">Password*</label>
+                        <label for="password">Password <span class="text-danger">*</span></label>
                         <div class="input-group">
-                            <input type="password" name="password" id="password" class="form-control" required />
+                            <input type="password" name="password" id="password" class="form-control" placeholder="xxxxxxxx" required />
                             <button type="button" id="verifyPasswordButton" class="btn btn-outline-success">
                                 <i class="fas fa-check" id="verifyPasswordIcon"></i>
                             </button>
@@ -234,9 +234,9 @@
                     
                     <!-- Confirm Password Field -->
                     <div class="form-group d-none" id="confirmPasswordGroup">
-                        <label for="confirm_password">Confirm Password*</label>
+                        <label for="confirm_password">Confirm Password <span class="text-danger">*</span></label>
                         <div class="input-group">
-                            <input type="password" id="confirm_password" class="form-control" required />
+                            <input type="password" id="confirm_password" class="form-control" placeholder="xxxxxxxx" required />
                             <button type="button" id="verifyConfirmPasswordButton" class="btn btn-outline-success">
                                 <i class="fas fa-check" id="verifyConfirmPasswordIcon"></i>
                             </button>
@@ -244,8 +244,8 @@
                     </div>
                     @endif
                     <div class="form-group">
-                        <label for="phone">Phone Number*</label>
-                        <input type="text" name="phone" id="phone" class="form-control" required />
+                        <label for="phone">Phone Number <span class="text-danger">*</span></label>
+                        <input type="text" name="phone" id="phone" class="form-control" placeholder="eg. 999-999-9999" required />
                     </div>
                     <div class="form-group">
                         <small>

@@ -148,7 +148,7 @@
                     </div>
                     <div class="d-flex align-items-center mb-3">
                         <i class="far fa-clock me-2"></i>
-                        <span>{{$service->duration}}</span>
+                        <span>{{$service->duration}} {{$service->duration_type}}</span>
                     </div>
                 </div>
                 <div class="d-flex align-items-center">

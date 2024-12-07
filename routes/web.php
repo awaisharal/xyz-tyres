@@ -117,26 +117,29 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function ()
     {
-        Route::get('/login',[AdminController::class,'login_view'])->name('view');
-        //logout
-        Route::get('/logout',[AdminController::class,'logout'])->name('logout');
-        Route::post('/login',[AdminController::class,'login'])->name('login');
-        //dashboard routes
+        // Auth
+        Route::get('login',[AdminController::class,'login'])->name('login');
+        Route::post('login',[AdminController::class,'login_post'])->name('login.post');
+        Route::get('logout',[AdminController::class,'logout'])->name('logout');
+
+        // Dashboard
         Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
-        //customer listing
-        Route::get('/customer/list',[AdminController::class,'CustomerList'])->name('customer.list');
-        Route::post('/customer/update',[AdminController::class,'CustomerUpdate'])->name('customer.update');
-        Route::delete('/customer/delete/{id}',[AdminController::class,'CustomerDestroy'])->name('customer.destroy');
-        //shop listing
-        Route::get('/shopkeeper/list',[AdminController::class,'ShopList'])->name('shopkeeper.list');
-        Route::post('shopkeeper/update',[AdminController::class,'ShopkeeperUpdate'])->name('shopkeeper.update');
-        Route::delete('/shopkeeper/delete/{id}',[AdminController::class,'ShopkeeperDestroy'])->name('shopkeeper.destroy');
-        Route::get('/shopkeeper/service/provider',[AdminController::class,'ServiceProvider'])->name('shopkeeper.service.provider');
-        Route::get('/shopkeeper/service',[AdminController::class,'Service'])->name('shopkeeper.service');
-        //Appointment listing
-        Route::get('/appointment/list',[AdminController::class,'AppointmentList'])->name('appointment.list');
-        Route::delete('/appointment/delete/{id}',[AdminController::class,'AppointmentDestroy'])->name('appointment.destroy');
-        //Payment
-        Route::get('/payment/list',[AdminController::class,'PaymentList'])->name('payment.list');
+
+        // Customers
+        Route::get('customers/list',[AdminController::class,'customers'])->name('customer.list');
+        Route::post('customer/update',[AdminController::class,'customer_update'])->name('customer.update');
+        Route::post('customer/delete',[AdminController::class,'customer_delete'])->name('customer.delete');
+
+        // Shopkeepers
+        Route::get('shopkeepers/list',[AdminController::class,'shopkeepers'])->name('shopkeeper.list');
+        Route::post('shopkeeper/update',[AdminController::class,'shopkeeper_update'])->name('shopkeeper.update');
+        Route::post('shopkeeper/delete',[AdminController::class,'shopkeeper_delete'])->name('shopkeeper.delete');
+
+        // Appointments
+        Route::get('appointments/list',[AdminController::class,'appointments'])->name('appointment.list');
+        Route::post('appointment/delete',[AdminController::class,'appointments_delete'])->name('appointment.delete');
+
+        //Payments
+        Route::get('payments/list',[AdminController::class,'payments'])->name('payment.list');
     });
 require __DIR__.'/auth.php';
