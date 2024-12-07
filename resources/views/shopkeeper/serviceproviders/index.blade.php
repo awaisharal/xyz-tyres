@@ -24,7 +24,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th><Address></Address></th>
+                                <th>Address</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -50,7 +50,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">No service providers found.</td>
+                                    <td colspan="5" class="text-center">No service providers found.</td>
                                 </tr>
                             @endforelse
                         </tbody>

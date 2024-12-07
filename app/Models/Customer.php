@@ -13,8 +13,13 @@ class Customer extends Authenticatable
     use Notifiable;
     protected $guarded = [];
     public function appointments()
-{
-    return $this->hasMany(Appointment::class, 'customer_id');
-}
+    {
+        return $this->hasMany(Appointment::class, 'customer_id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'customer_id');
+    }
 
 }

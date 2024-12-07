@@ -26,99 +26,43 @@
                             <small class="nav-subtitle">Dashboard</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin') ? 'show' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/dashboard') ? 'show' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="
-                            {{ route('admin.dashboard') }}" title="dashboards">
+                            {{ route('admin.dashboard') }}" title="Dashboard">
                                 <i class="tio-home-vs-1-outlined nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    dashboard
+                                    Dashboard
                                 </span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <small class="nav-subtitle">Menue</small>
+                            <small class="nav-subtitle">Menu</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
-                        <li class="nav-item {{ Request::is('admin/customer/list') ? 'active' : '' }}">
-                            <a class="nav-link "
-                                href="
-                            {{ route('admin.customer.list') }}
-                             "
-                                title="
-                                list_of_customers
-                                {{-- {{ \App\CPU\translate('list_of_customers') }} --}}
-                                 ">
+                        <li class="nav-item {{ Request::is('admin/customers/list') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.customer.list') }}" title="Customers List">
                                 <span class="tio-user-outlined nav-icon"></span>
                                 <span class="text-truncate">Customers</span>
                             </a>
                         </li>
-                        <li
-                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/shpkeeper*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
-                                href="javascript:void(0)
-                                {{-- {{ route('admin.shopkeeper.list') }} --}}
-                                 ">
-                                <span class="tio-shop nav-icon"></span>
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    Shop Keepers
-                                    {{-- {{ \App\CPU\translate('Bookings') }} --}}
-                                </span>
-                            </a>
-                            <ul
-                                class="js-navbar-vertical-aside-submenu nav nav-sub {{ Request::is('admin/booking/*') ? 'd-block' : '' }}">
-                                <li class="nav-item {{ Request::is('admin/shopkeeper/list') ? 'active' : '' }}">
-                                    <a class="nav-link"
-                                        href="
-                                        {{ route('admin.shopkeeper.list') }}
-                                         "
-                                        title="List Shopkeeper">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">Shop</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item {{ Request::is('admin/shopkeeper/service/provider') ? 'active' : '' }}">
-                                    <a class="nav-link "
-                                        href="
-                                        {{ route('admin.shopkeeper.service.provider') }}
-                                         "
-                                        title="Create Booking">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">Service Provider</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item {{ Request::is('admin/shopkeeper/service') ? 'active' : '' }}">
-                                    <a class="nav-link "
-                                        href="
-                                        {{ route('admin.shopkeeper.service') }}
-                                         "
-                                        title="Create Booking">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">Services</span>
-                                    </a>
-                                </li>
 
-                            </ul>
+                        <li class="nav-item {{ Request::is('admin/shopkeepers/list') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.shopkeeper.list') }}" title="Shopkeepers List">
+                                <span class="tio-shop nav-icon"></span>
+                                <span class="text-truncate">Shopkeepers</span>
+                            </a>
                         </li>
 
-                        <li class="nav-item {{ Request::is('admin/appointment/list') ? 'active' : '' }}">
-                            <a class="nav-link"
-                                href="
-                            {{ route('admin.appointment.list') }}
-                             "
-                                title="List Appointments">
-                                {{-- <span class="tio-add-event nav-icon"></span> --}}
+                        <li class="nav-item {{ Request::is('admin/appointments/list') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.appointment.list') }}" title="Appointments List">
                                 <i class="fas fa-calendar-alt nav-icon"></i>
                                 <span class="text-truncate">Appointments</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ Request::is('admin/payment/list') ? 'active' : '' }}">
-                            <a class="nav-link"
-                                href="
-                            {{ route('admin.payment.list') }}
-                             "
-                                title="List Payments">
-                                {{-- <span class="tio-add-event nav-icon"></span> --}}
+
+                        <li class="nav-item {{ Request::is('admin/payments/list') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.payment.list') }}" title="Payments List">
                                 <i class="tio-paypal nav-icon"></i>
                                 <span class="text-truncate">Payments</span>
                             </a>

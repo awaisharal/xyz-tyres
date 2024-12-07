@@ -3,7 +3,7 @@
 @section('title','dashboard')
 
 @section('content')
-<h1 class="mt-5 text-center">Dashboard !!</h1>
+<h1 class="mt-5 text-center">Welcome to Dashboard</h1>
 {{-- <div class="content container-fluid">
 
     <div class="card mb-3 bg-white">
