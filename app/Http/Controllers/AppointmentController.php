@@ -14,6 +14,8 @@ use App\Models\Appointment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
+use App\Notifications\AppointmentConfirmation;
+use Illuminate\Support\Facades\Notification;
 
 class AppointmentController extends Controller
 {
@@ -125,6 +127,27 @@ class AppointmentController extends Controller
             'service' => 'required|exists:services,id',
             'phone' => 'required|string|min:10|max:15|regex:/^[0-9]+$/',
         ]);
+        $service = Service::findOrFail($validated['service']);
+
+        
+        if ($service->price == 0) {
+            try {
+                $customer = Auth::guard('customers')->user();
+                $appointment=Appointment::create([
+                    'service_id' => $validated['service'],
+                    'customer_id' => $customer->id,
+                    'date' => $validated['date'],
+                    'time' => $validated['time'],
+                    'phone' => $validated['phone'],
+                    'payment_status' =>'free',
+                ]);
+                $customer->notify(new AppointmentConfirmation($appointment));
+
+                return redirect()->route('customer.appointments.index')->with('success', 'Appointment created successfully without payment.');
+            } catch (\Throwable $th) {
+                return redirect()->back()->with('error', $th->getMessage());
+            }
+        }
 
 
         try {
@@ -254,7 +277,7 @@ class AppointmentController extends Controller
         Session::put('paymentData', $payment);
 
 
-
+        $customer->notify(new AppointmentConfirmation($appointment));
         return redirect()->route('payment.thankyou')->with('success', 'Appointment successfully created!');
         } catch (\Throwable $th) {
             return redirect()->route('customer.services')->with('error', $th->getMessage());

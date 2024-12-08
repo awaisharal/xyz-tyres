@@ -37,7 +37,7 @@ class ServiceController extends Controller
             'service_provider_id' => 'required|exists:service_providers,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:1',
+            'price' => 'required|numeric|',
             'duration' => 'required|numeric|min:1',
             'duration_type' => 'required',
             'first_reminder_enabled' => 'boolean',
