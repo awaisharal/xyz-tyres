@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Shopkeeper;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServiceProvider;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 
 class ServiceProviderController extends Controller
@@ -40,8 +41,8 @@ class ServiceProviderController extends Controller
             'address' => $request->address,
             'user_id' => auth()->id(), // Associate with the logged-in user's ID
         ]);
-
-        return redirect()->route('service-providers.index')->with('success', 'Service provider added successfully.');
+        Toastr::success('Service provider added successfully.');
+        return redirect()->route('service-providers.index');
     }
 
     // Show the form for editing the specified service provider
@@ -71,8 +72,8 @@ class ServiceProviderController extends Controller
         ]);
 
         $serviceProvider->update($request->only('name', 'email', 'phone', 'address'));
-
-        return redirect()->route('service-providers.index')->with('success', 'Service provider updated successfully.');
+        Toastr::success('Service provider updated successfully.');
+        return redirect()->route('service-providers.index');
     }
 
     // Remove the specified service provider from the database
@@ -84,7 +85,7 @@ class ServiceProviderController extends Controller
         }
 
         $serviceProvider->delete();
-
-        return redirect()->route('service-providers.index')->with('success', 'Service provider deleted successfully.');
+        Toastr::success('Service provider deleted successfully.');
+        return redirect()->route('service-providers.index');
     }
 }

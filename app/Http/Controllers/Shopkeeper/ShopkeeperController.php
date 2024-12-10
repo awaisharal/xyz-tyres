@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Appointment;
 use App\Models\Customer;
+use Brian2694\Toastr\Facades\Toastr;
+
 
 class ShopkeeperController extends Controller
 {
@@ -16,7 +18,8 @@ class ShopkeeperController extends Controller
     $shopkeeper = Auth::user();
     if (!$shopkeeper) {
        
-        return redirect()->route('login')->with('error', 'You must be logged in to view appointments.');
+        Toastr::error('You must be logged in to view appointments.');
+        return redirect()->route('login');
     }
     $appointments = Appointment::with(['service', 'service.user', 'customer'])
     ->whereHas('service', function ($query) use ($shopkeeper) {

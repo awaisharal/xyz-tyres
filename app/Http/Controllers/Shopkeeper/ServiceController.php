@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Brian2694\Toastr\Facades\Toastr;
+
 
 class ServiceController extends Controller
 {
@@ -95,8 +97,8 @@ if ($request->hasFile('image')) {
             'followup_reminder_hours' => $request->followup_reminder_hours,
             'followup_reminder_message' => $request->followup_reminder_message,
         ]);
-
-        return redirect()->route('services.index')->with('success', 'Service added successfully');
+        Toastr::success('Service added successfully');
+        return redirect()->route('services.index');
     }
 
     public function edit($id)
@@ -170,8 +172,8 @@ if ($request->hasFile('image')) {
             'followup_reminder_hours' => $request->followup_reminder_hours,
             'followup_reminder_message' => $request->followup_reminder_message,
         ]);
-
-        return redirect()->route('services.index')->with('success', 'Service updated successfully');
+        Toastr::success('Service updated successfully');
+        return redirect()->route('services.index');
     }
 
     public function destroy($id)
@@ -184,7 +186,7 @@ if ($request->hasFile('image')) {
         }
 
         $service->delete();
-
-        return redirect()->route('services.index')->with('success', 'Service deleted successfully');
+        Toastr::success('Service deleted successfully');
+        return redirect()->route('services.index');
     }
 }

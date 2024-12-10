@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Appointment;
+use Brian2694\Toastr\Facades\Toastr;
+
 
 class CustomerController extends Controller
 {
@@ -47,12 +49,13 @@ class CustomerController extends Controller
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-    
+        
         if (Auth::guard('customers')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            Toastr::success('Log in Successfully!.');
             return redirect()->route('customer.dashboard');
         }
-        
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+        Toastr::error('Invalid credentials.');
+        return back();
     }
 
     public function logout(Request $request)
@@ -60,8 +63,8 @@ class CustomerController extends Controller
         if (Auth::guard('customers')->check()) {    
             Auth::guard('customers')->logout(); // Log out the customer
         }
-
-        return redirect ('customer/login')->withErrors('success', 'logged out successfully.');
+        Toastr::success('logged out successfully.');
+        return redirect ('customer/login');
     }
 
     public function dashboard(){
@@ -80,8 +83,9 @@ class CustomerController extends Controller
 {
     $customer = Auth::guard('customers')->user();
 
-    if (!$customer) {   
-        return redirect()->route('customer.login')->with('error', 'You must be logged in to view your appointments.');
+    if (!$customer) {
+        Toastr::error('You must be logged in to view your appointments.');
+        return redirect()->route('customer.login');
     }
 
     $appointments = Appointment::where('customer_id', $customer->id)
@@ -106,8 +110,10 @@ class CustomerController extends Controller
     public function update(Request $request)
     {
         $customer = Auth::guard('customers')->user(); 
-        if (!($customer instanceof Customer)) {
-            return redirect()->route('customer.profile.edit')->with('error', 'Customer not found.');
+        if (!($customer instanceof Customer)) 
+        {
+            Toastr::error('Customer not found.');
+            return redirect()->route('customer.profile.edit');
         }
         
         $request->validate([
@@ -123,7 +129,9 @@ class CustomerController extends Controller
 
          $customer->save();
 
-        return redirect()->route('customer.profile.edit')->with('success', 'Profile updated successfully.');
+         Toastr::success('Updated successfully');
+         return back(); 
+
     }
 
     
@@ -144,27 +152,28 @@ class CustomerController extends Controller
 
         
         if (!($customer instanceof Customer)) {
-            return redirect()->route('customer.profile.edit')->with('error', 'Customer not found.');
+            Toastr::error('Customer not found.');
+            return redirect()->route('customer.profile.edit');
         }
 
         
         if (!Hash::check($request->input('current_password'), $customer->password)) {
-            return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+            Toastr::error('Current password is incorrect.');
+            return back();
         }
 
         
         $customer->password = Hash::make($request->input('password'));
-
-        
         $customer->save();
-
+        Toastr::success('Password updated successfully.');
         return redirect()->route('customer.profile.edit')->with('success', 'Password updated successfully.');
     }
     public function destroy(Request $request)
     {
         
         if (!$request->has('confirm_delete')) {
-            return redirect()->back()->withErrors(['confirm_delete' => 'You must confirm the deletion of your account.']);
+            Toastr::error('You must confirm the deletion of your account.');
+            return redirect()->back();
         }
 
         // Get the logged-in customer
@@ -175,8 +184,9 @@ class CustomerController extends Controller
 
        
         Auth::logout();
+        Toastr::success('Your account has been deleted.');
 
         
-        return redirect()->route('customer/register')->with('status', 'Your account has been deleted.');
+        return redirect()->route('customer/register');
     }
 }
