@@ -7,6 +7,7 @@
         <link rel="shortcut icon" href="/assets/images/favicon.ico" />
         <link rel="stylesheet" href="/assets/css/backend-plugin.min.css">
         <link rel="stylesheet" href="/assets/css/backend.css?v=1.0.1">
+        <link rel="stylesheet" href="/assets/css/toastr.css">
         <link rel="stylesheet" href="/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
         <link rel="stylesheet" href="/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
         <link rel="stylesheet" href="/assets/vendor/remixicon/fonts/remixicon.css">
@@ -36,12 +37,25 @@
         <script src="/assets/js/backend-bundle.min.js"></script>
         <script src="/assets/js/customizer.js"></script>
         <script src="/assets/js/app.js"></script>
+        <script src="/assets/js/toastr.js"></script>
         <script>
             window.addEventListener('load', function () {
                 document.getElementById('loading').style.display = 'none';
             });
         </script>
         @yield('scripts')
+        {!! Toastr::message() !!}
+
+            @if ($errors->any())
+                <script>
+                    @foreach ($errors->all() as $error)
+                        toastr.error('{{ $error }}', Error, {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                    @endforeach
+                </script>
+            @endif
     </body>
 
 </html>
