@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Auth;
 
 //////////////////////////////////////////////////////////SHOPKEEPER ROUTES///////////////////////////////////////////////////////////
 
-Route::get('/', function () {
-return view('shopkeeper.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/', function () {
+// return view('shopkeeper.dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 //about me
 Route::get('/aboutme', function () {
     return view('shopkeeper.aboutme');
@@ -26,14 +26,15 @@ Route::get('/aboutme', function () {
 
 
 Route::middleware('auth')->group(function () {
-    //dashboard
-    Route::get('/', function () {
-        return view('shopkeeper.dashboard');
-        })->middleware(['auth', 'verified'])->name('dashboard');
-        //about me
-        Route::get('/aboutme', function () {
-            return view('shopkeeper.aboutme');
-        })->middleware(['auth', 'verified'])->name('aboutme');
+        //     about me
+    //     Route::get('/aboutme', function () {
+    //         return view('shopkeeper.aboutme');
+    //     })->middleware(['auth', 'verified'])->name('aboutme');
+
+        //dashboard
+    Route::get('/', [ShopkeeperController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/sales', [ShopkeeperController::class, 'getSalesData'])->name('shopkeeper.sales');
+
         //profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -188,7 +188,8 @@ class AppointmentController extends Controller
                     "total" => $service->price * 100
                 ],
                 "redirectUrls" => [
-                    "success" => "https://1c3c-154-192-136-25.ngrok-free.app/payment/success",
+                    "success" => "https://7c62-154-192-137-9.ngrok-free.app/payment/success",
+                
                     "failure" => "https://google.com",
                     "cancel" => "https://google.com"
                 ]
@@ -264,6 +265,7 @@ class AppointmentController extends Controller
 
             $validated = Session::get('appointment_data');
             $customer = Auth::guard('customers')->user();
+            
             // return $paymentStatus;
 
 
@@ -285,10 +287,10 @@ class AppointmentController extends Controller
                 'transaction_id' => $transactionId,
             ]);
 
+            
+
+
             $shopkeeper = $appointment->service->user;
-
-
-
 
             Session::forget(['session_id', 'appointment_data']);
             // $session = Session::put('payresponse', $paymentRes);
@@ -297,6 +299,7 @@ class AppointmentController extends Controller
             Session::put('amountPaid', $amount);
             Session::put('appointmentData', $appointment);
             Session::put('paymentData', $payment);
+            // Session::put('shopkeeper',$shopkeeper );
 
 
             $customer->notify(new AppointmentConfirmation($appointment));
@@ -315,11 +318,14 @@ class AppointmentController extends Controller
     {
         $transactionId = Session::get('transactionID');
         $amountPaid = Session::get('amountPaid');
-        $appointmentData = Session::get('appointmentdata');
+        $appointmentData = Session::get('appointmentData');
         $paymentData = Session::get('paymentData');
+
         $paymentDate = Carbon::parse($paymentData->created_at)->format('d-m-Y');
+        // return $appointmentData;
         $appointmentDate = Carbon::parse($appointmentData->date)->format('d-m-Y');
-        return view('customer.appointments.success_appointment', compact('transactionId', 'appointmentData', 'paymentData', 'paymentDate', 'amountPaid', 'appointmentDate'));
+        
+        return view('customer.appointments.success_appointment', compact('transactionId', 'appointmentData', 'paymentData', 'paymentDate', 'amountPaid','appointmentDate'));
     }
 
 
