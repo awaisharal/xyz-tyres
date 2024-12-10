@@ -9,6 +9,7 @@
         .th, tr {
             text-align: center;
         }
+        
     </style>
 @endpush
 
@@ -52,6 +53,7 @@
                                     <th>Shop Name</th>
                                     <th>Email</th>
                                     <th>Company</th>
+                                    <th>Permissions</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -63,9 +65,19 @@
                                         <td>{{ $shopkeeper->name }}</td>
                                         <td><a href="mailto:{{ $shopkeeper->email }}">{{ $shopkeeper->email }}</a></td>
                                         <td>{{ $shopkeeper->company }}</td>
-                                        
+                    
+                                        <!-- Toggle Button for is_permitted -->
+                                        <td>
+                                            <label class="switch">
+                                                <input type="checkbox" class="is-permitted-toggle" data-shopkeeper-id="{{ $shopkeeper->id }}" {{ $shopkeeper->is_permitted ? 'checked' : '' }}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </td>
+                    
                                         <td class="d-flex justify-content-center">
-                                            <a class="btn btn-white mr-1" onclick="updateShopkeeper('{{$shopkeeper->name }}','{{$shopkeeper->email}}','{{$shopkeeper->company}}','{{$shopkeeper->id}}')"  href="javascript:void(0)"><span class="tio-edit"></span></a>
+                                            <a class="btn btn-white mr-1" onclick="updateShopkeeper('{{ $shopkeeper->name }}','{{ $shopkeeper->email }}','{{ $shopkeeper->company }}','{{ $shopkeeper->id }}')"  href="javascript:void(0)">
+                                                <span class="tio-edit"></span>
+                                            </a>
                                             <button type="button" onClick="deleteShopkeeper({{ $shopkeeper->id }})" class="btn btn-white mr-1">
                                                 <span class="tio-delete"></span>
                                             </button>
@@ -75,8 +87,8 @@
                             @endif
                             </tbody>
                             <tfoot>
-                                <tr >
-                                    <td colspan="5">
+                                <tr>
+                                    <td colspan="6">
                                         <div class="pagination-wrapper">
                                             {!! $shopkeepers->links() !!}
                                         </div>
@@ -93,6 +105,7 @@
                             </div>
                         @endif
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -198,6 +211,41 @@
         $("#deleteShopkeeper #id").val(id);
         $("#deleteShopkeeper").modal('show');
     }
+
+
+    //toggle button
+    $(document).ready(function() {
+    // Listen for toggle button change
+    $('.is-permitted-toggle').change(function() {
+        var shopkeeperId = $(this).data('shopkeeper-id');
+        var isPermitted = $(this).prop('checked') ? 1 : 0;
+
+        // Send AJAX request to update the 'is_permitted' status
+        $.ajax({
+            url: '/admin/shopkeeper/toggle-permission', // Define the correct route
+            method: 'POST',
+            data: {
+                shopkeeper_id: shopkeeperId,
+                is_permitted: isPermitted,
+                _token: '{{ csrf_token() }}' // Include CSRF token
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Optionally, update the toggle color or add a success class
+                    // You can also update the status text next to the toggle button if needed
+                    // Example: changing the toggle to green on success
+                    $('.is-permitted-toggle[data-shopkeeper-id="'+shopkeeperId+'"]').parent().toggleClass('success');
+                }
+            },
+            error: function() {
+                // Revert the toggle if the update fails
+                $('.is-permitted-toggle[data-shopkeeper-id="'+shopkeeperId+'"]').prop('checked', !isPermitted);
+            }
+            });
+        });
+    });
+
+
     
 </script>
 @endpush

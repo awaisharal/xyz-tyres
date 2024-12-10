@@ -64,12 +64,18 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="price">Price</label>
-                                        <input type="number" name="price" class="form-control" placeholder="Enter price..." value="{{ old('price') }}" step="0.01" required>
+                                        @if(Auth::user()->is_permitted)                                    
+                                            <input type="number" name="price" class="form-control" placeholder="Enter price..." 
+                                                   value="{{ old('price') }}" step="0.01" required>
+                                        @else
+                                            <input type="number" name="price" class="form-control" value="0" readonly>
+                                        @endif
                                         @error('price')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+                                
 
                                 <!-- Duration -->
                                 <div class="col-md-3">

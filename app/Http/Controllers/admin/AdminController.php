@@ -181,6 +181,24 @@ class AdminController extends Controller
         return back();
     }
 
+    //toggle permission
+    public function togglePermission(Request $request)
+    {
+        $shopkeeper = User::find($request->shopkeeper_id);
+
+        if (!$shopkeeper) {
+            return response()->json(['success' => false, 'message' => 'Shopkeeper not found']);
+        }
+
+        // Update the 'is_permitted' field
+        $shopkeeper->is_permitted = $request->is_permitted;
+        $shopkeeper->save();
+
+        return response()->json(['success' => true]);
+    }
+
+
+
     public function logout(Request $request)
     {
         if (Auth::guard('admin')->check()) {

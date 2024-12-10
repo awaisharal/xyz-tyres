@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('image')->nullable(); // Assuming you will store the image path
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 8, 2)->default(0);
             // $table->time('duration')->nullable();
             $table->integer('duration')->nullable(); // Add new integer duration
             $table->string('duration_type', 20)->nullable(); // Updated to store duration in HH:MM format

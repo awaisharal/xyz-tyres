@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Illuminate\Support\Facades\Auth;
 
-//SHOPKEEPER
+//////////////////////////////////////////////////////////SHOPKEEPER ROUTES///////////////////////////////////////////////////////////
 
 Route::get('/', function () {
 return view('shopkeeper.dashboard');
@@ -39,11 +39,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    //schedule
+    //shop schedule
     Route::get('/profile/schedule', [ProfileController::class, 'editSchedule'])->name('profile.schedule.edit'); // Edit Schedule
     Route::patch('/profile/schedule', [ProfileController::class, 'updateSchedule'])->name('profile.schedule.update');
 
-    //services
+    //services management 
     Route::get('/service', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/service/create', [ServiceController::class, 'create'])->name('services.create');
     Route::post('/service', [ServiceController::class, 'store'])->name('services.store');
@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/service/{service}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 
-    // Service Providers
+    // Service Providers->shopkeepers
     Route::get('/service-providers', [ServiceProviderController::class, 'index'])->name('service-providers.index');
     Route::get('/service-providers/create', [ServiceProviderController::class, 'create'])->name('service-providers.create');
     Route::post('/service-providers', [ServiceProviderController::class, 'store'])->name('service-providers.store');
@@ -63,9 +63,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-/////////////////////////////////////////////////
-// CUSTOMER ROUTES 
-
+/////////////////////////////////////////////////////////// CUSTOMER ROUTES /////////////////////////////////////////////////////////////
 
 //public customer routes
 Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
@@ -76,7 +74,6 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
     Route::post('/login', [CustomerController::class, 'login'])->name('login');
     
     Route::get('/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
-    // web.php (routes)
     Route::get('/shop/schedule/{userId}', [ProfileController::class, 'getSchedule'])->name('shop.schedule');
 
     // Services 
@@ -95,8 +92,7 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
         // Logout
         Route::post('/logout', [CustomerController::class, 'logout'])->name('logout');
 
-        //profile
-        
+        //profile        
         Route::get('/profile', [CustomerController::class, 'edit'])->name('profile.edit');
         Route::patch('/update', [CustomerController::class, 'update'])->name('profile.update');
         Route::get('/password', [CustomerController::class, 'editPassword'])->name('profile.password.edit');
@@ -105,15 +101,18 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
     });
 
 });
+    //show services 
     Route::get('/services', [CustomerController::class, 'showServices'])->name('customer.services');
+    //user email validation during appointment 
     Route::post('/check/user-email', [AppointmentController::class, 'check_userEmail'])->name('customer.checkEmail');
     Route::post('/login/validate', [AppointmentController::class, 'login_ValidateUser'])->name('customer.loginValidate');
     Route::post('/register/validate', [AppointmentController::class, 'register_ValidateUser'])->name('customer.registerValidate');
-
+    //payment confirmation 
     Route::get('/payment/success', [AppointmentController::class, 'confirm_payment'])->name('payment.verify');
     Route::get('/payment/success/thankyou', [AppointmentController::class, 'showThankyou'])->name('payment.thankyou');
 
 
+    ////////////////////////////////////////////////////////ADMIN ROUTES////////////////////////////////////////////////////////////////
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function ()
     {
@@ -134,6 +133,9 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
         Route::get('shopkeepers/list',[AdminController::class,'shopkeepers'])->name('shopkeeper.list');
         Route::post('shopkeeper/update',[AdminController::class,'shopkeeper_update'])->name('shopkeeper.update');
         Route::post('shopkeeper/delete',[AdminController::class,'shopkeeper_delete'])->name('shopkeeper.delete');
+        //permission toggle
+        Route::post('/shopkeeper/toggle-permission', [AdminController::class, 'togglePermission'])->name('toggle-permission');
+
 
         // Appointments
         Route::get('appointments/list',[AdminController::class,'appointments'])->name('appointment.list');
