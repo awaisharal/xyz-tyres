@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,7 +13,25 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        
+        $schedule->call(function () {
+            $appointments = \App\Models\Appointment::with(['service', 'customer'])
+                ->whereHas('service', function ($query) {
+                    $query->where('first_reminder_enabled', 1)
+                        ->whereRaw('TIMESTAMPDIFF(HOUR, NOW(), CONCAT(appointments.date, " ", appointments.time)) = services.first_reminder_hours');
+                })
+                ->get();
+                
+        
+            foreach ($appointments as $appointment) {
+                // Notify the customer
+                if ($appointment->customer) {
+                    $appointment->customer->notify(new \App\Notifications\FirstReminderNotification($appointment, 'Test Reminder Message'));
+                } else {
+                    \Log::error('Customer not found for appointment ID: ' . $appointment->id);
+                }
+            }
+        })->everyMinute();
     }
 
     /**
