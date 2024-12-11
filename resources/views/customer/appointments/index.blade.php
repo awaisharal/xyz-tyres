@@ -32,7 +32,7 @@
                         <td>{{ $appointment->time }}</td>
                         <td>
                             @if($appointment->payment_status ==='PAID')
-                                <span class="text-success">{{$appointment->payment_status}}</span>
+                                <span class="text-success">$$$</span>
                             @else
                                 <span class="text-danger">{{$appointment->payment_status}}</span>
                             @endif

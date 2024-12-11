@@ -147,7 +147,7 @@ class AppointmentController extends Controller
                     'date' => $validated['date'],
                     'time' => $validated['time'],
                     'phone' => $validated['phone'],
-                    'payment_status' => 'free',
+                    'payment_status' => 'Scheduled',
                 ]);
                 // $shopkeeper=Appointment::with('services')->get();
                 // $servicename = $appointment->service->user->name;
