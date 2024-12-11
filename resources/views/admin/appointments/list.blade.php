@@ -75,10 +75,10 @@
                                         <td>{{ \Carbon\Carbon::parse($appointment->date)->format('d M, Y') }}</td>
                                         <td>{{ $appointment->time }}</td>
                                         <td>
-                                            @if ($appointment->payment_status == 0)
-                                                <span class="badge bg-danger text-white px-2 py-1">Unpaid</span>
-                                            @elseif ($appointment->payment_status == 1)
-                                                <span class="badge bg-success text-white px-2 py-1">Paid</span>
+                                            @if ($appointment->payment_status == 'PAID')
+                                                <span class="badge badge-success ">Paid</span>
+                                            @else
+                                                <span class="badge badge-danger">Unpaid</span>
                                             @endif
                                         </td>
                                         <td>
@@ -128,7 +128,7 @@
                     <div>
                         <p class="mt-2">This action is permanent and cannot be undone. This appointment will be deleted from the system.</p>
                     </div>
-                    
+
                     <div class="col-12 d-flex justify-content-end ">
                         <input type="hidden" class="form-control" name="id" id="id">
                         <button type="submit" class="btn btn-primary me-sm-3">Delete</button>

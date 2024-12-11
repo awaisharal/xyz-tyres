@@ -66,10 +66,10 @@
                                             <td>{{ $payment->customer->name }}</td>
                                             <td>&dollar; {{ $payment->amount }}</td>
                                             <td>
-                                                @if ($payment->payment_status == 0)
-                                                    <span class="badge bg-danger text-white px-2 py-1">Unpaid</span>
-                                                @elseif($payment->payment_status == 1)
-                                                    <span class="badge bg-success text-white px-2 py-1">Paid</span>
+                                                @if ($payment->payment_status == 'PAID')
+                                                <span class="badge badge-success ">Paid</span>
+                                                @else
+                                                <span class="badge badge-danger">Unpaid</span>
                                                 @endif
                                             </td>
                                             <td>
@@ -135,5 +135,5 @@
             });
         }
     </script>
-    
+
 @endpush

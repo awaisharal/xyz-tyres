@@ -9,7 +9,7 @@
         .th, tr {
             text-align: center;
         }
-        
+
     </style>
 @endpush
 
@@ -53,7 +53,7 @@
                                     <th>Shop Name</th>
                                     <th>Email</th>
                                     <th>Company</th>
-                                    <th>Permissions</th>
+                                    <th>Payments allowed</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -65,7 +65,7 @@
                                         <td>{{ $shopkeeper->name }}</td>
                                         <td><a href="mailto:{{ $shopkeeper->email }}">{{ $shopkeeper->email }}</a></td>
                                         <td>{{ $shopkeeper->company }}</td>
-                    
+
                                         <!-- Toggle Button for is_permitted -->
                                         <td>
                                             <label class="switch">
@@ -73,7 +73,7 @@
                                                 <span class="slider round"></span>
                                             </label>
                                         </td>
-                    
+
                                         <td class="d-flex justify-content-center">
                                             <a class="btn btn-white mr-1" onclick="updateShopkeeper('{{ $shopkeeper->name }}','{{ $shopkeeper->email }}','{{ $shopkeeper->company }}','{{ $shopkeeper->id }}')"  href="javascript:void(0)">
                                                 <span class="tio-edit"></span>
@@ -105,7 +105,7 @@
                             </div>
                         @endif
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -166,7 +166,7 @@
                     <div>
                         <p class="mt-2">This action is permanent and cannot be undone. This shop will be deleted from the system.</p>
                     </div>
-                    
+
                     <div class="col-12 d-flex justify-content-end ">
                         <input type="hidden" class="form-control" name="id" id="id">
                         <button type="submit" class="btn btn-primary me-sm-3">Delete</button>
@@ -189,7 +189,7 @@
 
         searchInput.addEventListener('input', function () {
             if (searchInput.value === '' && isSearching) {
-                window.location.href = "{{ url()->current() }}"; 
+                window.location.href = "{{ url()->current() }}";
             }
         });
         searchForm.addEventListener('submit', function () {
@@ -246,6 +246,6 @@
     });
 
 
-    
+
 </script>
 @endpush
