@@ -16,6 +16,8 @@ class ShopkeeperController extends Controller
 {
     public function dashboard()
     {
+
+       
         $shopkeeperId = auth()->id(); // Assuming shopkeeper is authenticated
 
         // Fetch all services provided by this shopkeeper
