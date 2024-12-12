@@ -48,7 +48,7 @@
                             <i class="la la-clock me-1"></i> {{ $service->duration }} days
                         </div>
                     </div>
-                    <a href="{{ route('customer.appointment.create', $service->id) }}" 
+                    <a href="{{ route('customer.appointment.create', ['company_slug' => $service->user->company_slug, 'service' => $service->id] ) }}" 
                         class="btn btn-outline-dark mx-2 d-flex align-items-center" >
                          Book Now
                      </a>

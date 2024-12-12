@@ -74,8 +74,11 @@ class CustomerController extends Controller
         return view('customer.dashboard', compact('customer'));
     }
     public function showServices(){
+
+        
         $customer = Auth::guard('customers')->user();
         $services = Service::with('user')->get();
+        
        
         return view('customer.services', compact('customer', 'services'));
     }

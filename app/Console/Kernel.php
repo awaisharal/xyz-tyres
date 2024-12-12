@@ -13,7 +13,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        
         $schedule->call(function () {
             $appointments = \App\Models\Appointment::with(['service', 'customer'])
                 ->whereHas('service', function ($query) {
@@ -21,18 +20,54 @@ class Kernel extends ConsoleKernel
                         ->whereRaw('TIMESTAMPDIFF(HOUR, NOW(), CONCAT(appointments.date, " ", appointments.time)) = services.first_reminder_hours');
                 })
                 ->get();
-                
-        
+            
             foreach ($appointments as $appointment) {
-                // Notify the customer
-                if ($appointment->customer) {
-                    $appointment->customer->notify(new \App\Notifications\FirstReminderNotification($appointment, 'Test Reminder Message'));
-                } else {
-                    \Log::error('Customer not found for appointment ID: ' . $appointment->id);
-                }
+                // Get the service associated with the appointment
+                $service = $appointment->service;
+
+                // Check if the service has reminder notifications enabled for email or SMS
+                $emailNotification = $service->notify_via_email;
+                $smsNotification = $service->notify_via_sms;
+
+                // Send notifications based on settings
+                $this->sendReminder($service, $emailNotification, $smsNotification, $appointment);
             }
         })->everyMinute();
     }
+
+// Handle sending reminders based on notification types
+    public function sendReminder($service, $emailNotification, $smsNotification, $appointment)
+    {
+        if ($emailNotification && $smsNotification) {
+            // Send both email and SMS
+            $this->sendEmailNotification($service, $appointment);
+            $this->sendSmsNotification($service, $appointment);
+        } elseif ($emailNotification) {
+            // Send only email
+            $this->sendEmailNotification($service, $appointment);
+        } elseif ($smsNotification) {
+            // Send only SMS
+            $this->sendSmsNotification($service, $appointment);
+        }
+    }
+
+// Send email notification
+    public function sendEmailNotification($service, $appointment)
+    {
+        if ($appointment->customer) {
+            $appointment->customer->notify(new \App\Notifications\FirstReminderNotification($appointment, 'Test Reminder Message'));
+        } else {
+            \Log::error('Customer not found for appointment ID: ' . $appointment->id);
+        }
+    }
+
+    // Send SMS notification (placeholder for now)
+    public function sendSmsNotification($service, $appointment)
+    {
+        // Placeholder logic for SMS. Implement SMS API or logic as needed
+        \Log::info('Sending SMS reminder for appointment ID: ' . $appointment->id);
+    }
+
 
     /**
      * Register the commands for the application.

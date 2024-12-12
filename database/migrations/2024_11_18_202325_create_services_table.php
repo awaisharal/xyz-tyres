@@ -21,7 +21,9 @@ return new class extends Migration
             $table->decimal('price', 8, 2)->default(0);
             // $table->time('duration')->nullable();
             $table->integer('duration')->nullable(); // Add new integer duration
-            $table->string('duration_type', 20)->nullable(); // Updated to store duration in HH:MM format
+            $table->string('duration_type', 20)->nullable();
+            $table->tinyInteger('notify_via_email')->default(0);
+            $table->tinyInteger('notify_via_sms')->default(0);
             $table->boolean('first_reminder_enabled')->default(false);
             $table->integer('first_reminder_hours')->nullable(); // Hours before appointment for first reminder
             $table->text('first_reminder_message')->nullable();

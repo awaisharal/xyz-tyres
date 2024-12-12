@@ -5,7 +5,7 @@
     <div class="mb-4 d-flex justify-content-between align-items-center">
         <h1 class="display-5 fw-bold">Dashboard</h1>
         <div>
-            <select id="dashboard-period" class="form-control w-auto" onchange="changePeriod(this.value)" >
+            <select id="dashboard-period" class="form-control" onchange="changePeriod(this.value)">
                 <option value="daily" {{ $period === 'daily' ? 'selected' : '' }}>Today</option>
                 <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>Last 7 days</option>
                 <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last Month</option>
@@ -34,18 +34,7 @@
             </div>
         </div>
 
-        <!-- Most Booked Service -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Most Booked Service</h5>
-                    <p class="card-text">
-                        {{ $mostBookedService ? $mostBookedService->title : 'No services booked yet' }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
+        
         <!-- Sales Card -->
         <div class="col-md-6 col-lg-3 mb-4">
             <div class="card h-100">
@@ -55,6 +44,20 @@
                 </div>
             </div>
         </div>
+
+        <!-- Most Booked Service -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Most Booked Service</h5>
+                    <br>
+                <p class="card-text text-success" style="font-size: 1.5rem;">
+                    <strong>{{ $mostBookedService ? $mostBookedService->title : 'No services booked yet' }}</strong>
+                </p>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </main>
 @endsection

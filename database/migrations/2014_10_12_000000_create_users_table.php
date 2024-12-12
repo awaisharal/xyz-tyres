@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('company');
             $table->string('password');
+            $table->string('company_slug')->unique();
             $table->boolean('is_permitted')->default(0);
             $table->rememberToken();
             $table->timestamps();

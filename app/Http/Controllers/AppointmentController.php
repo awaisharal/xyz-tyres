@@ -23,8 +23,11 @@ use Brian2694\Toastr\Facades\Toastr;
 class AppointmentController extends Controller
 {
 
-    public function create(Service $service)
+    public function create($company_slug, $serviceId)
     {
+        // $slug= $service->user->company_slug;
+        // return $slug;
+        $service = Service::findOrFail($serviceId);
         $customer = Auth::guard('customers')->user();
         $user = $service->user;
         $userID = $user->id;
@@ -152,6 +155,7 @@ class AppointmentController extends Controller
                 // $shopkeeper=Appointment::with('services')->get();
                 // $servicename = $appointment->service->user->name;
                 $shopkeeper = $appointment->service->user;
+
 
                 // $shopkeeper= $servicename->user->name;
 

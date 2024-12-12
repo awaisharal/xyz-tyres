@@ -76,6 +76,9 @@ class ShopkeeperController extends Controller
             ->first();
             // $time =now();
             // return $time;
+
+            // $slug= Auth::user()->company_slug;
+            // return $slug;
     
         // Pass all the data to the dashboard view
         return view('shopkeeper.dashboard', compact(

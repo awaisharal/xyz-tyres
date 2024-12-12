@@ -51,6 +51,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::put('/service/{service}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+    //templates 
+    Route::get('/get-template-message', [ServiceController::class, 'getTemplateMessage'])->name('service.getTemplateMessage');
+
 
     // Service Providers->shopkeepers
     Route::get('/service-providers', [ServiceProviderController::class, 'index'])->name('service-providers.index');
@@ -74,8 +77,10 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
     Route::get('/login', [CustomerController::class, 'login_view'])->name('login.view');
     Route::post('/login', [CustomerController::class, 'login'])->name('login');
     
-    Route::get('/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
+    // Route::get('/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
+    Route::get('{company_slug}/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
     Route::get('/shop/schedule/{userId}', [ProfileController::class, 'getSchedule'])->name('shop.schedule');
+    Route::post('generate-qr', [ServiceController::class, 'generateQrCode'])->name('generateQr');
 
     // Services 
     Route::GET('/appointment/{service}/book', [AppointmentController::class, 'store'])->name('appointment.store');

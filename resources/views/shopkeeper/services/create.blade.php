@@ -104,55 +104,106 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <!-- Reminder Fields (First, Second, Followup) -->
+                    </div>
+                    
+                    <!-- Reminder Fields (First, Second, Followup) -->
                         @foreach (['first', 'second', 'followup'] as $reminderType)
-                            <div class="col-md-12 mb-2">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="hidden" name="{{ $reminderType }}_reminder_enabled" value="0">
-                                    <input
-                                        type="checkbox"
-                                        class="custom-control-input"
-                                        id="{{ $reminderType }}ReminderToggle"
-                                        name="{{ $reminderType }}_reminder_enabled"
-                                        value="1"
-                                        onclick="toggleReminder('{{ $reminderType }}')"
-                                    >
-                                    <label class="custom-control-label" for="{{ $reminderType }}ReminderToggle">
-                                        {{ ucfirst($reminderType) }} Reminder
-                                    </label>
-                                    <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="display: none; margin-left: -23px">
-                                        <div class="d-flex align-items-center mb-3">
-                                            @if ($reminderType == 'followup')
-                                                <!-- For Follow-up reminder, show 'after' -->
-                                                <div>
-                                                    Send follow-up reminder after
-                                                </div>
-                                            @else
-                                                <!-- For first and second reminder, show 'before' -->
-                                                <div>
-                                                    Send {{ $reminderType }} reminder before
-                                                </div>
-                                            @endif
-                                            <div class="mx-1">
-                                                <input type="number" class="reminder_input" name="{{ $reminderType }}_reminder_hours" id="{{ $reminderType }}ReminderHours" />
-                                            </div>
-                                            <div>hour(s)</div>
+                        <div class="col-md-12 mb-2 form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="hidden" name="{{ $reminderType }}_reminder_enabled" value="0">
+                                <input
+                                    type="checkbox"
+                                    class="custom-control-input"
+                                    id="{{ $reminderType }}ReminderToggle"
+                                    name="{{ $reminderType }}_reminder_enabled"
+                                    value="1"
+                                    onclick="toggleReminder('{{ $reminderType }}')"
+                                >
+                                <label class="custom-control-label" for="{{ $reminderType }}ReminderToggle">
+                                    {{ ucfirst($reminderType) }} Reminder
+                                </label>
+                                <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="display: none; margin-left: -23px">
+                                    <div class="d-flex align-items-center mb-3">
+                                        @if ($reminderType == 'followup')
+                                            <!-- For Follow-up reminder, show 'after' -->
+                                            <div>Send follow-up reminder after</div>
+                                        @else
+                                            <!-- For first and second reminder, show 'before' -->
+                                            <div>Send {{ $reminderType }} reminder before</div>
+                                        @endif
+                                        <div class="mx-1">
+                                            <input type="number" class="reminder_input" name="{{ $reminderType }}_reminder_hours" id="{{ $reminderType }}ReminderHours" />
                                         </div>
-                                        @error($reminderType . '_reminder_hours')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                                        <div>hour(s)</div>
+                                    </div>
+                                    @error($reminderType . '_reminder_hours')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror                                
+                                    
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="title mb-0">{{ ucfirst($reminderType) }} Reminder Message</label>
+                                        <!-- Copy icon on the right -->
+                                        <button 
+                                            type="button" 
+                                            class="copy-button"
+                                            style="border: none; background-color: white;"
+                                            data-key="{{ ucfirst($reminderType) }} Reminder"
+                                            onclick="copyReminderMessage('{{ $reminderType }}')"
+                                        >
+                                        
+                                            <i class="las la-paste" style="font-size: 22px;"></i> <!-- Using 'la-paste' icon -->
+                                        </button>
 
-                                        <label class="title">{{ ucfirst($reminderType) }} reminder message</label>
-                                        <textarea name="{{ $reminderType }}_reminder_message" class="form-control" rows="3">{{ old($reminderType . '_reminder_message') }}</textarea>
-                                        @error($reminderType . '_reminder_message')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center">
+                                        <textarea 
+                                            name="{{ $reminderType }}_reminder_message" 
+                                            id="{{ $reminderType }}ReminderMessage" 
+                                            class="form-control reminder-message" 
+                                            rows="3"
+                                        >{{ old($reminderType . '_reminder_message') }}</textarea>
+                                        
+                                    </div>
+                                    @error($reminderType . '_reminder_message')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{--notify selection --}}
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Send Reminders via:</label>
+                                <div class=" align-items-center">
+                                    <div>
+                                        <input 
+                                            type="checkbox" 
+                                            name="notify_via_email" 
+                                            id="notify_via_email" 
+                                            value="1" 
+                                            {{ old('notify_via_email', $service->notify_via_email ?? 0) ? 'checked' : '' }}
+                                        >
+                                        <label for="notify_via_email" class="ms-1">Email</label>
+                                    </div>
+                                    <div>
+                                        <input 
+                                            type="checkbox" 
+                                            name="notify_via_sms" 
+                                            id="notify_via_sms" 
+                                            value="1" 
+                                            {{ old('notify_via_sms', $service->notify_via_sms ?? 0) ? 'checked' : '' }}
+                                        >
+                                        <label for="notify_via_sms" class="ms-1">SMS</label>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
+
 
                         <!-- Service Image -->
                         <div class="col-md-12 mb-2 mt-2">
@@ -220,5 +271,49 @@
             document.getElementById("filename").innerText = '';
         }
     }
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Attach click event to all copy buttons
+        document.querySelectorAll('.copy-button').forEach(button => {
+            button.addEventListener('click', function () {
+                // Get the key to identify the message
+                const key = this.getAttribute('data-key');
+
+                // Make an AJAX request to fetch the message based on the key
+                fetch(`/get-template-message?key=${encodeURIComponent(key)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Find the associated textarea and set its value
+                            const reminderType = key.toLowerCase().replace(' reminder', '');
+                            const textarea = document.getElementById(`${reminderType}ReminderMessage`);
+                            textarea.value = data.message;
+                        } else {
+                            alert('Message not found!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching the template:', error);
+                        alert('An error occurred while fetching the message.');
+                    });
+            });
+        });
+    });
+
+    function copyReminderMessage(reminderType) {
+        // Get the reminder message textarea for the specific reminder
+        var reminderTextArea = document.querySelector(`[name='${reminderType}_reminder_message']`);
+        
+        // Select and copy the text
+        reminderTextArea.select();
+        document.execCommand('copy');
+
+    }
+
+
+
 </script>
 @endsection
