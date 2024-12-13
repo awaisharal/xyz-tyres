@@ -14,60 +14,82 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->call(function () {
-            $appointments = \App\Models\Appointment::with(['service', 'customer'])
+            // Fetch appointments for the First Reminder
+            $firstReminderAppointments = \App\Models\Appointment::with(['service', 'customer'])
                 ->whereHas('service', function ($query) {
                     $query->where('first_reminder_enabled', 1)
                         ->whereRaw('TIMESTAMPDIFF(HOUR, NOW(), CONCAT(appointments.date, " ", appointments.time)) = services.first_reminder_hours');
                 })
                 ->get();
-            
-            foreach ($appointments as $appointment) {
-                // Get the service associated with the appointment
-                $service = $appointment->service;
 
-                // Check if the service has reminder notifications enabled for email or SMS
-                $emailNotification = $service->notify_via_email;
-                $smsNotification = $service->notify_via_sms;
+            foreach ($firstReminderAppointments as $appointment) {
+                $this->sendReminder($appointment, 'first');
+            }
 
-                // Send notifications based on settings
-                $this->sendReminder($service, $emailNotification, $smsNotification, $appointment);
+            // Fetch appointments for the Second Reminder
+            $secondReminderAppointments = \App\Models\Appointment::with(['service', 'customer'])
+                ->whereHas('service', function ($query) {
+                    $query->where('second_reminder_enabled', 1)
+                        ->whereRaw('TIMESTAMPDIFF(HOUR, NOW(), CONCAT(appointments.date, " ", appointments.time)) = services.second_reminder_hours');
+                })
+                ->get();
+
+            foreach ($secondReminderAppointments as $appointment) {
+                $this->sendReminder($appointment, 'second');
+            }
+
+            // Fetch appointments for Follow-Up Reminder
+            $followupReminderAppointments = \App\Models\Appointment::with(['service', 'customer'])
+                ->whereHas('service', function ($query) {
+                    $query->where('followup_reminder_enabled', 1)
+                        ->whereRaw('TIMESTAMPDIFF(HOUR, CONCAT(appointments.date, " ", appointments.time), NOW()) = services.followup_reminder_hours');
+                })
+                ->get();
+
+            foreach ($followupReminderAppointments as $appointment) {
+                $this->sendReminder($appointment, 'followup');
             }
         })->everyMinute();
     }
 
-// Handle sending reminders based on notification types
-    public function sendReminder($service, $emailNotification, $smsNotification, $appointment)
+    // Handle sending reminders based on notification types
+    public function sendReminder($appointment, $type)
     {
-        if ($emailNotification && $smsNotification) {
-            // Send both email and SMS
-            $this->sendEmailNotification($service, $appointment);
-            $this->sendSmsNotification($service, $appointment);
-        } elseif ($emailNotification) {
-            // Send only email
-            $this->sendEmailNotification($service, $appointment);
-        } elseif ($smsNotification) {
-            // Send only SMS
-            $this->sendSmsNotification($service, $appointment);
+        $service = $appointment->service;
+
+        // Check notification preferences for Email and SMS
+        $emailNotification = $service->notify_via_email;
+        $smsNotification = $service->notify_via_sms;
+
+        // Send notifications based on the type
+        if ($type === 'first' && $service->first_reminder_enabled) {
+            $this->sendEmailNotification($appointment, \App\Notifications\FirstReminderNotification::class, 'This is your first reminder.');
+            $this->sendSmsNotification($appointment, 'First Reminder');
+        } elseif ($type === 'second' && $service->second_reminder_enabled) {
+            $this->sendEmailNotification($appointment, \App\Notifications\SecondReminderNotification::class, 'This is your second reminder.');
+            $this->sendSmsNotification($appointment, 'Second Reminder');
+        } elseif ($type === 'followup' && $service->followup_reminder_enabled) {
+            $this->sendEmailNotification($appointment, \App\Notifications\FollowupReminderNotification::class, 'Thank you for attending your appointment!');
+            $this->sendSmsNotification($appointment, 'Follow-Up Reminder');
         }
     }
 
-// Send email notification
-    public function sendEmailNotification($service, $appointment)
+    // Send email notification
+    public function sendEmailNotification($appointment, $notificationClass, $message)
     {
         if ($appointment->customer) {
-            $appointment->customer->notify(new \App\Notifications\FirstReminderNotification($appointment, 'Test Reminder Message'));
+            $appointment->customer->notify(new $notificationClass($appointment, $message));
         } else {
             \Log::error('Customer not found for appointment ID: ' . $appointment->id);
         }
     }
 
     // Send SMS notification (placeholder for now)
-    public function sendSmsNotification($service, $appointment)
+    public function sendSmsNotification($appointment, $type)
     {
         // Placeholder logic for SMS. Implement SMS API or logic as needed
-        \Log::info('Sending SMS reminder for appointment ID: ' . $appointment->id);
+        \Log::info("Sending $type SMS reminder for appointment ID: " . $appointment->id);
     }
-
 
     /**
      * Register the commands for the application.

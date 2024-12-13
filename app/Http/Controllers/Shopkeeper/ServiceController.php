@@ -205,6 +205,7 @@ if ($request->hasFile('image')) {
             'followup_reminder_hours' => $request->followup_reminder_hours,
             'followup_reminder_message' => $request->followup_reminder_message,
         ]);
+        
         Toastr::success('Service updated successfully');
         return redirect()->route('services.index');
     }
