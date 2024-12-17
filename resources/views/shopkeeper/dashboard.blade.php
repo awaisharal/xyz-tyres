@@ -1,6 +1,7 @@
 @extends('shopkeeper.layouts.app')
 @section('title', 'Dashboard')
 @section('content')
+
 <main class="container py-5">
     <div class="mb-4 d-flex justify-content-between align-items-center">
         <h1 class="display-5 fw-bold">Dashboard</h1>
@@ -57,6 +58,11 @@
                 </div>
             </div>
         </div>
+
+        <iframe src="http://127.0.0.1:8000/embed/{company_slug}" width="100%" 
+        height="600" 
+        frameborder="0" 
+        style="border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 10px;"></iframe>
         
     </div>
 </main>

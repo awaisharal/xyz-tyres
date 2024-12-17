@@ -9,7 +9,7 @@ use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Payment;
-
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\DB;
@@ -224,6 +224,16 @@ class ShopkeeperController extends Controller
     //   return $payments;
     return view('shopkeeper.payments.index', compact('payments'));
 
+    }
+
+    public function showBookingWidget($company_slug)
+    {
+        $services = Service::where('user_id', Auth::id())->get();       
+        $user=Auth::user(); 
+        // $user = User::where('company_slug', $company_slug)->firstOrFail();
+        $company_slug=$user->company_slug;  
+        // return $company_slug;                                                
+        return view('shopkeeper.booking-widget', compact('user', 'services','company_slug'));
     }
 
 }

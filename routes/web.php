@@ -10,6 +10,7 @@ use App\Http\Controllers\Shopkeeper\ShopkeeperController;
 use App\Http\Controllers\Shopkeeper\ServiceProviderController;
 use App\Http\Controllers\BookingsController;
 use App\Models\Appointment;
+use App\Notifications\ShopkeeperConfirmation;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +70,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers', [ShopkeeperController::class, 'showCustomers'])->name('customers');
     //payments
     Route::get('/payments', [ShopkeeperController::class, 'showPayments'])->name('payments');
+    //embedded link 
+    Route::get('/embed/{company_slug}', [ShopkeeperController::class, 'showBookingWidget'])->name('embed.booking.widget');
+    // Update the route to use the company_slug instead of userSlug
+    // Route::get('/embed/{companySlug}', [ShopkeeperController::class, 'showBookingWidget'])->name('embed.booking.widget');
+
+
 
 
 });
@@ -86,6 +93,8 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
     
     // Route::get('/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
     Route::get('{company_slug}/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
+    Route::get('{user}/book', [AppointmentController::class, 'embedCreate'])->name('embed.appointment.create');
+
     Route::get('/shop/schedule/{userId}', [ProfileController::class, 'getSchedule'])->name('shop.schedule');
     Route::post('generate-qr', [ServiceController::class, 'generateQrCode'])->name('generateQr');
 

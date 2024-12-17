@@ -164,10 +164,7 @@
                         <strong>Email:</strong> {{$customer->email}}
                     </div>
                 @else
-                    <div class="mt-3">
-                        <strong>Name:</strong> Not logged in<br>
-                        <strong>Email:</strong> Not logged in
-                    </div>
+               
                 @endauth
 
 

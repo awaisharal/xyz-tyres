@@ -218,7 +218,7 @@ class CustomerController extends Controller
     
             return view('customer.payments.index', compact('payments'));
     
-            return $payments;
+            // return $payments;
         
     }
 }

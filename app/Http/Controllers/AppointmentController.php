@@ -25,8 +25,7 @@ class AppointmentController extends Controller
 
     public function create($company_slug, $serviceId)
     {
-        // $slug= $service->user->company_slug;
-        // return $slug;
+        
         $service = Service::findOrFail($serviceId);
         $customer = Auth::guard('customers')->user();
         $user = $service->user;
