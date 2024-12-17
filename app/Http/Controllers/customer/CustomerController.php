@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Customer;
 use App\Models\Service;
+use App\Models\Payment;
 use App\Models\Appointment;
 use Brian2694\Toastr\Facades\Toastr;
 
@@ -83,20 +84,22 @@ class CustomerController extends Controller
         return view('customer.services', compact('customer', 'services'));
     }
     public function showAppointments()
-{
-    $customer = Auth::guard('customers')->user();
+    {
+        $customer = Auth::guard('customers')->user();
 
-    if (!$customer) {
-        Toastr::error('You must be logged in to view your appointments.');
-        return redirect()->route('customer.login');
+        if (!$customer) {
+            Toastr::error('You must be logged in to view your appointments.');
+            return redirect()->route('customer.login');
+        }
+
+        $appointments = Appointment::where('customer_id', $customer->id)
+            ->with('service.user') 
+            ->get();
+
+       
+
+        return view('customer.appointments.index', compact('customer', 'appointments'));
     }
-
-    $appointments = Appointment::where('customer_id', $customer->id)
-        ->with('service.user') 
-        ->get();
-
-    return view('customer.appointments.index', compact('customer', 'appointments'));
-}
 
 
 //////////////////////profile section /////////////////////
@@ -191,5 +194,31 @@ class CustomerController extends Controller
 
         
         return redirect()->route('customer/register');
+    }
+
+    public function showPayments(){
+
+        $customer = Auth::guard('customers')->user();
+        if (!$customer) {
+            return redirect()->route('customer.login')->with('error', 'Please login to view your payments.');
+        }
+        $payments = Payment::where('payments.customer_id', $customer->id)
+            ->with(['appointment', 'appointment.service'])
+            ->select(
+                'payments.id',
+                'payments.amount',
+                'payments.payment_status',
+                'payments.transaction_id',
+                'appointments.date as appointment_date',
+                'services.name as service_name' 
+            )
+            ->join('appointments', 'payments.appointment_id', '=', 'appointments.id')
+            ->join('services', 'appointments.service_id', '=', 'services.id')
+            ->get();
+    
+            return view('customer.payments.index', compact('payments'));
+    
+            return $payments;
+        
     }
 }

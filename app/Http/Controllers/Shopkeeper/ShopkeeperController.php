@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Service;
+use App\Models\Payment;
+
 use Illuminate\Support\Carbon;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\DB;
@@ -113,54 +115,54 @@ class ShopkeeperController extends Controller
     
 
 
-public function getSalesData(Request $request)
-{
-    $shopkeeperId = auth()->id();
-    $services = Service::where('user_id', $shopkeeperId)->pluck('id');
+    public function getSalesData(Request $request)
+    {
+        $shopkeeperId = auth()->id();
+        $services = Service::where('user_id', $shopkeeperId)->pluck('id');
 
-    $period = $request->get('period'); // Expecting 'daily', 'weekly', or 'monthly'
-    $today = now()->startOfDay();
-    $weekStart = now()->startOfWeek();
-    $monthStart = now()->startOfMonth();
+        $period = $request->get('period'); // Expecting 'daily', 'weekly', or 'monthly'
+        $today = now()->startOfDay();
+        $weekStart = now()->startOfWeek();
+        $monthStart = now()->startOfMonth();
 
-    // Define period-specific queries
-    $dateRange = match ($period) {
-        'daily' => [$today, $today],
-        'weekly' => [$weekStart, now()],
-        'monthly' => [$monthStart, now()],
-        default => [$monthStart, now()],
-    };
+        // Define period-specific queries
+        $dateRange = match ($period) {
+            'daily' => [$today, $today],
+            'weekly' => [$weekStart, now()],
+            'monthly' => [$monthStart, now()],
+            default => [$monthStart, now()],
+        };
 
-    // Sales Data
-    $sales = Appointment::whereIn('service_id', $services)
-        ->whereBetween('date', $dateRange)
-        ->join('services', 'appointments.service_id', '=', 'services.id')
-        ->sum('services.price');
+        // Sales Data
+        $sales = Appointment::whereIn('service_id', $services)
+            ->whereBetween('date', $dateRange)
+            ->join('services', 'appointments.service_id', '=', 'services.id')
+            ->sum('services.price');
 
-    // Total Appointments
-    $totalAppointments = Appointment::whereIn('service_id', $services)
-        ->whereBetween('date', $dateRange)
-        ->count();
+        // Total Appointments
+        $totalAppointments = Appointment::whereIn('service_id', $services)
+            ->whereBetween('date', $dateRange)
+            ->count();
 
-    // Free Appointments
-    $freeAppointments = Appointment::whereIn('service_id', $services)
-        ->where('payment_status', 'free')
-        ->whereBetween('date', $dateRange)
-        ->count();
+        // Free Appointments
+        $freeAppointments = Appointment::whereIn('service_id', $services)
+            ->where('payment_status', 'free')
+            ->whereBetween('date', $dateRange)
+            ->count();
 
-    // Upcoming Appointments
-    $upcomingAppointments = Appointment::whereIn('service_id', $services)
-        ->whereDate('date', '>=', now())
-        ->whereBetween('date', $dateRange)
-        ->count();
+        // Upcoming Appointments
+        $upcomingAppointments = Appointment::whereIn('service_id', $services)
+            ->whereDate('date', '>=', now())
+            ->whereBetween('date', $dateRange)
+            ->count();
 
-    return response()->json([
-        'sales' => $sales,
-        'totalAppointments' => $totalAppointments,
-        'freeAppointments' => $freeAppointments,
-        'upcomingAppointments' => $upcomingAppointments,
-    ]);
-}
+        return response()->json([
+            'sales' => $sales,
+            'totalAppointments' => $totalAppointments,
+            'freeAppointments' => $freeAppointments,
+            'upcomingAppointments' => $upcomingAppointments,
+        ]);
+    }
 
     
     public function showAppointments()
@@ -178,8 +180,51 @@ public function getSalesData(Request $request)
     })->get();
     //  return $appointments;
 
-
     return view('shopkeeper.appointments.index', compact('appointments'));
     }
+
+    public function showCustomers()
+    {
+        $customers = Appointment::with('customer') // Load customer relationship
+            ->whereHas('service', function ($query) {
+                $query->where('user_id', auth()->id()); // Filter appointments by shopkeeper
+            })
+            ->select('customer_id', 'phone') // Include phone from the Appointment table
+            ->get()
+            ->groupBy('customer_id'); // Group appointments by customer ID
+
+
+      
+    
+        return view('shopkeeper.customers.index', compact('customers'));
+    }
+
+    public function showPayments(){
+      //payments 
+
+      $payments = Payment::with(['appointment', 'appointment.service'])
+      ->whereHas('appointment.service', function ($query) {
+          $query->where('user_id', auth()->id()); // Filter by shopkeeper's user ID
+      })
+      ->select(
+          'payments.id',
+          'payments.amount',
+          'payments.payment_status',
+          'payments.transaction_id',
+          'appointments.customer_id',
+          'appointments.service_id',
+          'appointments.id as appointment_id',
+          'appointments.date as appointment_date',
+          'services.title as service_name' // Add the service name for display
+      )
+      ->join('appointments', 'payments.appointment_id', '=', 'appointments.id')
+      ->join('services', 'appointments.service_id', '=', 'services.id')
+      ->get();
+
+    //   return $payments;
+    return view('shopkeeper.payments.index', compact('payments'));
+
+    }
+
 }
 

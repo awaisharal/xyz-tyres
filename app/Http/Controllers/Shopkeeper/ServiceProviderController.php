@@ -4,26 +4,28 @@ namespace App\Http\Controllers\Shopkeeper;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServiceProvider;
+use App\Models\Appointment;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 
 class ServiceProviderController extends Controller
 {
-    // Display the list of service providers for the authenticated shopkeeper
+    
     public function index()
     {
-        // Fetch service providers associated with the logged-in shopkeeper (user_id)
+       
         $serviceProviders = ServiceProvider::where('user_id', auth()->id())->get();
+      
         return view('shopkeeper.serviceproviders.index', compact('serviceProviders'));
     }
 
-    // Show the form for creating a new service provider
+   
     public function create()
     {
         return view('shopkeeper.serviceproviders.create');
     }
 
-    // Store a newly created service provider in the database
+   
     public function store(Request $request)
     {
         $request->validate([
@@ -33,13 +35,13 @@ class ServiceProviderController extends Controller
             'address' => 'nullable|string|max:500',
         ]);
 
-        // Create the service provider and associate it with the logged-in shopkeeper
+       
         ServiceProvider::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
-            'user_id' => auth()->id(), // Associate with the logged-in user's ID
+            'user_id' => auth()->id(), 
         ]);
         Toastr::success('Service provider added successfully.');
         return redirect()->route('service-providers.index');
@@ -59,7 +61,7 @@ class ServiceProviderController extends Controller
     // Update the specified service provider in the database
     public function update(Request $request, ServiceProvider $serviceProvider)
     {
-        // Ensure the service provider belongs to the logged-in shopkeeper
+       
         if ($serviceProvider->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
@@ -76,10 +78,9 @@ class ServiceProviderController extends Controller
         return redirect()->route('service-providers.index');
     }
 
-    // Remove the specified service provider from the database
+   
     public function destroy(ServiceProvider $serviceProvider)
-    {
-        // Ensure the service provider belongs to the logged-in shopkeeper
+    {       
         if ($serviceProvider->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }

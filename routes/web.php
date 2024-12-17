@@ -64,6 +64,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/service-providers/{serviceProvider}', [ServiceProviderController::class, 'destroy'])->name('service-providers.destroy');
     //appointments
     Route::get('/appointments', [ShopkeeperController::class, 'showAppointments'])->name('appointments');
+
+    //customers
+    Route::get('/customers', [ShopkeeperController::class, 'showCustomers'])->name('customers');
+    //payments
+    Route::get('/payments', [ShopkeeperController::class, 'showPayments'])->name('payments');
+
+
 });
 
 
@@ -104,6 +111,10 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
         Route::get('/password', [CustomerController::class, 'editPassword'])->name('profile.password.edit');
         Route::patch('/password/update', [CustomerController::class, 'updatePassword'])->name('profile.password.update');
         Route::delete('/delete', [CustomerController::class, 'destroy'])->name('profile.delete');
+
+        //payments
+    Route::get('/payments', [CustomerController::class, 'showPayments'])->name('payments');
+
     });
 
 });
