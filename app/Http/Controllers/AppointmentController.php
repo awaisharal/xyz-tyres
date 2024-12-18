@@ -23,8 +23,10 @@ use Brian2694\Toastr\Facades\Toastr;
 class AppointmentController extends Controller
 {
 
-    public function create(Service $service)
+    public function create($company_slug, $serviceId)
     {
+        
+        $service = Service::findOrFail($serviceId);
         $customer = Auth::guard('customers')->user();
         $user = $service->user;
         $userID = $user->id;
@@ -147,11 +149,12 @@ class AppointmentController extends Controller
                     'date' => $validated['date'],
                     'time' => $validated['time'],
                     'phone' => $validated['phone'],
-                    'payment_status' => 'free',
+                    'payment_status' => 'Scheduled',
                 ]);
                 // $shopkeeper=Appointment::with('services')->get();
                 // $servicename = $appointment->service->user->name;
                 $shopkeeper = $appointment->service->user;
+
 
                 // $shopkeeper= $servicename->user->name;
 

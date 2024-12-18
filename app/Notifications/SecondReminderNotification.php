@@ -3,17 +3,15 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class FirstReminderNotification extends Notification implements ShouldQueue
+class SecondReminderNotification extends Notification
 {
     use Queueable;
-
     private $appointment;
     private $reminderMessage;
-
     /**
      * Create a new notification instance.
      */
@@ -25,8 +23,10 @@ class FirstReminderNotification extends Notification implements ShouldQueue
 
     /**
      * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
      */
-    public function via($notifiable)
+    public function via(object $notifiable): array
     {
         return ['mail'];
     }
@@ -39,14 +39,25 @@ class FirstReminderNotification extends Notification implements ShouldQueue
         $appointment = $this->appointment;
 
         return (new MailMessage)
-            ->subject('First Reminder')
+            ->subject('Second Reminder')
             ->greeting('Hi ' )
-            ->line('This is a reminder for your upcoming appointment.')
+            ->line('This is a second reminder for your upcoming appointment.')
             ->line('Service: ' . $appointment->service->title)
             ->line('Date: ' . $appointment->date)
             ->line('Time: ' . $appointment->time)
             ->line('Message: ' . 'testing mail')
             ->action('View Appointment', route('customer.appointments.index'))
             ->line('Thank you for choosing our service!');
+    }
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(object $notifiable): array
+    {
+        return [
+            //
+        ];
     }
 }

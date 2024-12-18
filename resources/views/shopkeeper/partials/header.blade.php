@@ -100,6 +100,20 @@
                                                             <h6>Service Providers</h6>
                                                         </div>
                                                     </a>
+
+                                                    <a href="{{route('customers')}}" class="iq-sub-card">
+                                                        <div class="media align-items-center">
+                                                            <i class="ri-user-line mr-3"></i>
+                                                            <h6>Customers</h6>
+                                                        </div>
+                                                    </a>
+                                                    <a href="{{route('payments')}}" class="iq-sub-card">
+                                                        <div class="media align-items-center">
+                                                            <i class="ri-user-line mr-3"></i>
+                                                            <h6>Payments</h6>
+                                                        </div>
+                                                    </a>
+                                                    
                                                 </div>
 
                                                 <a class="right-ic p-3 border-top btn-block position-relative text-center" href="javascript:void(0);" role="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

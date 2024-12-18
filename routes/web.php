@@ -10,6 +10,7 @@ use App\Http\Controllers\Shopkeeper\ShopkeeperController;
 use App\Http\Controllers\Shopkeeper\ServiceProviderController;
 use App\Http\Controllers\BookingsController;
 use App\Models\Appointment;
+use App\Notifications\ShopkeeperConfirmation;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Illuminate\Support\Facades\Auth;
@@ -51,6 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::put('/service/{service}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+    //templates 
+    Route::get('/get-template-message', [ServiceController::class, 'getTemplateMessage'])->name('service.getTemplateMessage');
+
 
     // Service Providers->shopkeepers
     Route::get('/service-providers', [ServiceProviderController::class, 'index'])->name('service-providers.index');
@@ -61,8 +65,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/service-providers/{serviceProvider}', [ServiceProviderController::class, 'destroy'])->name('service-providers.destroy');
     //appointments
     Route::get('/appointments', [ShopkeeperController::class, 'showAppointments'])->name('appointments');
+
+    //customers
+    Route::get('/customers', [ShopkeeperController::class, 'showCustomers'])->name('customers');
+    //payments
+    Route::get('/payments', [ShopkeeperController::class, 'showPayments'])->name('payments');
+    //embedded link 
+    // Update the route to use the company_slug instead of userSlug
+    // Route::get('/embed/{companySlug}', [ShopkeeperController::class, 'showBookingWidget'])->name('embed.booking.widget');
+
+
+
+
 });
 
+Route::get('/embed/{company_slug}', [ShopkeeperController::class, 'showBookingWidget'])->name('embed.booking.widget');
 
 /////////////////////////////////////////////////////////// CUSTOMER ROUTES /////////////////////////////////////////////////////////////
 
@@ -74,8 +91,12 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
     Route::get('/login', [CustomerController::class, 'login_view'])->name('login.view');
     Route::post('/login', [CustomerController::class, 'login'])->name('login');
     
-    Route::get('/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
+    // Route::get('/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
+    Route::get('{company_slug}/service/{service}/book', [AppointmentController::class, 'create'])->name('appointment.create');
+    Route::get('{user}/book', [AppointmentController::class, 'embedCreate'])->name('embed.appointment.create');
+
     Route::get('/shop/schedule/{userId}', [ProfileController::class, 'getSchedule'])->name('shop.schedule');
+    Route::post('generate-qr', [ServiceController::class, 'generateQrCode'])->name('generateQr');
 
     // Services 
     Route::GET('/appointment/{service}/book', [AppointmentController::class, 'store'])->name('appointment.store');
@@ -99,6 +120,10 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
         Route::get('/password', [CustomerController::class, 'editPassword'])->name('profile.password.edit');
         Route::patch('/password/update', [CustomerController::class, 'updatePassword'])->name('profile.password.update');
         Route::delete('/delete', [CustomerController::class, 'destroy'])->name('profile.delete');
+
+        //payments
+    Route::get('/payments', [CustomerController::class, 'showPayments'])->name('payments');
+
     });
 
 });

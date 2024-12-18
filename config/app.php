@@ -182,7 +182,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Brian2694\Toastr\ToastrServiceProvider::class,
-
+        LaravelQRCode\Providers\QRCodeServiceProvider::class, 
         /*
          * Package Service Providers...
          */
@@ -211,6 +211,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'Toastr' => Brian2694\Toastr\Facades\Toastr::class,
+        'QRCode' => LaravelQRCode\Facades\QRCode::class,  
     ])->toArray(),
 
 ];

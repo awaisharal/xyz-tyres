@@ -136,6 +136,8 @@
         <div class="row g-0">
             <!-- Left Sidebar -->
             <div class="col-md-4 event-details">
+
+                
                 <div class="event-icon">
                     <i class="fs-4">E</i>
                 </div>
@@ -158,17 +160,14 @@
                         {{-- We can bring your web design vision and ideas to life through innovative custom design for your business. We work on hundreds of websites a year, and bring unique insight from our deep experience. --}}
                     </span>
                 </div>
-                @auth('customers')
+                {{-- @auth('customers')
                     <div class="mt-3">
                         <strong>Name:</strong> {{$customer->name}}<br>
                         <strong>Email:</strong> {{$customer->email}}
                     </div>
                 @else
-                    <div class="mt-3">
-                        <strong>Name:</strong> Not logged in<br>
-                        <strong>Email:</strong> Not logged in
-                    </div>
-                @endauth
+               
+                @endauth --}}
 
 
                 

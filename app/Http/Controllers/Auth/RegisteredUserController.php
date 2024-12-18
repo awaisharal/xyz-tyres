@@ -24,9 +24,9 @@ class RegisteredUserController extends Controller
     }
 
     public function createShopkeeper()
-{
-    return view('auth.register_shopkeeper');
-}
+    {
+        return view('auth.register_shopkeeper');
+    }
 
 public function storeShopkeeper(Request $request)
 {

@@ -157,7 +157,7 @@
             <!-- Left Sidebar -->
             <div class="col-md-4 event-details">
                 <div class="mb-5">
-                    <a href={{route('customer.appointment.create',['service' => $service->id])}}>
+                    <a href={{route('customer.appointment.create',['service' => $service->id, 'company_slug' => $service->user->company_slug])}}>
                         <button class="backbtn">
                             <i class="fa fa-arrow-left fa-lg"></i>
                         </button>

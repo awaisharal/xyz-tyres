@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -38,10 +39,29 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected static function booted()
+    {
+        static::saving(function ($user) {
+            // Generate the slug from the company name
+            $slug = Str::slug($user->company);
+
+            // Check if slug already exists and make it unique by appending a number
+            $count = User::where('company_slug', 'like', "$slug%")->count();
+            $user->company_slug = $count > 0 ? "$slug-" . ($count + 1) : $slug;
+        });
+    }
+
     public function services()
     {
         return $this->hasMany(Service::class, 'user_id');
     }
+    //templates
+    public function templates()
+    {
+        return $this->hasMany(Template::class);
+    }
+
+
 
 
 

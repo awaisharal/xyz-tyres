@@ -94,6 +94,13 @@
                                                             <h6>Account Settings</h6>
                                                         </div>
                                                     </a>
+
+                                                    <a href="{{route('customer.payments')}}" class="iq-sub-card">
+                                                        <div class="media align-items-center">
+                                                            <i class="ri-user-line mr-3"></i>
+                                                            <h6>Payments</h6>
+                                                        </div>
+                                                    </a>
                                                 </div>
 
                                                <form action="{{route('customer.logout')}}" method="post">
