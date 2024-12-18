@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Support\Carbon\Carbon;
 
+use Carbon;
 class Appointment extends Model
 {
     use HasFactory;
@@ -19,4 +21,8 @@ class Appointment extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
+    public function dateTime()
+{
+    return Carbon::parse($this->date . ' ' . $this->time);
+}
 }

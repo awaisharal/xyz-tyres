@@ -27,7 +27,14 @@
              <!-- Iframe Link Copy Section -->
             <h4 class="mb-4 mt-5">Share Your Booking Widget</h4>
             <div class="input-group mb-3 position-relative">
-                <input type="text" class="form-control border-none text-black fw-bolder" style="font-size: 15px;" id="iframeLink" value="{{ url('/embed/' . $user->company_slug) }}" readonly>
+                {{-- <input type="text" class="form-control border-none text-black fw-bolder" style="font-size: 15px;" id="iframeLink" value="{{ url('/embed/' . $user->company_slug) }}" readonly> --}}
+                <input type="text" 
+                class="form-control border-none text-black fw-bolder" 
+                style="font-size: 15px;" 
+                id="iframeLink" 
+                value='<iframe src="{{ url('/embed/' . $user->company_slug) }}" width="100%" height="600" frameborder="0" style="border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 10px;"></iframe>' 
+                readonly>
+
                 <button style="border:none" onclick="copyToClipboard('iframeLink', this)">
                     <i class="las la-paste" style="font-size: 22px;"></i>
                 </button>

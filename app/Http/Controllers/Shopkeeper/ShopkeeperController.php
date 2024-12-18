@@ -228,8 +228,12 @@ class ShopkeeperController extends Controller
 
     public function showBookingWidget($company_slug)
     {
-        $services = Service::where('user_id', Auth::id())->get();       
-        $user=Auth::user(); 
+        // $services = Service::where('user_id', Auth::id())->get(); 
+        $user = User::where('company_slug', $company_slug)->firstOrFail();
+        $services = Service::where('user_id', $user->id)->get();      
+        // $user=Auth::user(); 
+       
+
         // $user = User::where('company_slug', $company_slug)->firstOrFail();
         $company_slug=$user->company_slug;  
         // return $company_slug;                                                

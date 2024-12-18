@@ -144,12 +144,13 @@
                                     id="{{ $reminderType }}ReminderToggle"
                                     name="{{ $reminderType }}_reminder_enabled"
                                     value="1"
+                                    {{ old($reminderType . '_reminder_enabled', $service->{$reminderType . '_reminder_enabled'} ?? 0) == 1 ? 'checked' : '' }}
                                     onclick="toggleReminder('{{ $reminderType }}')"
                                 >
                                 <label class="custom-control-label" for="{{ $reminderType }}ReminderToggle">
                                     {{ ucfirst($reminderType) }} Reminder
                                 </label>
-                                <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="display: none; margin-left: -23px">
+                                <div id="{{ $reminderType }}ReminderFields" class="mt-2" style="margin-left: -23px">
                                     <div class="d-flex align-items-center mb-3">
                                         @if ($reminderType == 'followup')
                                             <!-- For Follow-up reminder, show 'after' -->
@@ -159,39 +160,52 @@
                                             <div>Send {{ $reminderType }} reminder before</div>
                                         @endif
                                         <div class="mx-1">
-                                            <input type="number" class="reminder_input" name="{{ $reminderType }}_reminder_hours" id="{{ $reminderType }}ReminderHours" />
+                                            <input 
+                                                type="number" 
+                                                class="reminder_input" 
+                                                name="{{ $reminderType }}_reminder_duration" 
+                                                id="{{ $reminderType }}ReminderDuration" 
+                                                value="{{ old($reminderType . '_reminder_duration', $service->{$reminderType . '_reminder_duration'} ?? '') }}" 
+                                            />
                                         </div>
-                                        <div>hour(s)</div>
+                                        <div class="mx-1">
+                                            <select 
+                                                name="{{ $reminderType }}_reminder_duration_type" 
+                                                id="{{ $reminderType }}ReminderDurationType" 
+                                                class="form-control" 
+                                                style="height: 32px"
+                                            >
+                                                <option value="hours" {{ old($reminderType . '_reminder_duration_type', $service->{$reminderType . '_reminder_duration_type'} ?? 'hours') == 'hours' ? 'selected' : '' }}>Hours</option>
+                                                <option value="days" {{ old($reminderType . '_reminder_duration_type', $service->{$reminderType . '_reminder_duration_type'} ?? 'days') == 'days' ? 'selected' : '' }}>Days</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    @error($reminderType . '_reminder_hours')
+                                    @error($reminderType . '_reminder_duration')
                                         <div class="text-danger">{{ $message }}</div>
-                                    @enderror                                
-                                    
-                                    
+                                    @enderror
+                        
+                                    <!-- Reminder Message -->
                                     <div class="d-flex justify-content-between align-items-center">
                                         <label class="title mb-0">{{ ucfirst($reminderType) }} Reminder Message</label>
                                         <!-- Copy icon on the right -->
-                                        <button 
-                                            type="button" 
+                                        <button
+                                            type="button"
                                             class="copy-button"
                                             style="border: none; background-color: white;"
                                             data-key="{{ ucfirst($reminderType) }} Reminder"
                                             onclick="copyReminderMessage('{{ $reminderType }}')"
                                         >
-                                        
                                             <i class="las la-paste" style="font-size: 22px;"></i> <!-- Using 'la-paste' icon -->
                                         </button>
-
                                     </div>
-                                    
+                        
                                     <div class="d-flex align-items-center">
-                                        <textarea 
-                                            name="{{ $reminderType }}_reminder_message" 
-                                            id="{{ $reminderType }}ReminderMessage" 
-                                            class="form-control reminder-message" 
+                                        <textarea
+                                            name="{{ $reminderType }}_reminder_message"
+                                            id="{{ $reminderType }}ReminderMessage"
+                                            class="form-control reminder-message"
                                             rows="3"
-                                        >{{ old($reminderType . '_reminder_message') }}</textarea>
-                                        
+                                        >{{ old($reminderType . '_reminder_message', $service->{$reminderType . '_reminder_message'} ?? '') }}</textarea>
                                     </div>
                                     @error($reminderType . '_reminder_message')
                                         <div class="text-danger">{{ $message }}</div>
@@ -200,6 +214,7 @@
                             </div>
                         </div>
                         @endforeach
+                        
 
                         <!-- Service Image -->
                         <div class="col-md-12 mb-2 mt-2">
@@ -245,14 +260,51 @@
 
 @section('scripts')
 <script>
-    function toggleReminder(type){
-        const fields = document.getElementById(type + 'ReminderFields');
-        fields.style.display = fields.style.display === 'none' ? 'block' : 'none';
-    }
+        function toggleReminder(reminderType) {
+        var reminderToggle = document.getElementById(reminderType + 'ReminderToggle');
+        var reminderFields = document.getElementById(reminderType + 'ReminderFields');
 
-    function uploaded(filename){
-        document.getElementById('filename').textContent = filename.split('\\').pop();
+        // If reminder is checked (enabled), show the fields, else hide them
+        if (reminderToggle.checked) {
+            reminderFields.style.display = "block"; // Show the fields
+        } else {
+            reminderFields.style.display = "none"; // Hide the fields
+        }
     }
+    
+    function validateReminderDuration(reminderType) {
+        var firstDuration = parseFloat(document.getElementById('firstReminderDuration').value);
+        console.log(firstDuration);
+        var firstDurationType = document.getElementById('firstReminderDurationType').value;
+        console.log(firstDurationType);
+
+        var secondDuration = parseFloat(document.getElementById('secondReminderDuration').value);
+        console.log(secondDuration);
+
+        var secondDurationType = document.getElementById('secondReminderDurationType').value;
+        console.log(firstDurationType);
+
+
+        // Handle second reminder duration validation only if both first and second reminders are enabled
+        if (reminderType === 'second') {
+    if (firstDurationType === 'hours' && secondDurationType === 'days') {
+        alert("Second reminder cannot be in days when the first reminder is in hours.");
+        document.getElementById('secondReminderDurationType').value = 'hours'; // Revert to hours
+    } else if (firstDurationType === 'hours' && secondDuration > firstDuration) {
+        alert("Second reminder cannot be more than 2 hours after the first reminder.");
+        document.getElementById('secondReminderDuration').value = firstDuration ; // Set second reminder duration first
+    } else if (firstDurationType === 'days' && secondDurationType === 'days' && secondDuration >= firstDuration) {
+        alert("Second reminder must be less than the first reminder's days.");
+        document.getElementById('secondReminderDuration').value = (firstDuration - 1); // Adjust second reminder to less than first
+    }
+}
+
+    }
+// Initialize the toggle behavior for all reminders on page load
+window.onload = function() {
+    @foreach (['first', 'second', 'followup'] as $reminderType)
+        toggleReminder('{{ $reminderType }}');
+    @endforeach
 
 
     document.addEventListener('DOMContentLoaded', function () {

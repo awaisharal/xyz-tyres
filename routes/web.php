@@ -71,7 +71,6 @@ Route::middleware('auth')->group(function () {
     //payments
     Route::get('/payments', [ShopkeeperController::class, 'showPayments'])->name('payments');
     //embedded link 
-    Route::get('/embed/{company_slug}', [ShopkeeperController::class, 'showBookingWidget'])->name('embed.booking.widget');
     // Update the route to use the company_slug instead of userSlug
     // Route::get('/embed/{companySlug}', [ShopkeeperController::class, 'showBookingWidget'])->name('embed.booking.widget');
 
@@ -80,6 +79,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
+Route::get('/embed/{company_slug}', [ShopkeeperController::class, 'showBookingWidget'])->name('embed.booking.widget');
 
 /////////////////////////////////////////////////////////// CUSTOMER ROUTES /////////////////////////////////////////////////////////////
 

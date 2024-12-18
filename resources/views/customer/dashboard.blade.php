@@ -6,5 +6,6 @@
         <h1 class="display-5 fw-bold">Dashboard</h1>
         <p class="text-muted mt-1s">View your account statistics</p>
     </div>
+
 </main>
 @endsection

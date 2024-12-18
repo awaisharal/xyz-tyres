@@ -61,11 +61,15 @@ class CustomerController extends Controller
 
     public function logout(Request $request)
     {
+        // $auth = Auth::guard('customers')->check();
         if (Auth::guard('customers')->check()) {    
-            Auth::guard('customers')->logout(); // Log out the customer
+            Auth::guard('customers')->logout(); 
+            // Log out the customer
+
+      
         }
         Toastr::success('logged out successfully.');
-        return redirect ('customer/login');
+        return redirect ('/customer/login');
     }
 
     public function dashboard(){

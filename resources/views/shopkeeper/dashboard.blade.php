@@ -59,10 +59,10 @@
             </div>
         </div>
 
-        <iframe src="http://127.0.0.1:8000/embed/{company_slug}" width="100%" 
+        {{-- <iframe src="http://127.0.0.1:8000/embed/{company_slug}" width="100%" 
         height="600" 
         frameborder="0" 
-        style="border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 10px;"></iframe>
+        style="border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 10px;"></iframe> --}}
         
     </div>
 </main>
