@@ -9,6 +9,8 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Shopkeeper\ShopkeeperController;
 use App\Http\Controllers\Shopkeeper\ServiceProviderController;
 use App\Http\Controllers\BookingsController;
+use App\Http\Controllers\Shopkeeper\HolidayController;
+use App\Http\Controllers\Shopkeeper\TemplateController;
 use App\Models\Appointment;
 use App\Notifications\ShopkeeperConfirmation;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +56,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
     //templates 
     Route::get('/get-template-message', [ServiceController::class, 'getTemplateMessage'])->name('service.getTemplateMessage');
+    Route::resource('templates', TemplateController::class)->except(['show', 'edit', 'create']);
+
+    //holidays
+    Route::resource('holidays', HolidayController::class)->except(['show', 'create', 'edit']);
+
 
 
     // Service Providers->shopkeepers

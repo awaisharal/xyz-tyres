@@ -60,7 +60,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Template::class);
     }
-
+    //holidays
+    public function holidays()
+    {
+        return $this->hasMany(Holiday::class);
+    }
 
 
 

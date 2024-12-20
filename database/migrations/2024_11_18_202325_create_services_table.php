@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to shopkeepers table
-            $table->foreignId('service_provider_id')->constrained()->onDelete('cascade'); // Foreign key to service_providers table
+            // $table->foreignId('service_provider_id')->constrained()->onDelete('cascade'); // Foreign key to service_providers table
             $table->string('title');
             $table->text('description')->nullable();
+            $table->boolean('is_additional_info')->default(false);
+            $table->string('additional_info')->nullable();
+            $table->json('service_providers');
+            $table->integer('service_providers_count')->default(0);
             $table->string('image')->nullable(); // Assuming you will store the image path
             $table->decimal('price', 8, 2)->default(0);            // $table->time('duration')->nullable();
             $table->integer('duration')->nullable();

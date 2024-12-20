@@ -59,11 +59,15 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
+        // return $request;
         // Validate the incoming request
         $request->validate([
-            'service_provider_id' => 'required|exists:service_providers,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'service_providers' => 'required|array',
+            'is_additional_info'=>'nullable|boolean',
+            'additional_info'=>'nullable|string',
+            'service_providers.*' => 'integer',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'duration_type' => 'required|string|max:20',
@@ -83,7 +87,8 @@ class ServiceController extends Controller
             'followup_reminder_message' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    
+       
+    // return $request;
         // Handle file upload if present
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -93,13 +98,17 @@ class ServiceController extends Controller
             $file->move($destinationPath, $filename);
             $imagePath = $filename;
         }
+        $serviceProvidersCount = count($request->service_providers);
     
         // Create the service
         Service::create([
             'user_id' => auth()->id(),
-            'service_provider_id' => $request->service_provider_id,
             'title' => $request->title,
             'description' => $request->description,
+            'is_additional_info'=> $request->is_additional_info,
+            'additional_info'=>$request->additional_info,
+            'service_providers'=> json_encode($request->service_providers), 
+            'service_providers_count' => $serviceProvidersCount,
             'price' => $request->price,
             'duration' => $request->duration,
             'duration_type' => $request->duration_type,
@@ -128,6 +137,7 @@ class ServiceController extends Controller
     {
         $service = Service::findOrFail($id);
         $serviceProviders = ServiceProvider::all();
+        // return $service;
         return view('shopkeeper.services.edit', compact('service', 'serviceProviders'));
     }
 
@@ -135,9 +145,11 @@ class ServiceController extends Controller
     {
         // Validate the incoming request
         $request->validate([
-            'service_provider_id' => 'required|exists:service_providers,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'is_additional_info'=>'nullable|boolean',
+            'additional_info'=>'nullable|string',
+            'service_providers' => 'required|array',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'duration_type' => 'required|string|max:20',
@@ -176,12 +188,16 @@ class ServiceController extends Controller
             $file->move($destinationPath, $filename);
             $imagePath = $filename;
         }
+        $serviceProvidersCount = count($request->service_providers);
 
         // Update the service details
         $service->update([
-            'service_provider_id' => $request->service_provider_id,
             'title' => $request->title,
             'description' => $request->description,
+            'is_additional_info'=> $request->is_additional_info,
+            'additional_info'=>$request->additional_info,
+            'service_providers'=> json_encode($request->service_providers), 
+            'service_providers_count' => $serviceProvidersCount,
             'price' => $request->price,
             'duration' => $request->duration,
             'duration_type' => $request->duration_type,

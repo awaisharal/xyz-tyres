@@ -195,31 +195,36 @@
                     @csrf
                     <div>
                         <h1>Appointment Confirmation</h1>
-                        <input type="hidden" name="date" id="date" value="{{request('date')}}">
-                        <input type="hidden" name="time" id="time" value="{{request('time')}}">
+                        <input type="hidden" name="date" id="date" value="{{ request('date') }}">
+                        <input type="hidden" name="time" id="time" value="{{ request('time') }}">
                         <input type="hidden" name="service" value="{{ $service->id }}">
                     </div>                   
-                  
-
+                
                     @php
                         $isLoggedIn = Auth::guard('customers')->check();
                         $customer = $isLoggedIn ? Auth::guard('customers')->user() : null;
                     @endphp
-
+                
                     <div class="form-group">
                         <label for="name">Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" id="name" class="form-control" placeholder="eg. Name" 
-                            value="{{ $customer->name ?? '' }}" 
+                            value="{{ old('name', $customer->name ?? '') }}" 
                             {{ $isLoggedIn ? 'readonly' : 'required' }} />
+                        @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
+                
                     <div class="form-group">
                         <label for="email">Email <span class="text-danger">*</span></label>
                         <input type="email" name="email" id="email" class="form-control" placeholder="eg. example@example.com" 
-                            value="{{ $customer->email ?? '' }}" 
+                            value="{{ old('email', $customer->email ?? '') }}" 
                             {{ $isLoggedIn ? 'readonly' : 'required' }} />
+                        @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
-
-
+                
                     @if (!$isLoggedIn)
                     <div class="form-group d-none" id="passwordGroup">
                         <label for="password">Password <span class="text-danger">*</span></label>
@@ -229,33 +234,54 @@
                                 <i class="fas fa-check" id="verifyPasswordIcon"></i>
                             </button>
                         </div>
+                        @error('password')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     
-                    
-                    <!-- Confirm Password Field -->
                     <div class="form-group d-none" id="confirmPasswordGroup">
                         <label for="confirm_password">Confirm Password <span class="text-danger">*</span></label>
                         <div class="input-group">
-                            <input type="password" id="confirm_password" class="form-control" placeholder="xxxxxxxx" required />
+                            <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="xxxxxxxx" required />
                             <button type="button" id="verifyConfirmPasswordButton" class="btn btn-outline-success">
                                 <i class="fas fa-check" id="verifyConfirmPasswordIcon"></i>
                             </button>
                         </div>
+                        @error('confirm_password')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     @endif
+                
                     <div class="form-group">
                         <label for="phone">Phone Number <span class="text-danger">*</span></label>
-                        <input type="text" name="phone" id="phone" class="form-control" placeholder="eg. 999-999-9999" required />
+                        <input type="number" name="phone" id="phone" class="form-control" placeholder="eg. 999-999-9999" value="{{ old('phone') }}" required />
+                        @error('phone')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
+                
+                    @if($service->is_additional_info === 1)
+                    <div class="form-group">
+                        <label for="additional_info">{{ $service->additional_info }} <span class="text-danger">*</span></label>
+                        <textarea name="additional_info" class="form-control" placeholder="Enter additional info..." rows="3">{{ old('additional_info') }}</textarea>
+                        @error('additional_info')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    @endif
+                
                     <div class="form-group">
                         <small>
                             By clicking the below button you will be redirected to the payments page.
                         </small>
                     </div>
+                
                     <div class="form-group">
                         <button type="submit" class="bookBtn">Book Appointment</button>
                     </div>
                 </form>
+                
             </div>
             {{-- <div class="col-md-2"></div> --}}
         </div>

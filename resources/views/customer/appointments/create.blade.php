@@ -125,6 +125,7 @@
     </style>
 </head>
 <body >
+    
     <div class="booking-container">
         <form id="appointmentForm" action="{{ route('customer.appointment.store', ['service' => $service->id]) }}" method="GET">
             @csrf
@@ -134,10 +135,17 @@
         
        
         <div class="row g-0">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <!-- Left Sidebar -->
-            <div class="col-md-4 event-details">
-
-                
+            <div class="col-md-4 event-details">                
                 <div class="event-icon">
                     <i class="fs-4">E</i>
                 </div>
@@ -157,20 +165,8 @@
                     <i class="bi bi-camera-video me-2"></i>
                     <span class="text-muted">
                       {{$service->description}}
-                        {{-- We can bring your web design vision and ideas to life through innovative custom design for your business. We work on hundreds of websites a year, and bring unique insight from our deep experience. --}}
                     </span>
-                </div>
-                {{-- @auth('customers')
-                    <div class="mt-3">
-                        <strong>Name:</strong> {{$customer->name}}<br>
-                        <strong>Email:</strong> {{$customer->email}}
-                    </div>
-                @else
-               
-                @endauth --}}
-
-
-                
+                </div> 
             </div>
 
             <!-- Main Calendar Area -->
@@ -191,7 +187,6 @@
                                     </button>
                                 </div>
                             </div>
-
                             <div class="calendar-grid" id="calendarGrid">
                                 <!-- Calendar days will be dynamically inserted here -->
                             </div>
@@ -208,12 +203,7 @@
                             <button style="background-color: var(--calendly-purple); color: white;" type="submit" id="submitBtn" class="btn btn-primary w-100">Book Now</button>
                         </div>
                     </div>
-
-
                 </div>
-
-                {{-- <button type="submit">book appointment </button> --}}
-
             </div>
         </div>
     </form>
@@ -226,32 +216,30 @@
 
     <script>
         $(document).ready(function() {
+            const holidays = @json($holidays);
             const monthNames = ["January", "February", "March", "April", "May", "June", 
                 "July", "August", "September", "October", "November", "December"];
             const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
             const dayAbbreviations = {
-            sunday: "Sun",
-            monday: "Mon",
-            tuesday: "Tue",
-            wednesday: "Wed", 
-            thursday: "Thu",
-            friday: "Fri",
-            saturday: "Sat",
-        };
-                        
-            let currentDate = new Date();
+                sunday: "Sun",
+                monday: "Mon",
+                tuesday: "Tue",
+                wednesday: "Wed", 
+                thursday: "Thu",
+                friday: "Fri",
+                saturday: "Sat",
+            };
+        
             let selectedDate = null;
             let selectedTime = null;
             let scheduleData = {}; // Store the fetched schedule data
-    
-            // Get schedule data via AJAX
+        
             function fetchSchedule(userId) {
                 return $.ajax({
                     url: `/customer/shop/schedule/${userId}`,
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        console.log("Schedule data fetched:", data); // Log the schedule data
                         scheduleData = data;  // Store the schedule data globally
                     },
                     error: function(error) {
@@ -259,159 +247,147 @@
                     }
                 });
             }
-    
-            // Generate the calendar
+        
             function generateCalendar(year, month) {
                 const firstDay = new Date(year, month, 1);
                 const lastDay = new Date(year, month + 1, 0);
                 let html = '';
-    
-                // Add day names
+        
                 dayNames.forEach(day => {
                     html += `<div class="text-center text-muted">${dayAbbreviations[day]}</div>`;
                 });
-    
-                // Add empty cells for days before the first day of the month
+        
                 for (let i = 0; i < firstDay.getDay(); i++) {
                     html += '<div></div>';
                 }
-    
-                // Add calendar days (now all days are enabled for selection)
+        
                 for (let day = 1; day <= lastDay.getDate(); day++) {
                     const date = new Date(year, month, day);
+                    const dateString = date.toISOString().split('T')[0];
                     const isDisabled = date < new Date().setHours(0, 0, 0, 0);
                     const isActive = selectedDate && date.toDateString() === selectedDate.toDateString();
-    
+        
                     html += `<div class="calendar-day${isDisabled ? ' disabled' : ''}${isActive ? ' active' : ''}" data-date="${date.toISOString()}">${day}</div>`;
                 }
-    
+        
                 $('#calendarGrid').html(html);
                 $('#currentMonth').text(`${monthNames[month]} ${year}`);
             }
-    
-            // Generate time slots dynamically based on schedule
+        
             function generateTimeSlots(date) {
                 const dayOfWeek = date.getDay(); 
                 const dayName = dayNames[dayOfWeek].toLowerCase(); 
-                const isDayEnabled = scheduleData[`${dayName}_enabled`]; 
-                console.log(`Day of week: ${dayOfWeek}, Day Name: ${dayName}, Enabled: ${isDayEnabled}`); // Log this value
-    
+                const isDayEnabled = scheduleData[`${dayName}_enabled`];
                 let html = '';
-                if (isDayEnabled) {
+                const dateString = date.toISOString().split('T')[0];
+        
+                // Check for holidays
+                const holiday = holidays.find(holiday => holiday.date.split('T')[0] === dateString);
+                const isHoliday = !!holiday;
+                const isFullDayHoliday = isHoliday && holiday.start_time === null;
+                const holidayStart = isHoliday && holiday.start_time ? new Date(`${holiday.date.split('T')[0]}T${holiday.start_time}`) : null;
+                const holidayEnd = isHoliday && holiday.end_time ? new Date(`${holiday.date.split('T')[0]}T${holiday.end_time}`) : null;
+        
+                if (isFullDayHoliday || !isDayEnabled) {
+                    html = '<div class="text-center text-muted">Closed</div>';
+                    $('#submitBtn').prop('disabled', true); // Disable "Book Now" button
+                } else {
                     const startTime = scheduleData[`${dayName}_start_time`];
                     const endTime = scheduleData[`${dayName}_end_time`];
-    
-                    // Log the start and end times
-                    console.log(`Start Time: ${startTime}, End Time: ${endTime}`);
-    
-                    // Generate all time slots between start_time and end_time dynamically (1-hour gap)
                     const timeSlots = getTimeSlotsBetween(startTime, endTime);
-                    console.log("Generated time slots:", timeSlots); // Log generated time slots
-    
-                    timeSlots.forEach(time => {
-                        html += `
-                            <button type="button" class="time-slot" data-time="${time}">
-                                ${time}
-                            </button>`;
+        
+                    let availableTimeSlots = timeSlots.filter(time => {
+                        const timeDate = new Date(`${dateString}T${time}`);
+                        return !holidayStart || timeDate < holidayStart || timeDate > holidayEnd;
                     });
-                } else {
-                    html = '<div class="text-center text-muted">Closed</div>';
+        
+                    if (availableTimeSlots.length === 0) {
+                        html = '<div class="text-center text-muted">Closed</div>';
+                        $('#submitBtn').prop('disabled', true); // Disable "Book Now" button
+                    } else {
+                        availableTimeSlots.forEach(time => {
+                            html += `
+                                <button type="button" class="time-slot" data-time="${time}">
+                                    ${time}
+                                </button>`;
+                        });
+                        $('#submitBtn').prop('disabled', false); // Enable "Book Now" button
+                    }
                 }
-    
+        
                 $('#timeSlotContainer').html(html);
                 $('#selectedDate').text(date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
                 $("#timebox").removeClass('d-none');
             }
-    
-            // Helper function to generate time slots between start_time and end_time with 1-hour gap
+        
             function getTimeSlotsBetween(startTime, endTime) {
                 const timeSlots = [];
                 let start = parseTime(startTime);
                 const end = parseTime(endTime);
-    
+        
                 while (start.hours < end.hours || (start.hours === end.hours && start.minutes < end.minutes)) {
                     timeSlots.push(formatTime(start));
                     start = incrementTime(start);
                 }
-    
-                console.log("Generated time slots:", timeSlots); 
+        
                 return timeSlots;
             }
-    
-            // Helper function to parse time in 'HH:mm' format
+        
             function parseTime(time) {
                 const [hours, minutes] = time.split(':').map(num => parseInt(num));
                 return { hours, minutes };
             }
-    
-            // Helper function to format time as 'HH:mm'
+        
             function formatTime(time) {
                 return `${padTime(time.hours)}:${padTime(time.minutes)}`;
             }
-    
-            // Helper function to pad single-digit numbers
+        
             function padTime(num) {
                 return num < 10 ? `0${num}` : `${num}`;
             }
-    
-            // Helper function to increment time by 1 hour
+        
             function incrementTime(time) {
                 let { hours, minutes } = time;
-                hours += 1;  // Increment by 1 hour
+                hours += 1;
                 return { hours, minutes };
             }
-    
-            // Handle day click event
+        
             $(document).on('click', '.calendar-day:not(.disabled)', function() {
                 $('.calendar-day').removeClass('active');
                 $(this).addClass('active');
                 selectedDate = new Date($(this).data('date'));
-                console.log("Current Selected Date:", selectedDate); 
-    
-                // Fetch schedule for the logged-in shopkeeper (replace `userId` with the actual user ID)
-                const userId = @json($userID); 
+        
+                const userId = @json($userID);
                 fetchSchedule(userId).then(() => {
-                    generateTimeSlots(selectedDate); 
+                    generateTimeSlots(selectedDate);
                 });
             });
-    
-            // Handle time slot click event
+        
             $(document).on('click', '.time-slot', function() {
                 $('.time-slot').removeClass('selected');
                 $(this).addClass('selected');
                 selectedTime = $(this).data('time');
             });
-    
-            // Handle form submission on "Book Now"
+        
             $('#submitBtn').click(function(event) {
                 event.preventDefault();
-    
+        
                 if (!selectedDate || !selectedTime) {
-                    alert('Please select a date and time slot before booking!');
+                    alert('Please select a valid date and time!');
                     return;
                 }
-                console.log(selectedDate)
-                console.log(selectedTime)
-    
+        
                 $('#selectedDateInput').val(selectedDate);
                 $('#selectedTimeInput').val(selectedTime);
                 $('#appointmentForm').submit();
             });
-    
-            // Generate the initial calendar and fetch the schedule
-            const userId = @json($userID); // Correctly pass userId (shopkeeper)
+        
+            const userId = @json($userID);
             fetchSchedule(userId).then(() => {
-                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                generateCalendar(new Date().getFullYear(), new Date().getMonth());
             });
-            console.log(userId);
-    
         });
-    </script>
-    
-    
-    
-    
-    
-    
+        </script>
+        
 </body>
 </html>

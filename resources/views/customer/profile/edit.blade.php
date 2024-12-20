@@ -21,9 +21,9 @@
                 <h4 class="mb-4 mt-5">Change Password</h4>
                 @include('customer.profile.partials.update-password-form')
 
-                <!-- Account Deletion Section -->
+                {{-- <!-- Account Deletion Section -->
                 <h4 class="mb-4 mt-5">Delete Account</h4>
-                @include('customer.profile.partials.delete-user-form')
+                @include('customer.profile.partials.delete-user-form') --}}
 
             </div>
         </div>

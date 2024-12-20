@@ -70,14 +70,19 @@ class Kernel extends ConsoleKernel
                             // Handle the case when followup_reminder_duration_type is 'days'
                             $subQuery->where('services.followup_reminder_duration_type', 'days')
                                 ->whereRaw('TIMESTAMPDIFF(DAY, CONCAT(appointments.date, " ", appointments.time), NOW()) = services.followup_reminder_duration');
+                        })
+                        ->orWhere(function ($subQuery) {
+                            // Handle the case when followup_reminder_duration_type is 'months'
+                            $subQuery->where('services.followup_reminder_duration_type', 'months')
+                                ->whereRaw('TIMESTAMPDIFF(MONTH, CONCAT(appointments.date, " ", appointments.time), NOW()) = services.followup_reminder_duration');
                         });
                 })
                 ->get();
-            
-    
+
             foreach ($followupReminderAppointments as $appointment) {
                 $this->sendReminder($appointment, 'followup');
             }
+
         })->everyMinute(); // Adjust frequency as needed
     }
     

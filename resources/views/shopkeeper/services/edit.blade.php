@@ -1,5 +1,6 @@
 @extends('shopkeeper.layouts.app')
 @section('title', 'Dashboard')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @section('content')
 
 <main class="d-flex justify-content-center">
@@ -40,34 +41,60 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <!-- Is Additional Info -->
+                        <div class="col-md-12 mb-2">
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="is_additional_info" name="is_additional_info" value="1" 
+                                    {{ old('is_additional_info', $service->is_additional_info) == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_additional_info">Require Additional Information?</label>
+                            </div>
+                        </div>
+                        <!-- Debugging Output -->
+{{-- <p>is_additional_info Value: {{ old('is_additional_info', $service->is_additional_info) }}</p> --}}
+
+
+
+                        <!-- Additional Info -->
+                        <div class="col-md-12 mb-2 {{ old('is_additional_info', $service->is_additional_info) ? '' : 'd-none' }}" id="additional_info_field">
+                            <div class="form-group">
+                                <label for="additional_info">Additional Information Title</label>
+                                <input type="text" class="form-control" id="additional_info" name="additional_info" 
+                                    value="{{ old('additional_info', $service->additional_info) }}" placeholder="Enter title for additional information...">
+                                @error('additional_info')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                         
                         <div class="col-md-12 mb-3">
-                            <div class="row align-items-end">
+                            <div class="row align-items-end">                                
                                 <!-- Service Provider -->
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="service_provider_id">Service Provider</label>
-                                        <select name="service_provider_id" class="form-control" required>
+                                        <select id="service_provider_dropdown" name="service_providers[]" class="select2 form-control" required multiple>
                                             <option value="">Select Service Provider</option>
                                             @foreach ($serviceProviders as $provider)
-                                                <option value="{{ $provider->id }}" {{ old('service_provider_id', $service->service_provider_id) == $provider->id ? 'selected' : '' }}>
+                                                <option value="{{ $provider->id }}" 
+                                                    {{ in_array($provider->id, old('service_providers', json_decode($service->service_providers, true) ?? [])) ? 'selected' : '' }}>
                                                     {{ $provider->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('service_provider_id')
+                                        @error('service_providers')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+                                                               
 
-                                <!-- Price -->
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="price">Price</label>
-                                        @if(Auth::user()->is_permitted)                                    
+                                        @if(Auth::user()->is_permitted)
                                             <input type="number" name="price" class="form-control" placeholder="Enter price..." 
-                                                   value="{{ old('price') }}" step="0.01" required>
+                                                   value="{{ old('price', $service->price) }}" step="0.01" required>
                                         @else
                                             <input type="number" name="price" class="form-control" value="0" readonly>
                                         @endif
@@ -76,7 +103,7 @@
                                         @enderror
                                     </div>
                                 </div>
-
+                                
                                 <!-- Duration -->
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -259,8 +286,40 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
-        function toggleReminder(reminderType) {
+    $(document).ready(function() {
+        $('#service_provider_dropdown').select2({
+            placeholder: "Select Service Providers",
+            allowClear: true,
+        });
+    });
+
+    //additional info 
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const isAdditionInfoCheckbox = document.getElementById('is_additional_info');
+        const additionalInfoField = document.getElementById('additional_info_field');
+
+        // Toggle visibility based on checkbox state
+        isAdditionInfoCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                additionalInfoField.classList.remove('d-none');
+            } else {
+                additionalInfoField.classList.add('d-none');
+            }
+        });
+
+        // Ensure proper state on page load
+        if (isAdditionInfoCheckbox.checked) {
+            additionalInfoField.classList.remove('d-none');
+        }
+    });
+
+
+
+    function toggleReminder(reminderType) {
         var reminderToggle = document.getElementById(reminderType + 'ReminderToggle');
         var reminderFields = document.getElementById(reminderType + 'ReminderFields');
 

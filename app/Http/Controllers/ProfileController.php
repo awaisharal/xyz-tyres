@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\ShopSchedule;
-
-
+use App\Models\Template;
+use App\Models\Holiday;
 
 class ProfileController extends Controller
 {
@@ -20,10 +20,14 @@ class ProfileController extends Controller
         // return $request->user();
         // Fetch the existing shop schedule, or create a new instance if none exists
         $shopSchedule = ShopSchedule::where('user_id', auth()->user()->id)->first() ?? new ShopSchedule();
+        $templates = Template::where('user_id', $request->user()->id)->get();
+        $holidays = Holiday::where('user_id', $request->user()->id)->get();
 
         return view('shopkeeper.profile.edit', [
             'user' => $request->user(),
-            'shopSchedule' => $shopSchedule
+            'shopSchedule' => $shopSchedule,
+            'templates' => $templates,
+            'holidays'=> $holidays
         ]);
     }
 

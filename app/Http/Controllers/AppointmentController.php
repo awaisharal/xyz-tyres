@@ -12,6 +12,7 @@ use App\Models\Service;
 use App\Models\Payment;
 use App\Models\Customer;
 use App\Models\Appointment;
+use App\Models\Holiday;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -30,9 +31,11 @@ class AppointmentController extends Controller
         $customer = Auth::guard('customers')->user();
         $user = $service->user;
         $userID = $user->id;
+        $holidays = Holiday::where('user_id',$userID )->get();
+        // return $holidays;
 
 
-        return view('customer.appointments.create', compact('user', 'customer', 'service', 'userID'));
+        return view('customer.appointments.create', compact('user', 'customer', 'service', 'userID', 'holidays'));
     }
 
     public function store(Request $request, Service $service)
@@ -68,6 +71,23 @@ class AppointmentController extends Controller
         $service = Service::with('user')->find($serviceId);
         $user = $service->user;
         // return $date;
+
+
+        $serviceProviderCount = $service->service_providers_count;
+
+        // Get the count of existing appointments for the selected time and date
+        $existingAppointments = Appointment::where('service_id',$serviceId)
+            ->where('date', $date)
+            ->where('time', $time)
+            ->count();
+
+            // return $existingAppointments;
+    
+        // Check if the number of existing appointments is less than the available service providers
+        if ($existingAppointments >= $serviceProviderCount) {
+            // If there are no available slots
+            return redirect()->back()->withErrors('No available slots for this time. Please choose a different time.');
+        }
 
 
         return view("customer.appointments.confirmation", compact('date', 'time', 'serviceId', 'service', 'user'));
@@ -136,7 +156,9 @@ class AppointmentController extends Controller
             'phone' => 'required|string|min:10|max:15|regex:/^[0-9]+$/',
         ]);
         $service = Service::findOrFail($validated['service']);
+        $additionalInfo=$request->additional_info;
 
+        // return $additionalInfo;
 
         if ($service->price == 0) {
             try {
@@ -149,11 +171,13 @@ class AppointmentController extends Controller
                     'date' => $validated['date'],
                     'time' => $validated['time'],
                     'phone' => $validated['phone'],
+                    'additional_info'=>$request->additional_info,
                     'payment_status' => 'Scheduled',
                 ]);
                 // $shopkeeper=Appointment::with('services')->get();
                 // $servicename = $appointment->service->user->name;
                 $shopkeeper = $appointment->service->user;
+              
 
 
                 // $shopkeeper= $servicename->user->name;
@@ -226,6 +250,8 @@ class AppointmentController extends Controller
             // }
             Session::put('session_id', $response->checkoutSessionId);
             Session::put('appointment_data', $validated);
+            Session::put('additional_info', $additionalInfo);
+
 
             return redirect($response->href);
 
@@ -267,6 +293,8 @@ class AppointmentController extends Controller
             // return $amount;
 
             $validated = Session::get('appointment_data');
+            $additionalInfo=Session::get('additional_info');
+
             $customer = Auth::guard('customers')->user();
 
             // return $paymentStatus;
@@ -278,6 +306,7 @@ class AppointmentController extends Controller
                 'date' => $validated['date'],
                 'time' => $validated['time'],
                 'phone' => $validated['phone'],
+                'additional_info'=>$additionalInfo,
                 'payment_status' => $status
             ]);
 
