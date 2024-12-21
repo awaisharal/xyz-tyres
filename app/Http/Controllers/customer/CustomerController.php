@@ -87,23 +87,41 @@ class CustomerController extends Controller
        
         return view('customer.services', compact('customer', 'services'));
     }
-    public function showAppointments()
+    public function showAppointments(Request $request)
     {
         $customer = Auth::guard('customers')->user();
-
+    
         if (!$customer) {
             Toastr::error('You must be logged in to view your appointments.');
             return redirect()->route('customer.login');
         }
+    
+        $query = Appointment::where('customer_id', $customer->id)
+            ->with('service.user');
+    
+        if ($request->has('search') && $request->search) {
+            $key = explode(' ', $request->search);
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhereHas('service', function ($serviceQuery) use ($value) {
+                        $serviceQuery->where('title', 'like', "%{$value}%")
+                                     ->orWhereHas('user', function ($userQuery) use ($value) {
+                                         $userQuery->where('company', 'like', "%{$value}%");
+                                     });
+                    })
+                    ->orWhere('date', 'like', "%{$value}%")
+                    ->orWhere('payment_status', 'like', "%{$value}%");
 
-        $appointments = Appointment::where('customer_id', $customer->id)
-            ->with('service.user') 
-            ->get();
-
-       
-
-        return view('customer.appointments.index', compact('customer', 'appointments'));
+                    
+                }
+            });
+        }
+    
+        $appointments = $query->paginate(10)->appends(['search' => $request->search]);
+    
+        return view('customer.appointments.index', compact('customer', 'appointments'));   
     }
+    
 
 
 //////////////////////profile section /////////////////////
@@ -200,29 +218,41 @@ class CustomerController extends Controller
         return redirect()->route('customer/register');
     }
 
-    public function showPayments(){
-
+    public function showPayments(Request $request)
+    {
         $customer = Auth::guard('customers')->user();
+    
         if (!$customer) {
             return redirect()->route('customer.login')->with('error', 'Please login to view your payments.');
         }
-        $payments = Payment::where('payments.customer_id', $customer->id)
-            ->with(['appointment', 'appointment.service'])
-            ->select(
-                'payments.id',
-                'payments.amount',
-                'payments.payment_status',
-                'payments.transaction_id',
-                'appointments.date as appointment_date',
-                'services.name as service_name' 
-            )
-            ->join('appointments', 'payments.appointment_id', '=', 'appointments.id')
-            ->join('services', 'appointments.service_id', '=', 'services.id')
-            ->get();
     
-            return view('customer.payments.index', compact('payments'));
+        $query = Payment::where('payments.customer_id', $customer->id)
+            ->with(['appointment.service.user']); // Eager load the relationships
     
-            // return $payments;
-        
+        // Apply search filter if provided
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+    
+            $query->where(function ($query) use ($search) {
+                $query->whereHas('appointment.service.user', function ($q) use ($search) {
+                    $q->where('company', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('appointment.service', function ($q) use ($search) {
+                    $q->where('title', 'like', '%' . $search . '%');
+                })
+                ->orWhere('payments.payment_status', 'like', '%' . $search . '%')
+                ->orWhereHas('appointment', function ($q) use ($search) {
+                    $q->whereDate('appointments.date', 'like', '%' . $search . '%');
+                })
+                ->orWhere('payments.transaction_id', 'like', '%' . $search . '%');  // Search by transaction_id
+            });
+        }
+    
+        $payments = $query->get();
+    
+        return view('customer.payments.index', compact('payments'));
     }
+    
+
+    
 }

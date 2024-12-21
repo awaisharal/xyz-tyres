@@ -129,7 +129,7 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
         Route::delete('/delete', [CustomerController::class, 'destroy'])->name('profile.delete');
 
         //payments
-    Route::get('/payments', [CustomerController::class, 'showPayments'])->name('payments');
+        Route::get('/payments', [CustomerController::class, 'showPayments'])->name('payments');
 
     });
 

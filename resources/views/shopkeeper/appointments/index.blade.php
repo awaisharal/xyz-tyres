@@ -14,6 +14,22 @@
                 {{ Session::get('success') }}
             </div>
         @endif
+        <div class="row justify-content-end align-items-center flex-grow-1">
+            <div class="col-md-4 mb-3 mb-sm-0">
+                <form action="{{ url()->current() }}" method="GET">
+                    <div class="input-group input-group-merge input-group-flush">
+                        <div class="input-group-prepend">
+                            {{-- <div class="input-group-text">
+                                <i class="tio-search"></i>
+                            </div> --}}
+                        </div>
+                        <input id="datatableSearch_" type="search" name="search" class="form-control"
+                            placeholder="Search by Service, Customer, Phone, Date" aria-label="Search"
+                            value="{{ request('search') }}" required>
+                    </div>
+                </form>
+            </div>
+        </div>
         
         
         @if($appointments->isEmpty())
@@ -54,7 +70,23 @@
 
     </div>
 </main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var searchInput = document.getElementById('datatableSearch_');
+    var searchForm = document.getElementById('searchForm');
+    var isSearching = {{ request('search') ? 'true' : 'false' }};
 
+    searchInput.addEventListener('input', function() {
+        if (searchInput.value === '' && isSearching) {
+            window.location.href = "{{ url()->current() }}";
+        }
+    });
+    searchForm.addEventListener('submit', function() {
+        searchInput.value = searchInput.value.replace(/-/g, '');
+        isSearching = true;
+    });
+});
+</script>
 
 
 

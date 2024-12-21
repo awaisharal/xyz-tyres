@@ -11,10 +11,17 @@ use Illuminate\Http\Request;
 class ServiceProviderController extends Controller
 {
     
-    public function index()
+    public function index(Request $request)
     {
        
-        $serviceProviders = ServiceProvider::where('user_id', auth()->id())->get();
+        // $serviceProviders = ServiceProvider::where('user_id', auth()->id())->get();
+        $query = ServiceProvider::where('user_id', auth()->id());
+
+    if ($request->has('search') && $request->search) {
+        $query->where('name', 'like', '%' . $request->search . '%');
+    }
+
+    $serviceProviders = $query->get();
       
         return view('shopkeeper.serviceproviders.index', compact('serviceProviders'));
     }

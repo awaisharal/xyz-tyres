@@ -4,7 +4,7 @@
             <div class="iq-navbar-custom">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="iq-navbar-logo d-flex align-items-center justify-content-between">
-                        <a href="{{ route('dashboard') }}" class="header-logo">
+                        <a href="{{ route('customer.dashboard') }}" class="header-logo">
                             {{-- <img src="/assets/images/logo.png" class="img-fluid rounded-normal light-logo" alt="logo">
                             <img src="/assets/images/logo-white.png" class="img-fluid rounded-normal darkmode-logo" alt="logo"> --}}
                             <img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Ellesse_logo.png" class="img-fluid rounded-normal light-logo" alt="logo" />

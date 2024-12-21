@@ -165,66 +165,120 @@ class ShopkeeperController extends Controller
     }
 
     
-    public function showAppointments()
+    public function showAppointments(Request $request)
     {
+        $shopkeeper = Auth::user();
     
-    $shopkeeper = Auth::user();
-    if (!$shopkeeper) {
-       
-        Toastr::error('You must be logged in to view appointments.');
-        return redirect()->route('login');
+        if (!$shopkeeper) {
+            Toastr::error('You must be logged in to view appointments.');
+            return redirect()->route('login');
+        }
+    
+        $query = Appointment::with(['service', 'service.user', 'customer'])
+            ->whereHas('service', function ($query) use ($shopkeeper) {
+                $query->where('user_id', $shopkeeper->id);
+            });
+    
+        if ($request->has('search') && $request->search) {
+            $key = explode(' ', $request->search);
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhereHas('customer', function ($customerQuery) use ($value) {
+                        $customerQuery->where('name', 'like', "%{$value}%")
+                                     ->orWhere('email', 'like', "%{$value}%");
+                    })
+                    ->orWhereHas('service', function ($serviceQuery) use ($value) {
+                        $serviceQuery->where('title', 'like', "%{$value}%")
+                                     ->orWhereHas('user', function ($userQuery) use ($value) {
+                                         $userQuery->where('company', 'like', "%{$value}%");
+                                     });
+                    })
+                    ->orWhere('date', 'like', "%{$value}%")
+                    ->orWhere('payment_status', 'like', "%{$value}%");
+                }
+            });
+        }
+    
+        $appointments = $query->paginate(10)->appends(['search' => $request->search]);
+    
+        return view('shopkeeper.appointments.index', compact('appointments'));
     }
-    $appointments = Appointment::with(['service', 'service.user', 'customer'])
-    ->whereHas('service', function ($query) use ($shopkeeper) {
-        $query->where('user_id', $shopkeeper->id);
-    })->get();
-    //  return $appointments;
+        
 
-    return view('shopkeeper.appointments.index', compact('appointments'));
-    }
-
-    public function showCustomers()
+    public function showCustomers(Request $request)
     {
-        $customers = Appointment::with('customer') // Load customer relationship
+        $query = Appointment::with('customer') // Load customer relationship
             ->whereHas('service', function ($query) {
                 $query->where('user_id', auth()->id()); // Filter appointments by shopkeeper
+            });
+    
+        // Apply search filter
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->whereHas('customer', function ($customerQuery) use ($search) {
+                $customerQuery->where('name', 'like', "%{$search}%")
+                              ->orWhere('email', 'like', "%{$search}%");
             })
-            ->select('customer_id', 'phone') // Include phone from the Appointment table
-            ->get()
-            ->groupBy('customer_id'); // Group appointments by customer ID
-
-
-      
+            ->orWhere('phone', 'like', "%{$search}%");
+        }
+    
+        // Group and aggregate customer details with counts
+        $customers = $query->get()
+            ->groupBy('customer_id')
+            ->map(function ($appointments) {
+                $customer = $appointments->first()->customer; // Get the customer details
+                return [
+                    'customer' => $customer,
+                    'phone' => $appointments->first()->phone, // Fetch phone number from the appointment
+                    'appointment_count' => $appointments->count(), // Count total appointments for this customer
+                ];
+            });
     
         return view('shopkeeper.customers.index', compact('customers'));
     }
+    
+    
 
-    public function showPayments(){
-      //payments 
-
-      $payments = Payment::with(['appointment', 'appointment.service'])
-      ->whereHas('appointment.service', function ($query) {
-          $query->where('user_id', auth()->id()); // Filter by shopkeeper's user ID
-      })
-      ->select(
-          'payments.id',
-          'payments.amount',
-          'payments.payment_status',
-          'payments.transaction_id',
-          'appointments.customer_id',
-          'appointments.service_id',
-          'appointments.id as appointment_id',
-          'appointments.date as appointment_date',
-          'services.title as service_name' // Add the service name for display
-      )
-      ->join('appointments', 'payments.appointment_id', '=', 'appointments.id')
-      ->join('services', 'appointments.service_id', '=', 'services.id')
-      ->get();
-
-    //   return $payments;
-    return view('shopkeeper.payments.index', compact('payments'));
-
+    public function showPayments(Request $request)
+    {
+        $query = Payment::with(['appointment.customer', 'appointment.service'])
+            ->whereHas('appointment.service', function ($query) {
+                $query->where('user_id', auth()->id()); // Filter by shopkeeper's user ID
+            })
+            ->join('appointments', 'payments.appointment_id', '=', 'appointments.id')
+            ->join('services', 'appointments.service_id', '=', 'services.id')
+            ->select(
+                'payments.id',
+                'payments.amount',
+                'payments.payment_status',
+                'payments.transaction_id',
+                'appointments.customer_id',
+                'appointments.service_id',
+                'appointments.id as appointment_id',
+                'appointments.date as appointment_date',
+                'services.title as service_name' // Include service name for search and display
+            );
+    
+        // Apply search filter
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('payments.transaction_id', 'like', "%{$search}%")
+                  ->orWhere('payments.payment_status', 'like', "%{$search}%")
+                  ->orWhere('appointments.date', 'like', "%{$search}%")
+                  ->orWhere('services.title', 'like', "%{$search}%") // Search by service name
+                  ->orWhereHas('appointment.customer', function ($customerQuery) use ($search) {
+                      $customerQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+    
+        $payments = $query->get();
+    
+        return view('shopkeeper.payments.index', compact('payments'));
     }
+    
+    
 
     public function showBookingWidget($company_slug)
     {
